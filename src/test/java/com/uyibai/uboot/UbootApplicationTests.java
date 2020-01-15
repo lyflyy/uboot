@@ -1,4 +1,4 @@
-package com.uyibai.uboot.uboot;
+package com.uyibai.uboot;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
