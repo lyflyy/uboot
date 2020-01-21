@@ -58,8 +58,8 @@ public class CodeGenerator {
 
         // 包配置
         PackageConfig pc = new PackageConfig();
-        pc.setModuleName(scanner("uboot"));
-        pc.setParent("com.uyibai.uboot.persistent");
+        pc.setModuleName(scanner("persistent"));
+        pc.setParent("com.uyibai.uboot");
         mpg.setPackageInfo(pc);
 
         // 自定义配置
