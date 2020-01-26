@@ -143,13 +143,6 @@ jeecg :
      accessKeySecret: ??
   shiro:
      excludeUrls: /test/jeecgDemo/demo3,/test/jeecgDemo/redisDemo/**
-  #阿里云oss存储配置
-  oss:
-    endpoint: oss-cn-beijing.aliyuncs.com
-    accessKey: WegDpuKzOuPK6D3N
-    secretKey: ??
-    bucketName: jeecgos
-    staticDomain: ??
   # ElasticSearch 设置
   elasticsearch:
     cluster-name: jeecg-ES
