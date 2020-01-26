@@ -1,6 +1,6 @@
 package org.uboot.modules.message.service.impl;
 
-import org.uboot.common.system.base.service.impl.JeecgServiceImpl;
+import org.uboot.common.system.base.service.impl.IBaseServiceImpl;
 import org.uboot.modules.message.entity.SysMessageTemplate;
 import org.uboot.modules.message.mapper.SysMessageTemplateMapper;
 import org.uboot.modules.message.service.ISysMessageTemplateService;
@@ -16,7 +16,7 @@ import java.util.List;
  * @Version: V1.0
  */
 @Service
-public class SysMessageTemplateServiceImpl extends JeecgServiceImpl<SysMessageTemplateMapper, SysMessageTemplate> implements ISysMessageTemplateService {
+public class SysMessageTemplateServiceImpl extends IBaseServiceImpl<SysMessageTemplateMapper, SysMessageTemplate> implements ISysMessageTemplateService {
 
     @Autowired
     private SysMessageTemplateMapper sysMessageTemplateMapper;

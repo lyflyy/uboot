@@ -12,7 +12,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.uboot.common.aspect.annotation.PermissionData;
-import org.uboot.common.system.util.JeecgDataAutorUtils;
+import org.uboot.common.system.util.DataAutorUtils;
 import org.uboot.common.system.util.JwtUtil;
 import org.uboot.common.system.vo.SysPermissionDataRuleModel;
 import org.uboot.common.system.vo.SysUserCacheInfo;
@@ -104,9 +104,9 @@ public class PermissionDataAspect {
 				// update-end--Author:scott Date:20191119 for：数据权限规则编码不规范，项目存在相同包名和类名 #722
 			}
 			if(dataRules!=null && dataRules.size()>0) {
-				JeecgDataAutorUtils.installDataSearchConditon(request, dataRules);
+				DataAutorUtils.installDataSearchConditon(request, dataRules);
 				SysUserCacheInfo userinfo = sysUserService.getCacheUser(username);
-				JeecgDataAutorUtils.installUserInfo(request, userinfo);
+				DataAutorUtils.installUserInfo(request, userinfo);
 			}
 		}
 		return  point.proceed();

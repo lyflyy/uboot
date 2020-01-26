@@ -37,7 +37,7 @@ import lombok.extern.slf4j.Slf4j;
  * @Version: 1.0
  */
 @Slf4j
-public class JeecgController<T, S extends IService<T>> {
+public class BaseController<T, S extends IService<T>> {
     @Autowired
     S service;
 

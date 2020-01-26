@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.uboot.common.api.vo.Result;
-import org.uboot.common.system.base.controller.JeecgController;
+import org.uboot.common.system.base.controller.BaseController;
 import org.uboot.common.system.query.QueryGenerator;
 import org.uboot.modules.message.entity.SysMessage;
 import org.uboot.modules.message.service.ISysMessageService;
@@ -36,7 +36,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequestMapping("/message/sysMessage")
-public class SysMessageController extends JeecgController<SysMessage, ISysMessageService> {
+public class SysMessageController extends BaseController<SysMessage, ISysMessageService> {
 	@Autowired
 	private ISysMessageService sysMessageService;
 

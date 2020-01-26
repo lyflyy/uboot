@@ -1,7 +1,7 @@
 package org.uboot.modules.message.entity;
 
 import org.uboot.common.aspect.annotation.Dict;
-import org.uboot.common.system.base.entity.JeecgEntity;
+import org.uboot.common.system.base.entity.BaseEntity;
 import org.jeecgframework.poi.excel.annotation.Excel;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -22,7 +22,7 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 @TableName("sys_sms")
-public class SysMessage extends JeecgEntity {
+public class SysMessage extends BaseEntity {
 	/**推送内容*/
 	@Excel(name = "推送内容", width = 15)
 	private String esContent;

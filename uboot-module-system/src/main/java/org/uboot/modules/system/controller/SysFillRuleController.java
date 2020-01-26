@@ -10,7 +10,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.uboot.common.api.vo.Result;
 import org.uboot.common.aspect.annotation.AutoLog;
-import org.uboot.common.system.base.controller.JeecgController;
+import org.uboot.common.system.base.controller.BaseController;
 import org.uboot.common.system.query.QueryGenerator;
 import org.uboot.common.util.FillRuleUtil;
 import org.uboot.modules.system.entity.SysFillRule;
@@ -33,7 +33,7 @@ import java.util.Arrays;
 @Api(tags = "填值规则")
 @RestController
 @RequestMapping("/sys/fillRule")
-public class SysFillRuleController extends JeecgController<SysFillRule, ISysFillRuleService> {
+public class SysFillRuleController extends BaseController<SysFillRule, ISysFillRuleService> {
     @Autowired
     private ISysFillRuleService sysFillRuleService;
 

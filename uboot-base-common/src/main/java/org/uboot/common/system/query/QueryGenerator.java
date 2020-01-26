@@ -19,7 +19,7 @@ import org.apache.commons.beanutils.PropertyUtils;
 import org.uboot.common.constant.CommonConstant;
 import org.uboot.common.constant.DataBaseConstant;
 import org.uboot.common.system.api.ISysBaseAPI;
-import org.uboot.common.system.util.JeecgDataAutorUtils;
+import org.uboot.common.system.util.DataAutorUtils;
 import org.uboot.common.system.util.JwtUtil;
 import org.uboot.common.system.vo.SysPermissionDataRuleModel;
 import org.uboot.common.util.SqlInjectionUtil;
@@ -448,7 +448,7 @@ public class QueryGenerator {
 	 */
 	public static Map<String, SysPermissionDataRuleModel> getRuleMap() {
 		Map<String, SysPermissionDataRuleModel> ruleMap = new HashMap<String, SysPermissionDataRuleModel>();
-		List<SysPermissionDataRuleModel> list =JeecgDataAutorUtils.loadDataSearchConditon();
+		List<SysPermissionDataRuleModel> list = DataAutorUtils.loadDataSearchConditon();
 		if(list != null&&list.size()>0){
 			if(list.get(0)==null){
 				return ruleMap;

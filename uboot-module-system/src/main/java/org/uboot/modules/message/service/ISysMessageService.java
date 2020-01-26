@@ -1,6 +1,6 @@
 package org.uboot.modules.message.service;
 
-import org.uboot.common.system.base.service.JeecgService;
+import org.uboot.common.system.base.service.IBaseService;
 import org.uboot.modules.message.entity.SysMessage;
 
 /**
@@ -9,6 +9,6 @@ import org.uboot.modules.message.entity.SysMessage;
  * @Date:  2019-04-09
  * @Version: V1.0
  */
-public interface ISysMessageService extends JeecgService<SysMessage> {
+public interface ISysMessageService extends IBaseService<SysMessage> {
 
 }

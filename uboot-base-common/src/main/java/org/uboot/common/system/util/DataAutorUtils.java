@@ -16,7 +16,7 @@ import java.util.List;
  * @Date: 2012-12-15 下午11:27:39
  *
  */
-public class JeecgDataAutorUtils {
+public class DataAutorUtils {
 
 	public static final String MENU_DATA_AUTHOR_RULES = "MENU_DATA_AUTHOR_RULES";
 
