@@ -23,7 +23,7 @@ uyibai basic project for Spring Boot By uyibai
 
 #### 基于ant-design-jeecg修改的UBoot-console的前端项目
 
-[https://github.com/lyflyy/uboot-console](uboot-console)
+[uboot-console](https://github.com/lyflyy/uboot-console)
 
 
 ##### 前端使用AntDesign Vue开发
