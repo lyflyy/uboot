@@ -12,10 +12,14 @@
 	</parent>
 
 	<dependencies>
-		<dependency>
-			<groupId>com.uyibai.uboot</groupId>
-			<artifactId>uboot-base-common</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>com.uyibai.uboot</groupId>
+            <artifactId>uboot-base-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.uyibai.uboot</groupId>
+            <artifactId>uboot-business</artifactId>
+        </dependency>
 	</dependencies>
 
 	<build>
