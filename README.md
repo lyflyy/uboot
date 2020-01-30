@@ -6,8 +6,11 @@ uyibai basic project for Spring Boot By uyibai
 #### SpringBoot 单服务开发项目基础架构
 
 > uboot 开发基础项目，子模块开发为[uboot-app](./uboot-app/README.md)
->
->
+
+> ###更新子module代码需要手动执行
+```
+git submodule update --remote --merge
+```
 
 ##### 包含内容
 
@@ -26,6 +29,3 @@ uyibai basic project for Spring Boot By uyibai
 #### 基于ant-design-jeecg修改的UBoot-console的前端项目
 
 [uboot-console](https://github.com/lyflyy/uboot-console)
-
-
-##### 前端使用AntDesign Vue开发
