@@ -1,0 +1,3 @@
+[submodule "uboot-app"]
+	path = uboot-app
+	url = https://github.com/lyflyy/uboot-app.git

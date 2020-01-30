@@ -5,6 +5,8 @@ uyibai basic project for Spring Boot By uyibai
 
 #### SpringBoot 单服务开发项目基础架构
 
+> uboot 开发基础项目，子模块开发为[uboot-app](./uboot-app/README.md)
+
 ##### 包含内容
 
 ###### 1. 基础内容
@@ -13,13 +15,11 @@ uyibai basic project for Spring Boot By uyibai
 - [x] MybatisPlus集成、代码生成工具
 - [x] 接口返回内容封装
 - [x] log4j日志配置
-- [ ] jetcache集成、配置
+- [x] jetcache集成、配置
 
 ###### 2. 功能列表
-- [ ] shiro 权限控制、登陆、权限管理
-- [ ] 文件上传管理
-
-
+- [x] shiro 权限控制、登陆、权限管理
+- [x] 文件上传管理
 
 #### 基于ant-design-jeecg修改的UBoot-console的前端项目
 

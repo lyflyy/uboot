@@ -27,7 +27,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <uboot.common.version>0.0.1-SNAPSHOT</uboot.common.version>
-        <uboot.common.business>0.0.1-SNAPSHOT</uboot.common.business>
+        <uboot.common.system>0.0.1-SNAPSHOT</uboot.common.system>
         <java.version>1.8</java.version>
         <mybatis-plus.version>3.1.2</mybatis-plus.version>
         <druid.version>1.1.17</druid.version>
@@ -39,7 +39,6 @@
     <modules>
         <module>uboot-base-common</module>
         <module>uboot-module-system</module>
-        <module>uboot-business</module>
     </modules>
 
 
@@ -263,8 +262,8 @@
             </dependency>
             <dependency>
                 <groupId>com.uyibai.uboot</groupId>
-                <artifactId>uboot-business</artifactId>
-                <version>${uboot.common.business}</version>
+                <artifactId>uboot-module-system</artifactId>
+                <version>${uboot.common.system}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
