@@ -5,7 +5,7 @@ uyibai basic project for Spring Boot By uyibai
 
 #### SpringBoot 单服务开发项目基础架构
 
-> uboot 开发基础项目，子模块开发为[uboot-app](./uboot-app/README.md)
+> uboot 开发基础项目，子模块开发为[uboot-app](https://github.com/lyflyy/uboot-app.git)
 
 > ###更新子module代码需要手动执行
 ```
