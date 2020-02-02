@@ -1,6 +1,7 @@
 package org.uboot.config.mybatis;
 
 import lombok.Data;
+import org.apache.shiro.util.AntPathMatcher;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
@@ -24,7 +25,8 @@ public class ShiroExcludeProperties {
 
     public Boolean contains(String url){
         for(String pattern: excludeUrls){
-            if(Pattern.matches(pattern, url)){
+            AntPathMatcher antPathMatcher = new AntPathMatcher();
+            if(antPathMatcher.match(pattern, url)){
                 return true;
             }
         }

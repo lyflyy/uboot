@@ -7,9 +7,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.apache.shiro.SecurityUtils;
 import org.uboot.common.api.vo.Result;
 import org.uboot.common.constant.CommonConstant;
 import org.uboot.common.system.util.JwtUtil;
+import org.uboot.common.system.vo.LoginUser;
 import org.uboot.common.util.MD5Util;
 import org.uboot.common.util.oConvertUtils;
 import org.uboot.modules.system.entity.SysPermission;
@@ -170,7 +172,12 @@ public class SysPermissionController {
 	 */
 	@RequestMapping(value = "/getUserPermissionByToken", method = RequestMethod.GET)
 	public Result<?> getUserPermissionByToken(@RequestParam(name = "token", required = true) String token) {
-		Result<JSONObject> result = new Result<JSONObject>();
+
+        LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
+        log.info(" ------ sysUsersysUsersysUsersysUser ------ " + sysUser);
+
+
+        Result<JSONObject> result = new Result<JSONObject>();
 		try {
 			if (oConvertUtils.isEmpty(token)) {
 				return Result.error("TOKEN不允许为空！");

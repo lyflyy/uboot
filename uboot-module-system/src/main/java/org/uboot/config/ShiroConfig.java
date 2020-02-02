@@ -70,7 +70,6 @@ public class ShiroConfig {
 			}
 		}
 
-
 		// 添加自己的过滤器并且取名为jwt
 		Map<String, Filter> filterMap = new HashMap<String, Filter>(1);
 		filterMap.put("jwt", new JwtFilter());
