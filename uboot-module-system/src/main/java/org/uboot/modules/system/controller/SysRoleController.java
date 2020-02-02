@@ -1,8 +1,10 @@
 package org.uboot.modules.system.controller;
 
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -11,9 +13,12 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.uboot.common.api.vo.Result;
+import org.uboot.common.constant.CacheConstant;
 import org.uboot.common.constant.CommonConstant;
 import org.uboot.common.system.query.QueryGenerator;
+import org.uboot.common.util.PmsUtil;
 import org.uboot.common.util.oConvertUtils;
 import org.uboot.modules.system.entity.SysPermission;
 import org.uboot.modules.system.entity.SysPermissionDataRule;
@@ -24,11 +29,13 @@ import org.uboot.modules.system.service.ISysPermissionDataRuleService;
 import org.uboot.modules.system.service.ISysPermissionService;
 import org.uboot.modules.system.service.ISysRolePermissionService;
 import org.uboot.modules.system.service.ISysRoleService;
+import org.jeecgframework.poi.excel.ExcelImportUtil;
 import org.jeecgframework.poi.excel.def.NormalExcelConstants;
 import org.jeecgframework.poi.excel.entity.ExportParams;
 import org.jeecgframework.poi.excel.entity.ImportParams;
 import org.jeecgframework.poi.excel.view.JeecgEntityExcelView;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -84,9 +91,9 @@ public class SysRoleController {
 	 */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public Result<IPage<SysRole>> queryPageList(SysRole role,
-                                                @RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
-                                                @RequestParam(name="pageSize", defaultValue="10") Integer pageSize,
-                                                HttpServletRequest req) {
+									  @RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
+									  @RequestParam(name="pageSize", defaultValue="10") Integer pageSize,
+									  HttpServletRequest req) {
 		Result<IPage<SysRole>> result = new Result<IPage<SysRole>>();
 		QueryWrapper<SysRole> queryWrapper = QueryGenerator.initQueryWrapper(role, req.getParameterMap());
 		Page<SysRole> page = new Page<SysRole>(pageNo, pageSize);
@@ -144,9 +151,19 @@ public class SysRoleController {
 	 * @return
 	 */
 	@RequestMapping(value = "/delete", method = RequestMethod.DELETE)
-	public Result<?> delete(@RequestParam(name="id",required=true) String id) {
-		sysRoleService.deleteRole(id);
-		return Result.ok("删除角色成功");
+	public Result<SysRole> delete(@RequestParam(name="id",required=true) String id) {
+		Result<SysRole> result = new Result<SysRole>();
+		SysRole sysrole = sysRoleService.getById(id);
+		if(sysrole==null) {
+			result.error500("未找到对应实体");
+		}else {
+			boolean ok = sysRoleService.removeById(id);
+			if(ok) {
+				result.success("删除成功!");
+			}
+		}
+
+		return result;
 	}
 
 	/**
@@ -157,11 +174,11 @@ public class SysRoleController {
 	@RequestMapping(value = "/deleteBatch", method = RequestMethod.DELETE)
 	public Result<SysRole> deleteBatch(@RequestParam(name="ids",required=true) String ids) {
 		Result<SysRole> result = new Result<SysRole>();
-		if(oConvertUtils.isEmpty(ids)) {
-			result.error500("未选中角色！");
+		if(ids==null || "".equals(ids.trim())) {
+			result.error500("参数不识别！");
 		}else {
-			sysRoleService.deleteBatchRole(ids.split(","));
-			result.success("删除角色成功!");
+			this.sysRoleService.removeByIds(Arrays.asList(ids.split(",")));
+			result.success("删除成功!");
 		}
 		return result;
 	}

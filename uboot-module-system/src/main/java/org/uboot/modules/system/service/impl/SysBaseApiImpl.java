@@ -6,12 +6,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.apache.shiro.SecurityUtils;
 import org.uboot.common.constant.CacheConstant;
 import org.uboot.common.constant.CommonConstant;
@@ -25,8 +25,10 @@ import org.uboot.common.system.vo.SysDepartModel;
 import org.uboot.common.util.IPUtils;
 import org.uboot.common.util.SpringContextUtils;
 import org.uboot.common.util.oConvertUtils;
+import org.uboot.modules.message.websocket.WebSocket;
 import org.uboot.modules.system.entity.*;
 import org.uboot.modules.system.mapper.*;
+import org.uboot.modules.system.service.ISysDepartService;
 import org.uboot.modules.system.service.ISysDictService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,22 +59,19 @@ public class SysBaseApiImpl implements ISysBaseAPI {
 	@Autowired
 	private SysUserRoleMapper sysUserRoleMapper;
 	@Autowired
+	private ISysDepartService sysDepartService;
+	@Autowired
 	private ISysDictService sysDictService;
 	@Resource
 	private SysAnnouncementMapper sysAnnouncementMapper;
 	@Resource
 	private SysAnnouncementSendMapper sysAnnouncementSendMapper;
 	@Resource
+    private WebSocket webSocket;
+	@Resource
 	private SysRoleMapper roleMapper;
-
-//	@Resource
-//	private SysDepartMapper departMapper;
-//    @Autowired
-//    private ISysMessageTemplateService sysMessageTemplateService;
-//    @Resource
-//    private WebSocket webSocket;
-//    @Autowired
-//    private ISysDepartService sysDepartService;
+	@Resource
+	private SysDepartMapper departMapper;
 
 	@Override
 	public void addLog(String LogContent, Integer logType, Integer operatetype) {
@@ -107,7 +106,7 @@ public class SysBaseApiImpl implements ISysBaseAPI {
 	}
 
 	@Override
-	@Cacheable(cacheNames= CacheConstant.SYS_USERS_CACHE, key="#username")
+	@Cacheable(cacheNames=CacheConstant.SYS_USERS_CACHE, key="#username")
 	public LoginUser getUserByName(String username) {
 		if(oConvertUtils.isEmpty(username)) {
 			return null;
@@ -140,7 +139,25 @@ public class SysBaseApiImpl implements ISysBaseAPI {
 		return sysUserRoleMapper.getRoleByUserName(username);
 	}
 
+	@Override
+	public List<String> getDepartIdsByUsername(String username) {
+		List<SysDepart> list = sysDepartService.queryDepartsByUsername(username);
+		List<String> result = new ArrayList<>(list.size());
+		for (SysDepart depart : list) {
+			result.add(depart.getId());
+		}
+		return result;
+	}
 
+	@Override
+	public List<String> getDepartNamesByUsername(String username) {
+		List<SysDepart> list = sysDepartService.queryDepartsByUsername(username);
+		List<String> result = new ArrayList<>(list.size());
+		for (SysDepart depart : list) {
+			result.add(depart.getDepartName());
+		}
+		return result;
+	}
 
 	@Override
 	public String getDatabaseType() throws SQLException {
@@ -163,9 +180,44 @@ public class SysBaseApiImpl implements ISysBaseAPI {
 		return sysDictService.queryAllDepartBackDictModel();
 	}
 
+	@Override
+	public void sendSysAnnouncement(String fromUser, String toUser, String title, String msgContent) {
+		SysAnnouncement announcement = new SysAnnouncement();
+		announcement.setTitile(title);
+		announcement.setMsgContent(msgContent);
+		announcement.setSender(fromUser);
+		announcement.setPriority(CommonConstant.PRIORITY_M);
+		announcement.setMsgType(CommonConstant.MSG_TYPE_UESR);
+		announcement.setSendStatus(CommonConstant.HAS_SEND);
+		announcement.setSendTime(new Date());
+		announcement.setMsgCategory(CommonConstant.MSG_CATEGORY_2);
+		announcement.setDelFlag(String.valueOf(CommonConstant.DEL_FLAG_0));
+		sysAnnouncementMapper.insert(announcement);
+		// 2.插入用户通告阅读标记表记录
+		String userId = toUser;
+		String[] userIds = userId.split(",");
+		String anntId = announcement.getId();
+		for(int i=0;i<userIds.length;i++) {
+			if(oConvertUtils.isNotEmpty(userIds[i])) {
+				SysUser sysUser = userMapper.getUserByName(userIds[i]);
+				if(sysUser==null) {
+					continue;
+				}
+				SysAnnouncementSend announcementSend = new SysAnnouncementSend();
+				announcementSend.setAnntId(anntId);
+				announcementSend.setUserId(sysUser.getId());
+				announcementSend.setReadFlag(CommonConstant.NO_READ_FLAG);
+				sysAnnouncementSendMapper.insert(announcementSend);
+				JSONObject obj = new JSONObject();
+		    	obj.put("cmd", "user");
+		    	obj.put("userId", sysUser.getId());
+				obj.put("msgId", announcement.getId());
+				obj.put("msgTxt", announcement.getTitile());
+		    	webSocket.sendOneMessage(sysUser.getId(), obj.toJSONString());
+			}
+		}
 
-
-
+	}
 	/**
 	 * 获取数据库类型
 	 * @param dataSource
@@ -291,166 +343,27 @@ public class SysBaseApiImpl implements ISysBaseAPI {
 		return sysUserRoleMapper.getRoleIdByUserName(username);
 	}
 
+	@Override
+	public String getDepartIdsByOrgCode(String orgCode) {
+		return departMapper.queryDepartIdByOrgCode(orgCode);
+	}
 
+	@Override
+	public DictModel getParentDepartId(String departId) {
+		SysDepart depart = departMapper.getParentDepartId(departId);
+		DictModel model = new DictModel(depart.getId(),depart.getParentId());
+		return model;
+	}
 
-//    @Override
-//    public void sendSysAnnouncement(String fromUser, String toUser, String title, String msgContent, String setMsgCategory) {
-//        SysAnnouncement announcement = new SysAnnouncement();
-//        announcement.setTitile(title);
-//        announcement.setMsgContent(msgContent);
-//        announcement.setSender(fromUser);
-//        announcement.setPriority(CommonConstant.PRIORITY_M);
-//        announcement.setMsgType(CommonConstant.MSG_TYPE_UESR);
-//        announcement.setSendStatus(CommonConstant.HAS_SEND);
-//        announcement.setSendTime(new Date());
-//        announcement.setMsgCategory(setMsgCategory);
-//        announcement.setDelFlag(String.valueOf(CommonConstant.DEL_FLAG_0));
-//        sysAnnouncementMapper.insert(announcement);
-//        // 2.插入用户通告阅读标记表记录
-//        String userId = toUser;
-//        String[] userIds = userId.split(",");
-//        String anntId = announcement.getId();
-//        for(int i=0;i<userIds.length;i++) {
-//            if(oConvertUtils.isNotEmpty(userIds[i])) {
-//                SysUser sysUser = userMapper.getUserByName(userIds[i]);
-//                if(sysUser==null) {
-//                    continue;
-//                }
-//                SysAnnouncementSend announcementSend = new SysAnnouncementSend();
-//                announcementSend.setAnntId(anntId);
-//                announcementSend.setUserId(sysUser.getId());
-//                announcementSend.setReadFlag(CommonConstant.NO_READ_FLAG);
-//                sysAnnouncementSendMapper.insert(announcementSend);
-//                JSONObject obj = new JSONObject();
-//                obj.put("cmd", "user");
-//                obj.put("userId", sysUser.getId());
-//                obj.put("msgId", announcement.getId());
-//                obj.put("msgTxt", announcement.getTitile());
-//                webSocket.sendOneMessage(sysUser.getId(), obj.toJSONString());
-//            }
-//        }
-//
-//    }
-//
-//    @Override
-//    public String parseTemplateByCode(String templateCode,Map<String, String> map) {
-//        List<SysMessageTemplate> sysSmsTemplates = sysMessageTemplateService.selectByCode(templateCode);
-//        if(sysSmsTemplates==null||sysSmsTemplates.size()==0){
-//            throw new UBootException("消息模板不存在，模板编码："+templateCode);
-//        }
-//        SysMessageTemplate sysSmsTemplate = sysSmsTemplates.get(0);
-//        //模板内容
-//        String content = sysSmsTemplate.getTemplateContent();
-//        if(map!=null) {
-//            for (Map.Entry<String, String> entry : map.entrySet()) {
-//                String str = "${" + entry.getKey() + "}";
-//                content = content.replace(str, entry.getValue());
-//            }
-//        }
-//        return content;
-//    }
-//
-//    @Override
-//    public String getDepartIdsByOrgCode(String orgCode) {
-//        return departMapper.queryDepartIdByOrgCode(orgCode);
-//    }
-//
-//    @Override
-//    public DictModel getParentDepartId(String departId) {
-//        SysDepart depart = departMapper.getParentDepartId(departId);
-//        DictModel model = new DictModel(depart.getId(),depart.getParentId());
-//        return model;
-//    }
-//
-//    @Override
-//    public List<SysDepartModel> getAllSysDepart() {
-//        List<SysDepartModel> departModelList = new ArrayList<SysDepartModel>();
-//        List<SysDepart> departList = departMapper.selectList(new QueryWrapper<SysDepart>().eq("del_flag","0"));
-//        for(SysDepart depart : departList){
-//            SysDepartModel model = new SysDepartModel();
-//            BeanUtils.copyProperties(depart,model);
-//            departModelList.add(model);
-//        }
-//        return departModelList;
-//    }
-//
-//    @Override
-//    public List<String> getDepartIdsByUsername(String username) {
-//        List<SysDepart> list = sysDepartService.queryDepartsByUsername(username);
-//        List<String> result = new ArrayList<>(list.size());
-//        for (SysDepart depart : list) {
-//            result.add(depart.getId());
-//        }
-//        return result;
-//    }
-//
-//    @Override
-//    public List<String> getDepartNamesByUsername(String username) {
-//        List<SysDepart> list = sysDepartService.queryDepartsByUsername(username);
-//        List<String> result = new ArrayList<>(list.size());
-//        for (SysDepart depart : list) {
-//            result.add(depart.getDepartName());
-//        }
-//        return result;
-//    }
-//
-//    @Override
-//    public void sendSysAnnouncement(String fromUser, String toUser,String title,Map<String, String> map, String templateCode) {
-//        List<SysMessageTemplate> sysSmsTemplates = sysMessageTemplateService.selectByCode(templateCode);
-//        if(sysSmsTemplates==null||sysSmsTemplates.size()==0){
-//            throw new UBootException("消息模板不存在，模板编码："+templateCode);
-//        }
-//        SysMessageTemplate sysSmsTemplate = sysSmsTemplates.get(0);
-//        //模板标题
-//        title = title==null?sysSmsTemplate.getTemplateName():title;
-//        //模板内容
-//        String content = sysSmsTemplate.getTemplateContent();
-//        if(map!=null) {
-//            for (Map.Entry<String, String> entry : map.entrySet()) {
-//                String str = "${" + entry.getKey() + "}";
-//                title = title.replace(str, entry.getValue());
-//                content = content.replace(str, entry.getValue());
-//            }
-//        }
-//
-//        SysAnnouncement announcement = new SysAnnouncement();
-//        announcement.setTitile(title);
-//        announcement.setMsgContent(content);
-//        announcement.setSender(fromUser);
-//        announcement.setPriority(CommonConstant.PRIORITY_M);
-//        announcement.setMsgType(CommonConstant.MSG_TYPE_UESR);
-//        announcement.setSendStatus(CommonConstant.HAS_SEND);
-//        announcement.setSendTime(new Date());
-//        announcement.setMsgCategory(CommonConstant.MSG_CATEGORY_2);
-//        announcement.setDelFlag(String.valueOf(CommonConstant.DEL_FLAG_0));
-//        sysAnnouncementMapper.insert(announcement);
-//        // 2.插入用户通告阅读标记表记录
-//        String userId = toUser;
-//        String[] userIds = userId.split(",");
-//        String anntId = announcement.getId();
-//        for(int i=0;i<userIds.length;i++) {
-//            if(oConvertUtils.isNotEmpty(userIds[i])) {
-//                SysUser sysUser = userMapper.getUserByName(userIds[i]);
-//                if(sysUser==null) {
-//                    continue;
-//                }
-//                SysAnnouncementSend announcementSend = new SysAnnouncementSend();
-//                announcementSend.setAnntId(anntId);
-//                announcementSend.setUserId(sysUser.getId());
-//                announcementSend.setReadFlag(CommonConstant.NO_READ_FLAG);
-//                sysAnnouncementSendMapper.insert(announcementSend);
-//                JSONObject obj = new JSONObject();
-//                obj.put("cmd", "user");
-//                obj.put("userId", sysUser.getId());
-//                obj.put("msgId", announcement.getId());
-//                obj.put("msgTxt", announcement.getTitile());
-//                webSocket.sendOneMessage(sysUser.getId(), obj.toJSONString());
-//            }
-//        }
-//    }
-
-//    @Override
-//    public void sendSysAnnouncement(String fromUser, String toUser, String title, String msgContent) {
-//        this.sendSysAnnouncement(fromUser, toUser, title, msgContent, CommonConstant.MSG_CATEGORY_2);
-//    }
+	@Override
+	public List<SysDepartModel> getAllSysDepart() {
+		List<SysDepartModel> departModelList = new ArrayList<SysDepartModel>();
+		List<SysDepart> departList = departMapper.selectList(new QueryWrapper<SysDepart>().eq("del_flag","0"));
+		for(SysDepart depart : departList){
+			SysDepartModel model = new SysDepartModel();
+			BeanUtils.copyProperties(depart,model);
+			departModelList.add(model);
+		}
+		return departModelList;
+	}
 }

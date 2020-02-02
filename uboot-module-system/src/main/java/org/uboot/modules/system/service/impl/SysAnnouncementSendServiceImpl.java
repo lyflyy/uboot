@@ -32,7 +32,7 @@ public class SysAnnouncementSendServiceImpl extends ServiceImpl<SysAnnouncementS
 
 	@Override
 	public Page<AnnouncementSendModel> getMyAnnouncementSendPage(Page<AnnouncementSendModel> page,
-                                                                 AnnouncementSendModel announcementSendModel) {
+			AnnouncementSendModel announcementSendModel) {
 		 return page.setRecords(sysAnnouncementSendMapper.getMyAnnouncementSendList(page, announcementSendModel));
 	}
 

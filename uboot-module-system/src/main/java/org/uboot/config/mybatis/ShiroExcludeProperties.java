@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
  * @Description:
  **/
 @Data
-//@PropertySource({"classpath:shiroExcludeUrls.yaml"})
+//@PropertySource({"shiroExcludeUrls.yaml"})
 @Component
 @ConfigurationProperties("shiro")
 public class ShiroExcludeProperties {

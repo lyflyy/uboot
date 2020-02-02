@@ -38,7 +38,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 import lombok.extern.slf4j.Slf4j;
 
-/**
+ /**
  * @Description: 分类字典
  * @Author: jeecg-boot
  * @Date:   2019-05-29
@@ -61,9 +61,9 @@ public class SysCategoryController {
 	 */
 	@GetMapping(value = "/rootList")
 	public Result<IPage<SysCategory>> queryPageList(SysCategory sysCategory,
-                                                    @RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
-                                                    @RequestParam(name="pageSize", defaultValue="10") Integer pageSize,
-                                                    HttpServletRequest req) {
+									  @RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
+									  @RequestParam(name="pageSize", defaultValue="10") Integer pageSize,
+									  HttpServletRequest req) {
 		if(oConvertUtils.isEmpty(sysCategory.getPid())){
 			sysCategory.setPid("0");
 		}

@@ -2,29 +2,28 @@ package org.uboot.modules.system.controller;
 
 import cn.hutool.core.util.RandomUtil;
 import com.alibaba.fastjson.JSONObject;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.uboot.common.api.vo.Result;
 import org.uboot.common.constant.CacheConstant;
 import org.uboot.common.constant.CommonConstant;
 import org.uboot.common.system.api.ISysBaseAPI;
 import org.uboot.common.system.util.JwtUtil;
 import org.uboot.common.system.vo.LoginUser;
+import org.uboot.common.util.*;
 import org.uboot.common.util.encryption.EncryptedString;
 import org.uboot.modules.shiro.vo.DefContants;
+import org.uboot.modules.system.entity.SysDepart;
 import org.uboot.modules.system.entity.SysUser;
 import org.uboot.modules.system.model.SysLoginModel;
+import org.uboot.modules.system.service.ISysDepartService;
 import org.uboot.modules.system.service.ISysLogService;
 import org.uboot.modules.system.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.uboot.common.util.MD5Util;
-import org.uboot.common.util.PasswordUtil;
-import org.uboot.common.util.RedisUtil;
-import org.uboot.common.util.oConvertUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -47,6 +46,8 @@ public class LoginController {
 	private ISysLogService logService;
 	@Autowired
     private RedisUtil redisUtil;
+	@Autowired
+    private ISysDepartService sysDepartService;
 
 	private static final String BASE_CHECK_CODES = "qwertyuiplkjhgfdsazxcvbnmQWERTYUPLKJHGFDSAZXCVBNM1234567890";
 
@@ -202,6 +203,80 @@ public class LoginController {
 		return result;
 	}
 
+	/**
+	 * 短信登录接口
+	 *
+	 * @param jsonObject
+	 * @return
+	 */
+//	@PostMapping(value = "/sms")
+//	public Result<String> sms(@RequestBody JSONObject jsonObject) {
+//		Result<String> result = new Result<String>();
+//		String mobile = jsonObject.get("mobile").toString();
+//		String smsmode=jsonObject.get("smsmode").toString();
+//		log.info(mobile);
+//		Object object = redisUtil.get(mobile);
+//		if (object != null) {
+//			result.setMessage("验证码10分钟内，仍然有效！");
+//			result.setSuccess(false);
+//			return result;
+//		}
+//
+//		//随机数
+//		String captcha = RandomUtil.randomNumbers(6);
+//		JSONObject obj = new JSONObject();
+//    	obj.put("code", captcha);
+//		try {
+//			boolean b = false;
+//			//注册模板
+//			if (CommonConstant.SMS_TPL_TYPE_1.equals(smsmode)) {
+//				SysUser sysUser = sysUserService.getUserByPhone(mobile);
+//				if(sysUser!=null) {
+//					result.error500(" 手机号已经注册，请直接登录！");
+//					sysBaseAPI.addLog("手机号已经注册，请直接登录！", CommonConstant.LOG_TYPE_1, null);
+//					return result;
+//				}
+//				b = DySmsHelper.sendSms(mobile, obj, DySmsEnum.REGISTER_TEMPLATE_CODE);
+//			}else {
+//				//登录模式，校验用户有效性
+//				SysUser sysUser = sysUserService.getUserByPhone(mobile);
+//				result = sysUserService.checkUserIsEffective(sysUser);
+//				if(!result.isSuccess()) {
+//					return result;
+//				}
+//
+//				/**
+//				 * smsmode 短信模板方式  0 .登录模板、1.注册模板、2.忘记密码模板
+//				 */
+//				if (CommonConstant.SMS_TPL_TYPE_0.equals(smsmode)) {
+//					//登录模板
+//					b = DySmsHelper.sendSms(mobile, obj, DySmsEnum.LOGIN_TEMPLATE_CODE);
+//				} else if(CommonConstant.SMS_TPL_TYPE_2.equals(smsmode)) {
+//					//忘记密码模板
+//					b = DySmsHelper.sendSms(mobile, obj, DySmsEnum.FORGET_PASSWORD_TEMPLATE_CODE);
+//				}
+//			}
+//
+//			if (b == false) {
+//				result.setMessage("短信验证码发送失败,请稍后重试");
+//				result.setSuccess(false);
+//				return result;
+//			}
+//			//验证码10分钟内有效
+//			redisUtil.set(mobile, captcha, 600);
+//			//update-begin--Author:scott  Date:20190812 for：issues#391
+//			//result.setResult(captcha);
+//			//update-end--Author:scott  Date:20190812 for：issues#391
+//			result.setSuccess(true);
+//
+//		} catch (ClientException e) {
+//			e.printStackTrace();
+//			result.error500(" 短信接口未配置，请联系管理员！");
+//			return result;
+//		}
+//		return result;
+//	}
+
 
 	/**
 	 * 手机号登录接口
@@ -255,16 +330,16 @@ public class LoginController {
 
 		// 获取用户部门信息
 		JSONObject obj = new JSONObject();
-//		List<SysDepart> departs = sysDepartService.queryUserDeparts(sysUser.getId());
-//		obj.put("departs", departs);
-//		if (departs == null || departs.size() == 0) {
-//			obj.put("multi_depart", 0);
-//		} else if (departs.size() == 1) {
-//			sysUserService.updateUserDepart(username, departs.get(0).getOrgCode());
-//			obj.put("multi_depart", 1);
-//		} else {
-//			obj.put("multi_depart", 2);
-//		}
+		List<SysDepart> departs = sysDepartService.queryUserDeparts(sysUser.getId());
+		obj.put("departs", departs);
+		if (departs == null || departs.size() == 0) {
+			obj.put("multi_depart", 0);
+		} else if (departs.size() == 1) {
+			sysUserService.updateUserDepart(username, departs.get(0).getOrgCode());
+			obj.put("multi_depart", 1);
+		} else {
+			obj.put("multi_depart", 2);
+		}
 		obj.put("token", token);
 		obj.put("userInfo", sysUser);
 		result.setResult(obj);
@@ -337,17 +412,17 @@ public class LoginController {
 		}
 
 		String orgCode = sysUser.getOrgCode();
-//		if(oConvertUtils.isEmpty(orgCode)) {
-//			//如果当前用户无选择部门 查看部门关联信息
-//			List<SysDepart> departs = sysDepartService.queryUserDeparts(sysUser.getId());
-//			if (departs == null || departs.size() == 0) {
-//				result.error500("用户暂未归属部门,不可登录!");
-//				return result;
-//			}
-//			orgCode = departs.get(0).getOrgCode();
-//			sysUser.setOrgCode(orgCode);
-//			this.sysUserService.updateUserDepart(username, orgCode);
-//		}
+		if(oConvertUtils.isEmpty(orgCode)) {
+			//如果当前用户无选择部门 查看部门关联信息
+			List<SysDepart> departs = sysDepartService.queryUserDeparts(sysUser.getId());
+			if (departs == null || departs.size() == 0) {
+				result.error500("用户暂未归属部门,不可登录!");
+				return result;
+			}
+			orgCode = departs.get(0).getOrgCode();
+			sysUser.setOrgCode(orgCode);
+			this.sysUserService.updateUserDepart(username, orgCode);
+		}
 		JSONObject obj = new JSONObject();
 		//用户登录信息
 		obj.put("userInfo", sysUser);

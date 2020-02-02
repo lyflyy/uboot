@@ -2,6 +2,7 @@ package org.uboot.modules.system.service;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.uboot.common.exception.UBootException;
 import org.uboot.modules.system.entity.SysPermission;
 import org.uboot.modules.system.model.TreeModel;

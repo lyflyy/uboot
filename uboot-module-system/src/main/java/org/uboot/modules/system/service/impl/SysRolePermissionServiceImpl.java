@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.uboot.common.constant.CacheConstant;
 import org.uboot.common.util.oConvertUtils;
 import org.uboot.modules.system.entity.SysRolePermission;
 import org.uboot.modules.system.mapper.SysRolePermissionMapper;
@@ -15,6 +16,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
 /**

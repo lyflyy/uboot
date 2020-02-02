@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.uboot.common.api.vo.Result;
 import org.uboot.common.system.query.QueryGenerator;
+import org.uboot.common.util.oConvertUtils;
 import org.uboot.modules.system.entity.SysDataLog;
 import org.uboot.modules.system.service.ISysDataLogService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +30,8 @@ public class SysDataLogController {
 	private ISysDataLogService service;
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
-	public Result<IPage<SysDataLog>> queryPageList(SysDataLog dataLog, @RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
-                                                   @RequestParam(name="pageSize", defaultValue="10") Integer pageSize, HttpServletRequest req) {
+	public Result<IPage<SysDataLog>> queryPageList(SysDataLog dataLog,@RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
+									  @RequestParam(name="pageSize", defaultValue="10") Integer pageSize,HttpServletRequest req) {
 		Result<IPage<SysDataLog>> result = new Result<IPage<SysDataLog>>();
 		QueryWrapper<SysDataLog> queryWrapper = QueryGenerator.initQueryWrapper(dataLog, req.getParameterMap());
 		Page<SysDataLog> page = new Page<SysDataLog>(pageNo, pageSize);

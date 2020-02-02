@@ -7,11 +7,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.uboot.common.api.vo.Result;
+import org.uboot.common.constant.CacheConstant;
 import org.uboot.common.constant.CommonConstant;
 import org.uboot.common.system.util.JwtUtil;
-import org.uboot.common.system.vo.LoginUser;
 import org.uboot.common.util.MD5Util;
 import org.uboot.common.util.oConvertUtils;
 import org.uboot.modules.system.entity.SysPermission;
@@ -24,6 +24,8 @@ import org.uboot.modules.system.service.ISysPermissionService;
 import org.uboot.modules.system.service.ISysRolePermissionService;
 import org.uboot.modules.system.util.PermissionDataUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -172,12 +174,7 @@ public class SysPermissionController {
 	 */
 	@RequestMapping(value = "/getUserPermissionByToken", method = RequestMethod.GET)
 	public Result<?> getUserPermissionByToken(@RequestParam(name = "token", required = true) String token) {
-
-        LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
-        log.info(" ------ sysUsersysUsersysUsersysUser ------ " + sysUser);
-
-
-        Result<JSONObject> result = new Result<JSONObject>();
+		Result<JSONObject> result = new Result<JSONObject>();
 		try {
 			if (oConvertUtils.isEmpty(token)) {
 				return Result.error("TOKEN不允许为空！");
@@ -220,6 +217,7 @@ public class SysPermissionController {
 	 * @param permission
 	 * @return
 	 */
+	@RequiresRoles({ "admin" })
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public Result<SysPermission> add(@RequestBody SysPermission permission) {
 		Result<SysPermission> result = new Result<SysPermission>();
@@ -239,6 +237,7 @@ public class SysPermissionController {
 	 * @param permission
 	 * @return
 	 */
+	@RequiresRoles({ "admin" })
 	@RequestMapping(value = "/edit", method = { RequestMethod.PUT, RequestMethod.POST })
 	public Result<SysPermission> edit(@RequestBody SysPermission permission) {
 		Result<SysPermission> result = new Result<>();
@@ -258,6 +257,7 @@ public class SysPermissionController {
 	 * @param id
 	 * @return
 	 */
+	@RequiresRoles({ "admin" })
 	@RequestMapping(value = "/delete", method = RequestMethod.DELETE)
 	public Result<SysPermission> delete(@RequestParam(name = "id", required = true) String id) {
 		Result<SysPermission> result = new Result<>();
@@ -277,6 +277,7 @@ public class SysPermissionController {
 	 * @param ids
 	 * @return
 	 */
+	@RequiresRoles({ "admin" })
 	@RequestMapping(value = "/deleteBatch", method = RequestMethod.DELETE)
 	public Result<SysPermission> deleteBatch(@RequestParam(name = "ids", required = true) String ids) {
 		Result<SysPermission> result = new Result<>();
@@ -374,6 +375,7 @@ public class SysPermissionController {
 	 * @return
 	 */
 	@RequestMapping(value = "/saveRolePermission", method = RequestMethod.POST)
+	@RequiresRoles({ "admin" })
 	public Result<String> saveRolePermission(@RequestBody JSONObject json) {
 		long start = System.currentTimeMillis();
 		Result<String> result = new Result<>();

@@ -10,6 +10,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import org.apache.shiro.SecurityUtils;
 import org.uboot.common.api.vo.Result;
 import org.uboot.common.constant.CacheConstant;
@@ -45,6 +46,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -72,8 +74,8 @@ public class SysDictController {
 	private ISysDictItemService sysDictItemService;
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
-	public Result<IPage<SysDict>> queryPageList(SysDict sysDict, @RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
-                                                @RequestParam(name="pageSize", defaultValue="10") Integer pageSize, HttpServletRequest req) {
+	public Result<IPage<SysDict>> queryPageList(SysDict sysDict,@RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
+									  @RequestParam(name="pageSize", defaultValue="10") Integer pageSize,HttpServletRequest req) {
 		Result<IPage<SysDict>> result = new Result<IPage<SysDict>>();
 		QueryWrapper<SysDict> queryWrapper = QueryGenerator.initQueryWrapper(sysDict, req.getParameterMap());
 		Page<SysDict> page = new Page<SysDict>(pageNo, pageSize);
@@ -97,8 +99,8 @@ public class SysDictController {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/treeList", method = RequestMethod.GET)
-	public Result<List<SysDictTree>> treeList(SysDict sysDict, @RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
-                                              @RequestParam(name="pageSize", defaultValue="10") Integer pageSize, HttpServletRequest req) {
+	public Result<List<SysDictTree>> treeList(SysDict sysDict,@RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
+									  @RequestParam(name="pageSize", defaultValue="10") Integer pageSize,HttpServletRequest req) {
 		Result<List<SysDictTree>> result = new Result<>();
 		LambdaQueryWrapper<SysDict> query = new LambdaQueryWrapper<>();
 		// 构造查询条件
@@ -238,7 +240,7 @@ public class SysDictController {
 	 * @return
 	 */
 	@RequestMapping(value = "/delete", method = RequestMethod.DELETE)
-	@CacheEvict(value= CacheConstant.SYS_DICT_CACHE, allEntries=true)
+	@CacheEvict(value=CacheConstant.SYS_DICT_CACHE, allEntries=true)
 	public Result<SysDict> delete(@RequestParam(name="id",required=true) String id) {
 		Result<SysDict> result = new Result<SysDict>();
 		boolean ok = sysDictService.removeById(id);
@@ -414,12 +416,12 @@ public class SysDictController {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/loadTreeData", method = RequestMethod.GET)
-	public Result<List<TreeSelectModel>> loadDict(@RequestParam(name="pid") String pid, @RequestParam(name="pidField") String pidField,
-                                                  @RequestParam(name="tableName") String tbname,
-                                                  @RequestParam(name="text") String text,
-                                                  @RequestParam(name="code") String code,
-                                                  @RequestParam(name="hasChildField") String hasChildField,
-                                                  @RequestParam(name="condition") String condition) {
+	public Result<List<TreeSelectModel>> loadDict(@RequestParam(name="pid") String pid,@RequestParam(name="pidField") String pidField,
+			@RequestParam(name="tableName") String tbname,
+			@RequestParam(name="text") String text,
+			@RequestParam(name="code") String code,
+			@RequestParam(name="hasChildField") String hasChildField,
+			@RequestParam(name="condition") String condition) {
 		Result<List<TreeSelectModel>> result = new Result<List<TreeSelectModel>>();
 		Map<String, String> query = null;
 		if(oConvertUtils.isNotEmpty(condition)) {

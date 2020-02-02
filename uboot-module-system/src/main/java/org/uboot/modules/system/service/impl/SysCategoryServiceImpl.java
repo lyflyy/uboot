@@ -3,9 +3,8 @@ package org.uboot.modules.system.service.impl;
 import java.util.List;
 import java.util.Map;
 
-import com.alibaba.fastjson.JSONObject;
 import org.uboot.common.exception.UBootException;
-import org.uboot.common.util.FillRuleUtil;
+import org.uboot.common.util.YouBianCodeUtil;
 import org.uboot.common.util.oConvertUtils;
 import org.uboot.modules.system.entity.SysCategory;
 import org.uboot.modules.system.mapper.SysCategoryMapper;
@@ -43,11 +42,29 @@ public class SysCategoryServiceImpl extends ServiceImpl<SysCategoryMapper, SysCa
 				}
 			}
 		}
-		//update-begin--Author:baihailong  Date:20191209 for：分类字典编码规则生成器做成公用配置
-		JSONObject formData = new JSONObject();
-		formData.put("pid",categoryPid);
-		categoryCode = (String) FillRuleUtil.executeRule("category_code_rule",formData);
-		//update-end--Author:baihailong  Date:20191209 for：分类字典编码规则生成器做成公用配置
+		/*
+		* 分成三种情况
+		* 1.数据库无数据 调用YouBianCodeUtil.getNextYouBianCode(null);
+		* 2.添加子节点，无兄弟元素 YouBianCodeUtil.getSubYouBianCode(parentCode,null);
+		* 3.添加子节点有兄弟元素 YouBianCodeUtil.getNextYouBianCode(lastCode);
+		* */
+		//找同类 确定上一个最大的code值
+		LambdaQueryWrapper<SysCategory> query = new LambdaQueryWrapper<SysCategory>()
+				.eq(SysCategory::getPid,categoryPid)
+				.orderByDesc(SysCategory::getCode);
+		List<SysCategory> list = baseMapper.selectList(query);
+		if(list==null || list.size()==0){
+			if(ISysCategoryService.ROOT_PID_VALUE.equals(categoryPid)){
+				//情况1
+				categoryCode = YouBianCodeUtil.getNextYouBianCode(null);
+			}else{
+				//情况2
+				categoryCode = YouBianCodeUtil.getSubYouBianCode(parentCode,null);
+			}
+		}else{
+			//情况3
+			categoryCode = YouBianCodeUtil.getNextYouBianCode(list.get(0).getCode());
+		}
 		sysCategory.setCode(categoryCode);
 		sysCategory.setPid(categoryPid);
 		baseMapper.insert(sysCategory);
@@ -69,7 +86,7 @@ public class SysCategoryServiceImpl extends ServiceImpl<SysCategoryMapper, SysCa
 	}
 
 	@Override
-	public List<TreeSelectModel> queryListByCode(String pcode) throws UBootException {
+	public List<TreeSelectModel> queryListByCode(String pcode) throws UBootException{
 		String pid = ROOT_PID_VALUE;
 		if(oConvertUtils.isNotEmpty(pcode)) {
 			List<SysCategory> list = baseMapper.selectList(new LambdaQueryWrapper<SysCategory>().eq(SysCategory::getCode, pcode));
