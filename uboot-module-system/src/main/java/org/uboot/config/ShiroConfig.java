@@ -11,6 +11,7 @@ import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.crazycake.shiro.RedisCacheManager;
 import org.crazycake.shiro.RedisManager;
 import org.uboot.common.util.oConvertUtils;
+import org.uboot.config.mybatis.ShiroExcludeProperties;
 import org.uboot.modules.shiro.authc.ShiroRealm;
 import org.uboot.modules.shiro.authc.aop.JwtFilter;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
@@ -20,9 +21,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.util.StringUtils;
 
+import javax.annotation.Resource;
 import javax.servlet.Filter;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -35,8 +38,8 @@ import java.util.Map;
 @Configuration
 public class ShiroConfig {
 
-	@Value("${jeecg.shiro.excludeUrls}")
-	private String excludeUrls;
+    @Resource
+	private ShiroExcludeProperties shiroExcludeProperties;
 
     @Value("${spring.redis.port}")
     private String port;
@@ -60,72 +63,13 @@ public class ShiroConfig {
 		shiroFilterFactoryBean.setSecurityManager(securityManager);
 		// 拦截器
 		Map<String, String> filterChainDefinitionMap = new LinkedHashMap<String, String>();
+        List<String> excludeUrls = shiroExcludeProperties.getExcludeUrls();
 		if(oConvertUtils.isNotEmpty(excludeUrls)){
-			String[] permissionUrl = excludeUrls.split(",");
-			for(String url : permissionUrl){
+			for(String url : excludeUrls){
 				filterChainDefinitionMap.put(url,"anon");
 			}
 		}
-		//大屏请求排除
-		filterChainDefinitionMap.put("/big/screen/**", "anon");
-		filterChainDefinitionMap.put("/bigscreen/**", "anon");
 
-		//cas验证登录
-		filterChainDefinitionMap.put("/cas/client/validateLogin", "anon");
-		// 配置不会被拦截的链接 顺序判断
-		filterChainDefinitionMap.put("/sys/getCheckCode", "anon"); //登录验证码接口排除
-		filterChainDefinitionMap.put("/sys/login", "anon"); //登录接口排除
-		filterChainDefinitionMap.put("/sys/mLogin", "anon"); //登录接口排除
-		filterChainDefinitionMap.put("/sys/logout", "anon"); //登出接口排除
-		filterChainDefinitionMap.put("/sys/getEncryptedString", "anon"); //获取加密串
-		filterChainDefinitionMap.put("/sys/sms", "anon");//短信验证码
-		filterChainDefinitionMap.put("/sys/phoneLogin", "anon");//手机登录
-		filterChainDefinitionMap.put("/sys/user/checkOnlyUser", "anon");//校验用户是否存在
-		filterChainDefinitionMap.put("/sys/user/register", "anon");//用户注册
-		filterChainDefinitionMap.put("/sys/user/querySysUser", "anon");//根据手机号获取用户信息
-		filterChainDefinitionMap.put("/sys/user/phoneVerification", "anon");//用户忘记密码验证手机号
-		filterChainDefinitionMap.put("/sys/user/passwordChange", "anon");//用户更改密码
-		filterChainDefinitionMap.put("/auth/2step-code", "anon");//登录验证码
-		filterChainDefinitionMap.put("/sys/common/view/**", "anon");//图片预览不限制token
-		filterChainDefinitionMap.put("/sys/common/download/**", "anon");//文件下载不限制token
-		filterChainDefinitionMap.put("/sys/common/pdf/**", "anon");//pdf预览
-		filterChainDefinitionMap.put("/generic/**", "anon");//pdf预览需要文件
-		filterChainDefinitionMap.put("/", "anon");
-		filterChainDefinitionMap.put("/doc.html", "anon");
-		filterChainDefinitionMap.put("/**/*.js", "anon");
-		filterChainDefinitionMap.put("/**/*.css", "anon");
-		filterChainDefinitionMap.put("/**/*.html", "anon");
-		filterChainDefinitionMap.put("/**/*.svg", "anon");
-		filterChainDefinitionMap.put("/**/*.pdf", "anon");
-		filterChainDefinitionMap.put("/**/*.jpg", "anon");
-		filterChainDefinitionMap.put("/**/*.png", "anon");
-		filterChainDefinitionMap.put("/**/*.ico", "anon");
-
-		// update-begin--Author:sunjianlei Date:20190813 for：排除字体格式的后缀
-		filterChainDefinitionMap.put("/**/*.ttf", "anon");
-		filterChainDefinitionMap.put("/**/*.woff", "anon");
-		// update-begin--Author:sunjianlei Date:20190813 for：排除字体格式的后缀
-
-		filterChainDefinitionMap.put("/druid/**", "anon");
-		filterChainDefinitionMap.put("/swagger-ui.html", "anon");
-		filterChainDefinitionMap.put("/swagger**/**", "anon");
-		filterChainDefinitionMap.put("/webjars/**", "anon");
-		filterChainDefinitionMap.put("/v2/**", "anon");
-
-		//性能监控
-		filterChainDefinitionMap.put("/actuator/metrics/**", "anon");
-		filterChainDefinitionMap.put("/actuator/httptrace/**", "anon");
-		filterChainDefinitionMap.put("/actuator/redis/**", "anon");
-
-		//测试示例
-		filterChainDefinitionMap.put("/test/jeecgDemo/html", "anon"); //模板页面
-		filterChainDefinitionMap.put("/test/jeecgDemo/redis/**", "anon"); //redis测试
-
-		//排除Online请求
-		filterChainDefinitionMap.put("/auto/cgform/**", "anon");
-
-		//websocket排除
-		filterChainDefinitionMap.put("/websocket/**", "anon");
 
 		// 添加自己的过滤器并且取名为jwt
 		Map<String, Filter> filterMap = new HashMap<String, Filter>(1);

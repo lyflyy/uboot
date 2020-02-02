@@ -16,7 +16,6 @@ import org.uboot.common.util.PasswordUtil;
 import org.uboot.common.util.oConvertUtils;
 import org.uboot.modules.system.entity.*;
 import org.uboot.modules.system.mapper.*;
-import org.uboot.modules.system.model.SysUserSysDepartModel;
 import org.uboot.modules.system.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -47,8 +46,6 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 	private SysUserDepartMapper sysUserDepartMapper;
 	@Autowired
 	private ISysBaseAPI sysBaseAPI;
-	@Autowired
-	private SysDepartMapper sysDepartMapper;
 
     @Override
     @CacheEvict(value = {CacheConstant.SYS_USERS_CACHE}, allEntries = true)
@@ -207,20 +204,20 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 		}
 
 		//多部门支持in查询
-		List<SysDepart> list = sysDepartMapper.queryUserDeparts(user.getId());
-		List<String> sysMultiOrgCode = new ArrayList<String>();
-		if(list==null || list.size()==0) {
-			//当前用户无部门
-			//sysMultiOrgCode.add("0");
-		}else if(list.size()==1) {
-			sysMultiOrgCode.add(list.get(0).getOrgCode());
-		}else {
-			info.setOneDepart(false);
-			for (SysDepart dpt : list) {
-				sysMultiOrgCode.add(dpt.getOrgCode());
-			}
-		}
-		info.setSysMultiOrgCode(sysMultiOrgCode);
+//		List<SysDepart> list = sysDepartMapper.queryUserDeparts(user.getId());
+//		List<String> sysMultiOrgCode = new ArrayList<String>();
+//		if(list==null || list.size()==0) {
+//			//当前用户无部门
+//			//sysMultiOrgCode.add("0");
+//		}else if(list.size()==1) {
+//			sysMultiOrgCode.add(list.get(0).getOrgCode());
+//		}else {
+//			info.setOneDepart(false);
+//			for (SysDepart dpt : list) {
+//				sysMultiOrgCode.add(dpt.getOrgCode());
+//			}
+//		}
+//		info.setSysMultiOrgCode(sysMultiOrgCode);
 
 		return info;
 	}
@@ -241,16 +238,16 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         return userMapper.selectPage(page, lambdaQueryWrapper);
 	}
 
-	@Override
-	public IPage<SysUserSysDepartModel> queryUserByOrgCode(String orgCode, SysUser userParams, IPage page) {
-		List<SysUserSysDepartModel> list = baseMapper.getUserByOrgCode(page, orgCode, userParams);
-		Integer total = baseMapper.getUserByOrgCodeTotal(orgCode, userParams);
-
-		IPage<SysUserSysDepartModel> result = new Page<>(page.getCurrent(), page.getSize(), total);
-		result.setRecords(list);
-
-		return result;
-	}
+//	@Override
+//	public IPage<SysUserSysDepartModel> queryUserByOrgCode(String orgCode, SysUser userParams, IPage page) {
+//		List<SysUserSysDepartModel> list = baseMapper.getUserByOrgCode(page, orgCode, userParams);
+//		Integer total = baseMapper.getUserByOrgCodeTotal(orgCode, userParams);
+//
+//		IPage<SysUserSysDepartModel> result = new Page<>(page.getCurrent(), page.getSize(), total);
+//		result.setRecords(list);
+//
+//		return result;
+//	}
 
 	// 根据角色Id查询
 	@Override

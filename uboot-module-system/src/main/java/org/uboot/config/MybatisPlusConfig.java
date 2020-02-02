@@ -1,6 +1,7 @@
 package org.uboot.config;
 
 import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
@@ -16,9 +17,10 @@ import com.baomidou.mybatisplus.extension.plugins.PerformanceInterceptor;
 public class MybatisPlusConfig {
 
     /**
-         *  分页插件
+     *  分页插件
      */
     @Bean
+    @ConditionalOnMissingBean
     public PaginationInterceptor paginationInterceptor() {
         // 设置sql的limit为无限制，默认是500
         return new PaginationInterceptor().setLimit(-1);

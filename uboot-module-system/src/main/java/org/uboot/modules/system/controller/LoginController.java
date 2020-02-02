@@ -15,10 +15,8 @@ import org.uboot.common.system.util.JwtUtil;
 import org.uboot.common.system.vo.LoginUser;
 import org.uboot.common.util.encryption.EncryptedString;
 import org.uboot.modules.shiro.vo.DefContants;
-import org.uboot.modules.system.entity.SysDepart;
 import org.uboot.modules.system.entity.SysUser;
 import org.uboot.modules.system.model.SysLoginModel;
-import org.uboot.modules.system.service.ISysDepartService;
 import org.uboot.modules.system.service.ISysLogService;
 import org.uboot.modules.system.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,8 +47,6 @@ public class LoginController {
 	private ISysLogService logService;
 	@Autowired
     private RedisUtil redisUtil;
-	@Autowired
-    private ISysDepartService sysDepartService;
 
 	private static final String BASE_CHECK_CODES = "qwertyuiplkjhgfdsazxcvbnmQWERTYUPLKJHGFDSAZXCVBNM1234567890";
 
@@ -259,16 +255,16 @@ public class LoginController {
 
 		// 获取用户部门信息
 		JSONObject obj = new JSONObject();
-		List<SysDepart> departs = sysDepartService.queryUserDeparts(sysUser.getId());
-		obj.put("departs", departs);
-		if (departs == null || departs.size() == 0) {
-			obj.put("multi_depart", 0);
-		} else if (departs.size() == 1) {
-			sysUserService.updateUserDepart(username, departs.get(0).getOrgCode());
-			obj.put("multi_depart", 1);
-		} else {
-			obj.put("multi_depart", 2);
-		}
+//		List<SysDepart> departs = sysDepartService.queryUserDeparts(sysUser.getId());
+//		obj.put("departs", departs);
+//		if (departs == null || departs.size() == 0) {
+//			obj.put("multi_depart", 0);
+//		} else if (departs.size() == 1) {
+//			sysUserService.updateUserDepart(username, departs.get(0).getOrgCode());
+//			obj.put("multi_depart", 1);
+//		} else {
+//			obj.put("multi_depart", 2);
+//		}
 		obj.put("token", token);
 		obj.put("userInfo", sysUser);
 		result.setResult(obj);
@@ -341,17 +337,17 @@ public class LoginController {
 		}
 
 		String orgCode = sysUser.getOrgCode();
-		if(oConvertUtils.isEmpty(orgCode)) {
-			//如果当前用户无选择部门 查看部门关联信息
-			List<SysDepart> departs = sysDepartService.queryUserDeparts(sysUser.getId());
-			if (departs == null || departs.size() == 0) {
-				result.error500("用户暂未归属部门,不可登录!");
-				return result;
-			}
-			orgCode = departs.get(0).getOrgCode();
-			sysUser.setOrgCode(orgCode);
-			this.sysUserService.updateUserDepart(username, orgCode);
-		}
+//		if(oConvertUtils.isEmpty(orgCode)) {
+//			//如果当前用户无选择部门 查看部门关联信息
+//			List<SysDepart> departs = sysDepartService.queryUserDeparts(sysUser.getId());
+//			if (departs == null || departs.size() == 0) {
+//				result.error500("用户暂未归属部门,不可登录!");
+//				return result;
+//			}
+//			orgCode = departs.get(0).getOrgCode();
+//			sysUser.setOrgCode(orgCode);
+//			this.sysUserService.updateUserDepart(username, orgCode);
+//		}
 		JSONObject obj = new JSONObject();
 		//用户登录信息
 		obj.put("userInfo", sysUser);

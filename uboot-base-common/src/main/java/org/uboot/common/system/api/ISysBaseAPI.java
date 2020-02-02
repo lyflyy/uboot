@@ -46,19 +46,7 @@ public interface ISysBaseAPI {
 	 */
 	public List<String> getRolesByUsername(String username);
 
-	/**
-	 * 通过用户账号查询部门集合
-	 * @param username
-	 * @return 部门 id
-	 */
-	List<String> getDepartIdsByUsername(String username);
 
-	/**
-	 * 通过用户账号查询部门 name
-	 * @param username
-	 * @return 部门 name
-	 */
-	List<String> getDepartNamesByUsername(String username);
 
 	/**
 	 * 获取当前数据库类型
@@ -92,44 +80,10 @@ public interface ISysBaseAPI {
    	 */
    	public List<DictModel> queryAllDepartBackDictModel();
 
-	/**
-	 * 发送系统消息
-	 * @param fromUser 发送人(用户登录账户)
-	 * @param toUser  发送给(用户登录账户)
-	 * @param title  消息主题
-	 * @param msgContent  消息内容
-	 */
-	public void sendSysAnnouncement(String fromUser,String toUser,String title, String msgContent);
-
-	/**
-	 * 发送系统消息
-	 * @param fromUser 发送人(用户登录账户)
-	 * @param toUser   发送给(用户登录账户)
-	 * @param title    通知标题
-	 * @param map  	   模板参数
-	 * @param templateCode  模板编码
-	 */
-	public void sendSysAnnouncement(String fromUser, String toUser,String title, Map<String, String> map, String templateCode);
-
-	/**
-	 * 通过消息中心模板，生成推送内容
-	 *
-	 * @param templateCode 模板编码
-	 * @param map          模板参数
-	 * @return
-	 */
-	public String parseTemplateByCode(String templateCode, Map<String, String> map);
 
 
-	/**
-	 * 发送系统消息
-	 * @param fromUser 发送人(用户登录账户)
-	 * @param toUser  发送给(用户登录账户)
-	 * @param title  消息主题
-	 * @param msgContent  消息内容
-	 * @param setMsgCategory  消息类型 1:消息2:系统消息
-	 */
-	public void sendSysAnnouncement(String fromUser, String toUser, String title, String msgContent, String setMsgCategory);
+
+
 
 	/**
 	 * 查询表字典 支持过滤数据
@@ -174,24 +128,82 @@ public interface ISysBaseAPI {
 	 */
 	public List<String> getRoleIdsByUsername(String username);
 
-	/**
-	 * 通过部门编号查询部门id
-	 * @param orgCode
-	 * @return
-	 */
-	public String getDepartIdsByOrgCode(String orgCode);
 
-	/**
-	 * 查询上一级部门
-	 * @param departId
-	 * @return
-	 */
-	public DictModel getParentDepartId(String departId);
 
-	/**
-	 * 查询所有部门
-	 * @return
-	 */
-	public List<SysDepartModel> getAllSysDepart();
+//	/**
+//	 * 查询所有部门
+//	 * @return
+//	 */
+//	public List<SysDepartModel> getAllSysDepart();
+//
+//
+//    /**
+//     * 发送系统消息
+//     * @param fromUser 发送人(用户登录账户)
+//     * @param toUser  发送给(用户登录账户)
+//     * @param title  消息主题
+//     * @param msgContent  消息内容
+//     */
+//    public void sendSysAnnouncement(String fromUser,String toUser,String title, String msgContent);
+//
+//    /**
+//     * 发送系统消息
+//     * @param fromUser 发送人(用户登录账户)
+//     * @param toUser   发送给(用户登录账户)
+//     * @param title    通知标题
+//     * @param map  	   模板参数
+//     * @param templateCode  模板编码
+//     */
+//    public void sendSysAnnouncement(String fromUser, String toUser,String title, Map<String, String> map, String templateCode);
+//
+//
+//    /**
+//     * 通过消息中心模板，生成推送内容
+//     *
+//     * @param templateCode 模板编码
+//     * @param map          模板参数
+//     * @return
+//     */
+//    public String parseTemplateByCode(String templateCode, Map<String, String> map);
+//
+//
+//    /**
+//     * 通过部门编号查询部门id
+//     * @param orgCode
+//     * @return
+//     */
+//    public String getDepartIdsByOrgCode(String orgCode);
+//
+//    /**
+//     * 查询上一级部门
+//     * @param departId
+//     * @return
+//     */
+//    public DictModel getParentDepartId(String departId);
+
+//    /**
+//     * 通过用户账号查询部门集合
+//     * @param username
+//     * @return 部门 id
+//     */
+//    List<String> getDepartIdsByUsername(String username);
+//
+//    /**
+//     * 通过用户账号查询部门 name
+//     * @param username
+//     * @return 部门 name
+//     */
+//    List<String> getDepartNamesByUsername(String username);
+
+//    /**
+//     * 发送系统消息
+//     * @param fromUser 发送人(用户登录账户)
+//     * @param toUser  发送给(用户登录账户)
+//     * @param title  消息主题
+//     * @param msgContent  消息内容
+//     * @param setMsgCategory  消息类型 1:消息2:系统消息
+//     */
+//    public void sendSysAnnouncement(String fromUser, String toUser, String title, String msgContent, String setMsgCategory);
+
 
 }

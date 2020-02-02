@@ -12,7 +12,6 @@ import org.uboot.common.system.vo.SysUserCacheInfo;
 import org.uboot.modules.system.entity.SysUser;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import org.uboot.modules.system.model.SysUserSysDepartModel;
 
 /**
  * <p>
@@ -113,7 +112,7 @@ public interface ISysUserService extends IService<SysUser> {
 	 * @param page 分页参数
 	 * @return
 	 */
-	IPage<SysUserSysDepartModel> queryUserByOrgCode(String orgCode, SysUser userParams, IPage page);
+//	IPage<SysUserSysDepartModel> queryUserByOrgCode(String orgCode, SysUser userParams, IPage page);
 
 	/**
 	 * 根据角色Id查询

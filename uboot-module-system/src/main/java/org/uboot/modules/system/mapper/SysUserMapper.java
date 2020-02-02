@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.ibatis.annotations.Param;
 import org.uboot.modules.system.entity.SysUser;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import org.uboot.modules.system.model.SysUserSysDepartModel;
 
 import java.util.List;
 
@@ -71,7 +70,7 @@ public interface SysUserMapper extends BaseMapper<SysUser> {
 	 * @param userParams 用户查询条件，可为空
 	 * @return
 	 */
-	List<SysUserSysDepartModel> getUserByOrgCode(IPage page, @Param("orgCode") String orgCode, @Param("userParams") SysUser userParams);
+//	List<SysUserSysDepartModel> getUserByOrgCode(IPage page, @Param("orgCode") String orgCode, @Param("userParams") SysUser userParams);
 
 
     /**
