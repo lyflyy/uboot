@@ -9,6 +9,9 @@ public interface DataBaseConstant {
 	public static final String DB_TYPE_POSTGRESQL = "POSTGRESQL";
 	public static final String DB_TYPE_SQLSERVER = "SQLSERVER";
 
+	//*********是否租户模式变量****************************************
+	public static final String APP_TENANT_MODEL = "tenant";
+
 	//*********系统上下文变量****************************************
 	/**
 	 * 数据-所属机构编码

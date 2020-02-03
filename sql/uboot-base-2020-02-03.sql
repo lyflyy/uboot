@@ -11,7 +11,7 @@
  Target Server Version : 50727
  File Encoding         : 65001
 
- Date: 28/01/2020 13:24:38
+ Date: 03/02/2020 15:49:54
 */
 
 SET NAMES utf8mb4;
@@ -39,6 +39,30 @@ CREATE TABLE `military_plan` (
 -- ----------------------------
 BEGIN;
 INSERT INTO `military_plan` VALUES ('1221828869586173953', '123', '123', 123, 1, '2020-01-28 00:14:38', 'admin', '2020-01-28 00:16:50', 'admin');
+COMMIT;
+
+-- ----------------------------
+-- Table structure for military_user
+-- ----------------------------
+DROP TABLE IF EXISTS `military_user`;
+CREATE TABLE `military_user` (
+  `id` varchar(32) NOT NULL COMMENT '主键id',
+  `sys_user_id` varchar(32) NOT NULL COMMENT 'sys_user_id',
+  `soldiers_period` varchar(32) NOT NULL COMMENT '兵期',
+  `create_by` varchar(32) DEFAULT NULL COMMENT '创建人',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_by` varchar(32) DEFAULT NULL COMMENT '更新人',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `sys_user_id` (`sys_user_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='健康管理-用户表';
+
+-- ----------------------------
+-- Records of military_user
+-- ----------------------------
+BEGIN;
+INSERT INTO `military_user` VALUES ('1', 'e9ca23d68d884d4ebb19d07889727dae', '1111', NULL, NULL, NULL, NULL);
+INSERT INTO `military_user` VALUES ('a75d45a015c44384a04449ee80dc3503', 'a75d45a015c44384a04449ee80dc3503', '222', NULL, NULL, NULL, NULL);
 COMMIT;
 
 -- ----------------------------
@@ -386,6 +410,7 @@ CREATE TABLE `sys_depart` (
   `create_time` datetime DEFAULT NULL COMMENT '创建日期',
   `update_by` varchar(32) DEFAULT NULL COMMENT '更新人',
   `update_time` datetime DEFAULT NULL COMMENT '更新日期',
+  `soldiers_season` varchar(32) DEFAULT NULL COMMENT '兵季',
   PRIMARY KEY (`id`) USING BTREE,
   KEY `index_depart_parent_id` (`parent_id`) USING BTREE,
   KEY `index_depart_depart_order` (`depart_order`) USING BTREE,
@@ -396,14 +421,14 @@ CREATE TABLE `sys_depart` (
 -- Records of sys_depart
 -- ----------------------------
 BEGIN;
-INSERT INTO `sys_depart` VALUES ('4f1765520d6346f9bd9c79e2479e5b12', 'c6d7cb4deeac411cb3384b1b31278596', '市场部', NULL, NULL, 0, NULL, '1', '2', 'A01A03', NULL, NULL, NULL, NULL, NULL, '0', 'admin', '2019-02-20 17:15:34', 'admin', '2019-02-26 16:36:18');
-INSERT INTO `sys_depart` VALUES ('5159cde220114246b045e574adceafe9', '6d35e179cd814e3299bd588ea7daed3f', '研发部', NULL, NULL, 0, NULL, '1', '2', 'A02A02', NULL, NULL, NULL, NULL, NULL, '0', 'admin', '2019-02-26 16:44:38', 'admin', '2019-03-07 09:36:53');
-INSERT INTO `sys_depart` VALUES ('57197590443c44f083d42ae24ef26a2c', 'c6d7cb4deeac411cb3384b1b31278596', '研发部', NULL, NULL, 0, NULL, '1', '2', 'A01A05', NULL, NULL, NULL, NULL, NULL, '0', 'admin', '2019-02-21 16:14:41', 'admin', '2019-03-27 19:05:49');
-INSERT INTO `sys_depart` VALUES ('67fc001af12a4f9b8458005d3f19934a', 'c6d7cb4deeac411cb3384b1b31278596', '财务部', NULL, NULL, 0, NULL, '1', '2', 'A01A04', NULL, NULL, NULL, NULL, NULL, '0', 'admin', '2019-02-21 16:14:35', 'admin', '2019-02-25 12:49:41');
-INSERT INTO `sys_depart` VALUES ('6d35e179cd814e3299bd588ea7daed3f', '', '卓尔互动公司', NULL, NULL, 0, NULL, '1', '1', 'A02', NULL, NULL, NULL, NULL, NULL, '0', 'admin', '2019-02-26 16:36:39', 'admin', '2019-03-22 16:47:25');
-INSERT INTO `sys_depart` VALUES ('743ba9dbdc114af8953a11022ef3096a', 'f28c6f53abd841ac87ead43afc483433', '财务部', NULL, NULL, 0, NULL, '1', '2', 'A03A01', NULL, NULL, NULL, NULL, NULL, '0', 'admin', '2019-03-22 16:45:43', NULL, NULL);
-INSERT INTO `sys_depart` VALUES ('a7d7e77e06c84325a40932163adcdaa6', '6d35e179cd814e3299bd588ea7daed3f', '财务部', NULL, NULL, 0, NULL, '1', '2', 'A02A01', NULL, NULL, NULL, NULL, NULL, '0', 'admin', '2019-02-26 16:36:47', 'admin', '2019-02-26 16:37:25');
-INSERT INTO `sys_depart` VALUES ('c6d7cb4deeac411cb3384b1b31278596', '', '北京国炬公司', NULL, NULL, 0, NULL, '1', '1', 'A01', NULL, NULL, NULL, NULL, NULL, '0', 'admin', '2019-02-11 14:21:51', 'admin', '2019-03-22 16:47:19');
+INSERT INTO `sys_depart` VALUES ('4f1765520d6346f9bd9c79e2479e5b12', 'c6d7cb4deeac411cb3384b1b31278596', '市场部', NULL, NULL, 0, NULL, '1', '2', 'A01A03', NULL, NULL, NULL, NULL, NULL, '0', 'admin', '2019-02-20 17:15:34', 'admin', '2019-02-26 16:36:18', NULL);
+INSERT INTO `sys_depart` VALUES ('5159cde220114246b045e574adceafe9', '6d35e179cd814e3299bd588ea7daed3f', '研发部', NULL, NULL, 0, NULL, '1', '2', 'A02A02', NULL, NULL, NULL, NULL, NULL, '0', 'admin', '2019-02-26 16:44:38', 'admin', '2019-03-07 09:36:53', NULL);
+INSERT INTO `sys_depart` VALUES ('57197590443c44f083d42ae24ef26a2c', 'c6d7cb4deeac411cb3384b1b31278596', '研发部', NULL, NULL, 0, NULL, '1', '2', 'A01A05', NULL, NULL, NULL, NULL, NULL, '0', 'admin', '2019-02-21 16:14:41', 'admin', '2019-03-27 19:05:49', NULL);
+INSERT INTO `sys_depart` VALUES ('67fc001af12a4f9b8458005d3f19934a', 'c6d7cb4deeac411cb3384b1b31278596', '财务部', NULL, NULL, 0, NULL, '1', '2', 'A01A04', NULL, NULL, NULL, NULL, NULL, '0', 'admin', '2019-02-21 16:14:35', 'admin', '2019-02-25 12:49:41', NULL);
+INSERT INTO `sys_depart` VALUES ('6d35e179cd814e3299bd588ea7daed3f', '', '卓尔互动公司', NULL, NULL, 0, NULL, '1', '1', 'A02', NULL, NULL, NULL, NULL, NULL, '0', 'admin', '2019-02-26 16:36:39', 'admin', '2019-03-22 16:47:25', NULL);
+INSERT INTO `sys_depart` VALUES ('743ba9dbdc114af8953a11022ef3096a', 'f28c6f53abd841ac87ead43afc483433', '财务部', NULL, NULL, 0, NULL, '1', '2', 'A03A01', NULL, NULL, NULL, NULL, NULL, '0', 'admin', '2019-03-22 16:45:43', NULL, NULL, NULL);
+INSERT INTO `sys_depart` VALUES ('a7d7e77e06c84325a40932163adcdaa6', '6d35e179cd814e3299bd588ea7daed3f', '财务部', NULL, NULL, 0, NULL, '1', '2', 'A02A01', NULL, NULL, NULL, NULL, NULL, '0', 'admin', '2019-02-26 16:36:47', 'admin', '2019-02-26 16:37:25', NULL);
+INSERT INTO `sys_depart` VALUES ('c6d7cb4deeac411cb3384b1b31278596', '', '北京国炬公司', NULL, NULL, 0, NULL, '1', '1', 'A01', NULL, NULL, NULL, NULL, NULL, '0', 'admin', '2019-02-11 14:21:51', 'admin', '2019-03-22 16:47:19', NULL);
 COMMIT;
 
 -- ----------------------------
@@ -676,6 +701,36 @@ INSERT INTO `sys_log` VALUES ('1221829424677240833', 2, '方案表-编辑', 3, '
 INSERT INTO `sys_log` VALUES ('1221829425235083265', 2, '方案表-分页列表查询', 1, 'admin', '管理员', '127.0.0.1', 'org.uboot.modules.controller.MilitaryPlanController.queryPageList()', NULL, NULL, NULL, 42, 'admin', '2020-01-28 00:16:50', NULL, NULL);
 INSERT INTO `sys_log` VALUES ('1221830230952493057', 2, '职务表-分页列表查询', 1, 'admin', '管理员', '127.0.0.1', 'org.uboot.modules.system.controller.SysPositionController.queryPageList()', NULL, NULL, NULL, 31, 'admin', '2020-01-28 00:20:02', NULL, NULL);
 INSERT INTO `sys_log` VALUES ('1221830234626703361', 2, '职务表-分页列表查询', 1, 'admin', '管理员', '127.0.0.1', 'org.uboot.modules.system.controller.SysPositionController.queryPageList()', NULL, NULL, NULL, 17, 'admin', '2020-01-28 00:20:03', NULL, NULL);
+INSERT INTO `sys_log` VALUES ('1222818309901135873', 1, '用户名: jeecg,登录成功！', NULL, NULL, NULL, '127.0.0.1', NULL, NULL, NULL, NULL, NULL, NULL, '2020-01-30 17:46:19', NULL, NULL);
+INSERT INTO `sys_log` VALUES ('1222819431118278657', 1, '用户名: jeecg,退出成功！', NULL, NULL, NULL, '127.0.0.1', NULL, NULL, NULL, NULL, NULL, NULL, '2020-01-30 17:50:46', NULL, NULL);
+INSERT INTO `sys_log` VALUES ('1222819457970212866', 1, '用户名: admin,登录成功！', NULL, NULL, NULL, '127.0.0.1', NULL, NULL, NULL, NULL, NULL, NULL, '2020-01-30 17:50:52', NULL, NULL);
+INSERT INTO `sys_log` VALUES ('1222820256326643713', 2, '方案表-分页列表查询', 1, 'admin', '管理员', '127.0.0.1', 'org.uboot.modules.controller.MilitaryPlanController.queryPageList()', NULL, NULL, NULL, 279, 'admin', '2020-01-30 17:54:03', NULL, NULL);
+INSERT INTO `sys_log` VALUES ('1222820392217899009', 2, '方案表-分页列表查询', 1, 'admin', '管理员', '127.0.0.1', 'org.uboot.modules.controller.MilitaryPlanController.queryPageList()', NULL, NULL, NULL, 14, 'admin', '2020-01-30 17:54:35', NULL, NULL);
+INSERT INTO `sys_log` VALUES ('1223887764563480577', 1, '用户名: admin,登录成功！', NULL, NULL, NULL, '127.0.0.1', NULL, NULL, NULL, NULL, NULL, NULL, '2020-02-02 16:35:56', NULL, NULL);
+INSERT INTO `sys_log` VALUES ('1223888301316964354', 1, '用户名: jeecg,登录成功！', NULL, NULL, NULL, '127.0.0.1', NULL, NULL, NULL, NULL, NULL, NULL, '2020-02-02 16:38:04', NULL, NULL);
+INSERT INTO `sys_log` VALUES ('1223925618727579649', 1, '用户名: jeecg,登录成功！', NULL, NULL, NULL, '127.0.0.1', NULL, NULL, NULL, NULL, NULL, NULL, '2020-02-02 19:06:22', NULL, NULL);
+INSERT INTO `sys_log` VALUES ('1223925619260256258', 1, '用户名: jeecg,退出成功！', NULL, NULL, NULL, '127.0.0.1', NULL, NULL, NULL, NULL, NULL, NULL, '2020-02-02 19:06:22', NULL, NULL);
+INSERT INTO `sys_log` VALUES ('1223926106130784258', 1, '用户名: jeecg,登录成功！', NULL, NULL, NULL, '127.0.0.1', NULL, NULL, NULL, NULL, NULL, NULL, '2020-02-02 19:08:18', NULL, NULL);
+INSERT INTO `sys_log` VALUES ('1223926106818650114', 1, '用户名: jeecg,退出成功！', NULL, NULL, NULL, '127.0.0.1', NULL, NULL, NULL, NULL, NULL, NULL, '2020-02-02 19:08:18', NULL, NULL);
+INSERT INTO `sys_log` VALUES ('1223927074385850369', 1, '用户名: jeecg,登录成功！', NULL, NULL, NULL, '127.0.0.1', NULL, NULL, NULL, NULL, NULL, NULL, '2020-02-02 19:12:09', NULL, NULL);
+INSERT INTO `sys_log` VALUES ('1223927750323093506', 1, '用户名: jeecg,退出成功！', NULL, NULL, NULL, '127.0.0.1', NULL, NULL, NULL, NULL, NULL, NULL, '2020-02-02 19:14:50', NULL, NULL);
+INSERT INTO `sys_log` VALUES ('1223928083065618434', 1, '用户名: jeecg,登录成功！', NULL, NULL, NULL, '127.0.0.1', NULL, NULL, NULL, NULL, NULL, NULL, '2020-02-02 19:16:09', NULL, NULL);
+INSERT INTO `sys_log` VALUES ('1223928083862536193', 1, '用户名: jeecg,退出成功！', NULL, NULL, NULL, '127.0.0.1', NULL, NULL, NULL, NULL, NULL, NULL, '2020-02-02 19:16:09', NULL, NULL);
+INSERT INTO `sys_log` VALUES ('1223928645635022850', 1, '用户名: jeecg,登录成功！', NULL, NULL, NULL, '127.0.0.1', NULL, NULL, NULL, NULL, NULL, NULL, '2020-02-02 19:18:23', NULL, NULL);
+INSERT INTO `sys_log` VALUES ('1223928646255779842', 1, '用户名: jeecg,退出成功！', NULL, NULL, NULL, '127.0.0.1', NULL, NULL, NULL, NULL, NULL, NULL, '2020-02-02 19:18:23', NULL, NULL);
+INSERT INTO `sys_log` VALUES ('1223929297224437762', 1, '用户名: jeecg,登录成功！', NULL, NULL, NULL, '127.0.0.1', NULL, NULL, NULL, NULL, NULL, NULL, '2020-02-02 19:20:59', NULL, NULL);
+INSERT INTO `sys_log` VALUES ('1223929872192110593', 1, '用户名: jeecg,登录成功！', NULL, NULL, NULL, '127.0.0.1', NULL, NULL, NULL, NULL, NULL, NULL, '2020-02-02 19:23:16', NULL, NULL);
+INSERT INTO `sys_log` VALUES ('1223997081262276610', 1, '用户名: jeecg,登录成功！', NULL, NULL, NULL, '127.0.0.1', NULL, NULL, NULL, NULL, NULL, NULL, '2020-02-02 23:50:20', NULL, NULL);
+INSERT INTO `sys_log` VALUES ('1224009107887890434', 1, '用户名: jeecg,退出成功！', NULL, NULL, NULL, '127.0.0.1', NULL, NULL, NULL, NULL, NULL, NULL, '2020-02-03 00:38:07', NULL, NULL);
+INSERT INTO `sys_log` VALUES ('1224009139810738177', 1, '用户名: admin,登录成功！', NULL, NULL, NULL, '127.0.0.1', NULL, NULL, NULL, NULL, NULL, NULL, '2020-02-03 00:38:15', NULL, NULL);
+INSERT INTO `sys_log` VALUES ('1224010540876087298', 1, '用户名: 管理员,退出成功！', NULL, NULL, NULL, '127.0.0.1', NULL, NULL, NULL, NULL, NULL, NULL, '2020-02-03 00:43:46', NULL, NULL);
+INSERT INTO `sys_log` VALUES ('1224011100312330241', 1, '用户名: jeecg,登录成功！', NULL, NULL, NULL, '127.0.0.1', NULL, NULL, NULL, NULL, NULL, NULL, '2020-02-03 00:46:02', NULL, NULL);
+INSERT INTO `sys_log` VALUES ('1224011132033851393', 1, '用户名: jeecg,登录成功！', NULL, NULL, NULL, '127.0.0.1', NULL, NULL, NULL, NULL, NULL, NULL, '2020-02-03 00:46:10', NULL, NULL);
+INSERT INTO `sys_log` VALUES ('1224011429653286913', 1, '用户名: jeecg,退出成功！', NULL, NULL, NULL, '127.0.0.1', NULL, NULL, NULL, NULL, NULL, NULL, '2020-02-03 00:47:21', NULL, NULL);
+INSERT INTO `sys_log` VALUES ('1224011553896960002', 1, '用户名: jeecg,登录成功！', NULL, NULL, NULL, '127.0.0.1', NULL, NULL, NULL, NULL, NULL, NULL, '2020-02-03 00:47:50', NULL, NULL);
+INSERT INTO `sys_log` VALUES ('1224011591154962433', 1, '用户名: jeecg,退出成功！', NULL, NULL, NULL, '127.0.0.1', NULL, NULL, NULL, NULL, NULL, NULL, '2020-02-03 00:47:59', NULL, NULL);
+INSERT INTO `sys_log` VALUES ('1224011626101903362', 1, '用户名: admin,登录成功！', NULL, NULL, NULL, '127.0.0.1', NULL, NULL, NULL, NULL, NULL, NULL, '2020-02-03 00:48:07', NULL, NULL);
+INSERT INTO `sys_log` VALUES ('1224215246709841922', 1, '用户名: jeecg,登录成功！', NULL, NULL, NULL, '127.0.0.1', NULL, NULL, NULL, NULL, NULL, NULL, '2020-02-03 14:17:14', NULL, NULL);
 COMMIT;
 
 -- ----------------------------
@@ -730,8 +785,8 @@ INSERT INTO `sys_permission` VALUES ('08e6b9dc3c04489c8e1ff2ce6f105aa4', '', '�
 INSERT INTO `sys_permission` VALUES ('1170592628746878978', 'd7d6e2e4e2934f2c9385a623fd98c6f3', '菜单管理', '/isystem/newPermissionList', 'system/NewPermissionList', NULL, NULL, 1, NULL, '1', 100.00, 0, NULL, 1, 1, 0, 0, NULL, 'admin', '2019-09-08 15:00:05', 'admin', '2019-09-08 15:02:57', 0, 0, '1', 0);
 INSERT INTO `sys_permission` VALUES ('1174506953255182338', 'd7d6e2e4e2934f2c9385a623fd98c6f3', '职务管理', '/isystem/position', 'system/SysPositionList', NULL, NULL, 1, NULL, '1', 2.00, 0, NULL, 1, 1, 0, 0, NULL, 'admin', '2019-09-19 10:14:13', 'admin', '2019-09-19 10:15:22', 0, 0, '1', 0);
 INSERT INTO `sys_permission` VALUES ('1174590283938041857', 'd7d6e2e4e2934f2c9385a623fd98c6f3', '通讯录', '/isystem/addressList', 'system/AddressList', NULL, NULL, 1, NULL, '1', 3.00, 0, NULL, 1, 1, 0, 0, NULL, 'admin', '2019-09-19 15:45:21', NULL, NULL, 0, 0, '1', 0);
-INSERT INTO `sys_permission` VALUES ('1221823181782794242', '', '方案管理', '/military/plan', 'layouts/RouteView', NULL, 'military/plan/MilitaryPlanList', 0, NULL, '1', 3.00, 0, 'pic-center', 1, 0, 0, 0, NULL, 'admin', '2020-01-27 23:52:02', 'admin', '2020-01-27 23:59:26', 0, 0, '1', 0);
-INSERT INTO `sys_permission` VALUES ('1221823365166153729', '1221823181782794242', '方案列表', '/military/plan/MilitaryPlanList', 'military/plan/MilitaryPlanList', NULL, NULL, 1, NULL, '1', 1.00, 0, 'pic-right', 1, 1, 0, 0, NULL, 'admin', '2020-01-27 23:52:45', 'admin', '2020-01-28 00:00:16', 0, 0, '1', 0);
+INSERT INTO `sys_permission` VALUES ('1222819040007819266', NULL, '训练管理', '/military', 'layouts/RouteView', NULL, 'military/plan/MilitaryPlanList', 0, NULL, '1', 1.00, 0, 'pic-center', 1, 0, 0, 0, NULL, 'jeecg', '2020-01-30 17:49:13', NULL, NULL, 0, 0, '1', 0);
+INSERT INTO `sys_permission` VALUES ('1222819226453020674', '1222819040007819266', '计划管理', '/military/plan/MilitaryPlanList', 'military/plan/MilitaryPlanList', NULL, NULL, 1, NULL, '1', 1.00, 0, 'border-verticle', 1, 1, 0, 0, NULL, 'jeecg', '2020-01-30 17:49:57', NULL, NULL, 0, 0, '1', 0);
 INSERT INTO `sys_permission` VALUES ('13212d3416eb690c2e1d5033166ff47a', '2e42e3835c2b44ec9f7bc26c146ee531', '失败', '/result/fail', 'result/Error', NULL, NULL, 1, NULL, NULL, 2.00, NULL, NULL, 1, 1, NULL, NULL, NULL, NULL, '2018-12-25 20:34:38', NULL, NULL, 0, 0, NULL, NULL);
 INSERT INTO `sys_permission` VALUES ('190c2b43bec6a5f7a4194a85db67d96a', 'd7d6e2e4e2934f2c9385a623fd98c6f3', '角色维护', '/isystem/roleUserList', 'system/RoleUserList', NULL, NULL, 1, NULL, NULL, 1.00, 0, NULL, 1, 1, NULL, 0, NULL, 'admin', '2019-04-17 15:13:56', NULL, NULL, 0, 0, NULL, NULL);
 INSERT INTO `sys_permission` VALUES ('1a0811914300741f4e11838ff37a1d3a', '3f915b2769fc80648e92d04e84ca059d', '手机号禁用', NULL, NULL, NULL, NULL, 2, 'user:form:phone', '2', 1.00, 0, NULL, 0, 1, NULL, 0, NULL, 'admin', '2019-05-11 17:19:30', 'admin', '2019-05-11 18:00:22', 0, 0, '1', NULL);
@@ -990,6 +1045,9 @@ INSERT INTO `sys_role_permission` VALUES ('1185039870537576450', 'f6817f48af4fb3
 INSERT INTO `sys_role_permission` VALUES ('1197431682208206850', 'f6817f48af4fb3af11b9e8bf182f618b', '1192318987661234177', NULL);
 INSERT INTO `sys_role_permission` VALUES ('1221823555369451521', 'f6817f48af4fb3af11b9e8bf182f618b', '1221823181782794242', NULL);
 INSERT INTO `sys_role_permission` VALUES ('1221823555382034434', 'f6817f48af4fb3af11b9e8bf182f618b', '1221823365166153729', NULL);
+INSERT INTO `sys_role_permission` VALUES ('1222819355562086402', 'f6817f48af4fb3af11b9e8bf182f618b', '1222819040007819266', NULL);
+INSERT INTO `sys_role_permission` VALUES ('1222819355574669314', 'f6817f48af4fb3af11b9e8bf182f618b', '1222819226453020674', NULL);
+INSERT INTO `sys_role_permission` VALUES ('1222819652988571650', 'f6817f48af4fb3af11b9e8bf182f618b', '190c2b43bec6a5f7a4194a85db67d96a', NULL);
 INSERT INTO `sys_role_permission` VALUES ('126ea9faebeec2b914d6d9bef957afb6', 'f6817f48af4fb3af11b9e8bf182f618b', 'f1cb187abf927c88b89470d08615f5ac', NULL);
 INSERT INTO `sys_role_permission` VALUES ('145eac8dd88eddbd4ce0a800ab40a92c', 'e51758fa916c881624b046d26bd09230', '08e6b9dc3c04489c8e1ff2ce6f105aa4', NULL);
 INSERT INTO `sys_role_permission` VALUES ('154edd0599bd1dc2c7de220b489cd1e2', 'f6817f48af4fb3af11b9e8bf182f618b', '7ac9eb9ccbde2f7a033cd4944272bf1e', NULL);

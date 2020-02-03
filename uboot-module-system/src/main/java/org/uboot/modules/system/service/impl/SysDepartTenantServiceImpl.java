@@ -1,11 +1,12 @@
 package org.uboot.modules.system.service.impl;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
-
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import io.netty.util.internal.StringUtil;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Conditional;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.uboot.common.constant.CacheConstant;
 import org.uboot.common.constant.CommonConstant;
 import org.uboot.common.util.YouBianCodeUtil;
@@ -16,14 +17,11 @@ import org.uboot.modules.system.model.DepartIdModel;
 import org.uboot.modules.system.model.SysDepartTreeModel;
 import org.uboot.modules.system.service.ISysDepartService;
 import org.uboot.modules.system.util.FindsDepartsChildrenUtil;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-
-import io.netty.util.internal.StringUtil;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * <p>
@@ -34,8 +32,8 @@ import io.netty.util.internal.StringUtil;
  * @Since 2019-01-22
  */
 @Service
-@Conditional(UbootCondition.CommonCondition.class)
-public class SysDepartServiceImpl extends ServiceImpl<SysDepartMapper, SysDepart> implements ISysDepartService {
+@Conditional(UbootCondition.TenantCondition.class)
+public class SysDepartTenantServiceImpl extends ServiceImpl<SysDepartMapper, SysDepart> implements ISysDepartService {
 
 	/**
 	 * queryTreeList 对应 queryTreeList 查询所有的部门数据,以树结构形式响应给前端
