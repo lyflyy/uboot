@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.uboot.common.constant.CacheConstant;
 import org.uboot.common.constant.CommonConstant;
 import org.uboot.common.util.YouBianCodeUtil;
-import org.uboot.config.UbootCondition;
+import org.uboot.config.condition.TenantCondition;
 import org.uboot.modules.system.entity.SysDepart;
 import org.uboot.modules.system.mapper.SysDepartMapper;
 import org.uboot.modules.system.model.DepartIdModel;
@@ -32,7 +32,7 @@ import java.util.UUID;
  * @Since 2019-01-22
  */
 @Service
-@Conditional(UbootCondition.TenantCondition.class)
+@Conditional(TenantCondition.class)
 public class SysDepartTenantServiceImpl extends ServiceImpl<SysDepartMapper, SysDepart> implements ISysDepartService {
 
 	/**
