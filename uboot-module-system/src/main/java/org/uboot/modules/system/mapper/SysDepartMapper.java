@@ -24,6 +24,14 @@ public interface SysDepartMapper extends BaseMapper<SysDepart> {
 	 */
 	public List<SysDepart> queryUserDeparts(@Param("userId") String userId);
 
+    /**
+     * 根据租户id查询部门集合
+     * @param userId
+     * @param tenantId
+     * @return
+     */
+    List<SysDepart> queryUserDepartsByTenantId(@Param("userId")String userId,@Param("tenantId") String tenantId);
+
 	/**
 	 * 根据用户名查询部门
 	 *
@@ -37,5 +45,6 @@ public interface SysDepartMapper extends BaseMapper<SysDepart> {
 
 	@Select("select id,parent_id from sys_depart where id=#{departId}")
 	public SysDepart getParentDepartId(@Param("departId") String departId);
+
 
 }

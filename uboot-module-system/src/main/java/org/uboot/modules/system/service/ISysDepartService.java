@@ -70,6 +70,14 @@ public interface ISysDepartService extends IService<SysDepart>{
      */
 	public List<SysDepart> queryUserDeparts(String userId);
 
+
+    /**
+     * 根据租户id查询部门集合
+     * @param userId
+     * @return
+     */
+	public List<SysDepart> queryUserDepartsByTenantId(String userId, String tenantId);
+
     /**
      * 根据用户名查询部门
      *

@@ -255,7 +255,12 @@ public class SysDepartServiceImpl extends ServiceImpl<SysDepartMapper, SysDepart
 		return baseMapper.queryUserDeparts(userId);
 	}
 
-	@Override
+    @Override
+    public List<SysDepart> queryUserDepartsByTenantId(String userId, String tenantId) {
+        return baseMapper.queryUserDepartsByTenantId(userId, tenantId);
+    }
+
+    @Override
 	public List<SysDepart> queryDepartsByUsername(String username) {
 		return baseMapper.queryDepartsByUsername(username);
 	}

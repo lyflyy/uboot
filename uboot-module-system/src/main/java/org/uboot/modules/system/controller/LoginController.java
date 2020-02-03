@@ -349,7 +349,7 @@ public class LoginController {
             HashMap<String, Object> tenant = new HashMap<>();
             tenant.put("tenantId", tenantObj.getId());
             tenant.put("tenantName", tenantObj.getName());
-            List<SysDepart> departs = sysDepartService.queryUserDeparts(sysUser.getId());
+            List<SysDepart> departs = sysDepartService.queryUserDepartsByTenantId(sysUser.getId(), tenantObj.getId());
             tenant.put("departs", departs);
             if (departs == null || departs.size() == 0) {
                 tenant.put("multi_depart", 0);

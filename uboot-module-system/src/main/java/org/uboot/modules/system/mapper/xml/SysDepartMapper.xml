@@ -21,4 +21,9 @@
         )
     </select>
 
+    <select id="queryUserDepartsByTenantId" resultType="org.uboot.modules.system.entity.SysDepart">
+        select * from sys_depart where id IN ( select dep_id from sys_user_depart where user_id = #{userId} )
+        and tenant_id = #{tenantId}
+    </select>
+
 </mapper>
