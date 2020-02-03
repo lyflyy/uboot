@@ -1,4 +1,4 @@
-package org.uboot.config.mybatis;
+package org.uboot.config.shiro;
 
 import lombok.Data;
 import org.apache.shiro.util.AntPathMatcher;

@@ -89,52 +89,9 @@ public class SysDepart implements Serializable {
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	private Date updateTime;
 
-	/**
-	 * 重写equals方法
-	 */
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-			return true;
-		}
-        if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
-        if (!super.equals(o)) {
-			return false;
-		}
-        SysDepart depart = (SysDepart) o;
-        return Objects.equals(id, depart.id) &&
-                Objects.equals(parentId, depart.parentId) &&
-                Objects.equals(departName, depart.departName) &&
-                Objects.equals(departNameEn, depart.departNameEn) &&
-                Objects.equals(departNameAbbr, depart.departNameAbbr) &&
-                Objects.equals(departOrder, depart.departOrder) &&
-                Objects.equals(description, depart.description) &&
-                Objects.equals(orgCategory, depart.orgCategory) &&
-                Objects.equals(orgType, depart.orgType) &&
-                Objects.equals(orgCode, depart.orgCode) &&
-                Objects.equals(mobile, depart.mobile) &&
-                Objects.equals(fax, depart.fax) &&
-                Objects.equals(address, depart.address) &&
-                Objects.equals(memo, depart.memo) &&
-                Objects.equals(status, depart.status) &&
-                Objects.equals(delFlag, depart.delFlag) &&
-                Objects.equals(createBy, depart.createBy) &&
-                Objects.equals(createTime, depart.createTime) &&
-                Objects.equals(updateBy, depart.updateBy) &&
-                Objects.equals(updateTime, depart.updateTime);
-    }
-
     /**
-     * 重写hashCode方法
+     * 租户
      */
-    @Override
-    public int hashCode() {
+    private String tenantId;
 
-        return Objects.hash(super.hashCode(), id, parentId, departName,
-        		departNameEn, departNameAbbr, departOrder, description,orgCategory,
-        		orgType, orgCode, mobile, fax, address, memo, status,
-        		delFlag, createBy, createTime, updateBy, updateTime);
-    }
 }

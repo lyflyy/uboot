@@ -1,4 +1,4 @@
-package org.uboot.config;
+package org.uboot.config.shiro;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.mgt.DefaultSessionStorageEvaluator;
@@ -11,7 +11,7 @@ import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.crazycake.shiro.RedisCacheManager;
 import org.crazycake.shiro.RedisManager;
 import org.uboot.common.util.oConvertUtils;
-import org.uboot.config.mybatis.ShiroExcludeProperties;
+import org.uboot.config.shiro.ShiroExcludeProperties;
 import org.uboot.modules.shiro.authc.ShiroRealm;
 import org.uboot.modules.shiro.authc.aop.JwtFilter;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;

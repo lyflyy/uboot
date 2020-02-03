@@ -5,11 +5,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.context.annotation.Conditional;
 import org.uboot.common.constant.CacheConstant;
 import org.uboot.common.constant.CommonConstant;
 import org.uboot.common.util.YouBianCodeUtil;
-import org.uboot.config.condition.CommonCondition;
 import org.uboot.modules.system.entity.SysDepart;
 import org.uboot.modules.system.mapper.SysDepartMapper;
 import org.uboot.modules.system.model.DepartIdModel;
@@ -34,7 +32,6 @@ import io.netty.util.internal.StringUtil;
  * @Since 2019-01-22
  */
 @Service
-@Conditional(CommonCondition.class)
 public class SysDepartServiceImpl extends ServiceImpl<SysDepartMapper, SysDepart> implements ISysDepartService {
 
 	/**

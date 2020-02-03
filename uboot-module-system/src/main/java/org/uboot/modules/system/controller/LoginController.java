@@ -17,10 +17,13 @@ import org.uboot.common.util.*;
 import org.uboot.common.util.encryption.EncryptedString;
 import org.uboot.modules.shiro.vo.DefContants;
 import org.uboot.modules.system.entity.SysDepart;
+import org.uboot.modules.system.entity.SysTenant;
+import org.uboot.modules.system.entity.SysTenantUser;
 import org.uboot.modules.system.entity.SysUser;
 import org.uboot.modules.system.model.SysLoginModel;
 import org.uboot.modules.system.service.ISysDepartService;
 import org.uboot.modules.system.service.ISysLogService;
+import org.uboot.modules.system.service.ISysTenantService;
 import org.uboot.modules.system.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -38,6 +41,7 @@ import java.util.*;
 @Api(tags="用户登录")
 @Slf4j
 public class LoginController {
+
 	@Autowired
 	private ISysUserService sysUserService;
 	@Autowired
@@ -46,8 +50,10 @@ public class LoginController {
 	private ISysLogService logService;
 	@Autowired
     private RedisUtil redisUtil;
-	@Autowired
+    @Autowired
     private ISysDepartService sysDepartService;
+    @Autowired
+    private ISysTenantService sysTenantService;
 
 	private static final String BASE_CHECK_CODES = "qwertyuiplkjhgfdsazxcvbnmQWERTYUPLKJHGFDSAZXCVBNM1234567890";
 
@@ -91,7 +97,7 @@ public class LoginController {
 
 		//用户登录信息
 		userInfo(sysUser, result);
-		sysBaseAPI.addLog("用户名: " + username + ",登录成功！", CommonConstant.LOG_TYPE_1, null);
+//		sysBaseAPI.addLog("用户名: " + username + ",登录成功！", CommonConstant.LOG_TYPE_1, null);
 
 		return result;
 	}
@@ -306,7 +312,7 @@ public class LoginController {
 		//用户信息
 		userInfo(sysUser, result);
 		//添加日志
-		sysBaseAPI.addLog("用户名: " + sysUser.getUsername() + ",登录成功！", CommonConstant.LOG_TYPE_1, null);
+//		sysBaseAPI.addLog("用户名: " + sysUser.getUsername() + ",登录成功！", CommonConstant.LOG_TYPE_1, null);
 
 		return result;
 	}
@@ -328,18 +334,36 @@ public class LoginController {
 		redisUtil.set(CommonConstant.PREFIX_USER_TOKEN + token, token);
 		redisUtil.expire(CommonConstant.PREFIX_USER_TOKEN + token, JwtUtil.EXPIRE_TIME*2 / 1000);
 
+        /**
+         * [
+         *     {
+         *       tenantId:
+         *       departs: []
+         *     }
+         * ]
+         */
+        // 获取租户信息
+        List<HashMap<String, Object>> tenants = new ArrayList<>();
+        List<SysTenant> tenantUsers = sysTenantService.getByUserId(sysUser.getId());
+        for (SysTenant tenantObj : tenantUsers) {
+            HashMap<String, Object> tenant = new HashMap<>();
+            tenant.put("tenantId", tenantObj.getId());
+            tenant.put("tenantName", tenantObj.getName());
+            List<SysDepart> departs = sysDepartService.queryUserDeparts(sysUser.getId());
+            tenant.put("departs", departs);
+            if (departs == null || departs.size() == 0) {
+                tenant.put("multi_depart", 0);
+            } else if (departs.size() == 1) {
+                sysUserService.updateUserDepart(username, departs.get(0).getOrgCode());
+                tenant.put("multi_depart", 1);
+            } else {
+                tenant.put("multi_depart", 2);
+            }
+            tenants.add(tenant);
+        }
 		// 获取用户部门信息
 		JSONObject obj = new JSONObject();
-		List<SysDepart> departs = sysDepartService.queryUserDeparts(sysUser.getId());
-		obj.put("departs", departs);
-		if (departs == null || departs.size() == 0) {
-			obj.put("multi_depart", 0);
-		} else if (departs.size() == 1) {
-			sysUserService.updateUserDepart(username, departs.get(0).getOrgCode());
-			obj.put("multi_depart", 1);
-		} else {
-			obj.put("multi_depart", 2);
-		}
+		obj.put("tenants", tenants);
 		obj.put("token", token);
 		obj.put("userInfo", sysUser);
 		result.setResult(obj);
@@ -437,7 +461,7 @@ public class LoginController {
 		result.setResult(obj);
 		result.setSuccess(true);
 		result.setCode(200);
-		sysBaseAPI.addLog("用户名: " + username + ",登录成功[移动端]！", CommonConstant.LOG_TYPE_1, null);
+//		sysBaseAPI.addLog("用户名: " + username + ",登录成功[移动端]！", CommonConstant.LOG_TYPE_1, null);
 		return result;
 	}
 

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.uboot.modules.system.mapper.SysTenantMapper">
+
+    <select id="selectByUserId" resultType="org.uboot.modules.system.entity.SysTenant">
+        select st.* from sys_tenant st, sys_tenant_user stu, sys_user su
+        where st.id = stu.sys_tenant_id
+        and su.id = stu.sys_user_id
+        and su.id = #{userId}
+    </select>
+</mapper>
