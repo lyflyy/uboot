@@ -80,9 +80,8 @@ public class MybatisPlusConfig {
             public Expression getTenantId() {
                 // 从 MilitaryContext 中取实例id
                 LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
-                LOGGER.info("login user is -:{}", sysUser.getId());
-                LOGGER.info("tenant id is -:{}", sysUser.getTenantId());
-                return new StringValue(sysUser.getTenantId() == null ? "-" : sysUser.getTenantId());
+                LOGGER.info("login user is -:{}", sysUser);
+                return new StringValue((sysUser == null || sysUser.getTenantId() == null) ? "-" : sysUser.getTenantId());
             }
 
             @Override
