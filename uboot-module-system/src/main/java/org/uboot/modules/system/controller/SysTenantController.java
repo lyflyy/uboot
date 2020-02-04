@@ -9,6 +9,8 @@ import org.uboot.common.system.query.QueryGenerator;
 import org.uboot.common.aspect.annotation.AutoLog;
 import org.uboot.common.util.oConvertUtils;
 import org.uboot.modules.system.entity.SysTenant;
+import org.uboot.modules.system.entity.SysTenantUser;
+import org.uboot.modules.system.entity.SysUser;
 import org.uboot.modules.system.service.ISysTenantService;
 import java.util.Date;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -24,8 +26,10 @@ import org.springframework.web.servlet.ModelAndView;
 import com.alibaba.fastjson.JSON;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.uboot.modules.system.service.ISysTenantUserService;
+import org.uboot.modules.system.service.ISysUserService;
 
- /**
+/**
  * @Description: 租户
  * @Author: uboot-boot
  * @Date:   2020-02-03
@@ -38,6 +42,10 @@ import io.swagger.annotations.ApiOperation;
 public class SysTenantController extends BaseController<SysTenant, ISysTenantService> {
 	@Autowired
 	private ISysTenantService sysTenantService;
+    @Autowired
+    private ISysTenantUserService sysTenantUserService;
+    @Autowired
+    private ISysUserService sysUserService;
 
 	/**
 	 * 分页列表查询
@@ -63,7 +71,6 @@ public class SysTenantController extends BaseController<SysTenant, ISysTenantSer
 
 	/**
 	 * 添加
-	 * todo - 租户在添加的时候需要跟吧超级管理员与租户相关联一下
 	 * @param sysTenant
 	 * @return
 	 */
@@ -72,6 +79,12 @@ public class SysTenantController extends BaseController<SysTenant, ISysTenantSer
 	@PostMapping(value = "/add")
 	public Result<?> add(@RequestBody SysTenant sysTenant) {
 		sysTenantService.save(sysTenant);
+		// 租户在添加的时候需要跟吧超级管理员与租户相关联一下, 超级管理员为userName 为 admin的sys_user
+        SysTenantUser sysTenantUser = new SysTenantUser();
+        sysTenantUser.setSysTenantId(sysTenant.getId());
+        SysUser sysUser = sysUserService.getUserByName("admin");
+        sysTenantUser.setSysUserId(sysUser.getId());
+        sysTenantUserService.save(sysTenantUser);
 		return Result.ok("添加成功！");
 	}
 
