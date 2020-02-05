@@ -13,6 +13,7 @@ import org.uboot.modules.system.model.DuplicateCheckVo;
 import org.uboot.modules.system.model.TreeSelectModel;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.uboot.modules.system.vo.SysDictModel;
 
 /**
  * <p>
@@ -23,6 +24,8 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @since 2018-12-28
  */
 public interface SysDictMapper extends BaseMapper<SysDict> {
+
+    List<SysDictModel> queryAllDict();
 
 	/**
 	  *  重复检查SQL

@@ -11,6 +11,13 @@ public interface CacheConstant {
 	 * 字典信息缓存
 	 */
     public static final String SYS_DICT_CACHE = "sys:cache:dict";
+
+
+    /**
+     * 缓存全部字典内容
+     */
+    public static final String SYS_DICT_CACHE_ALL = "sys:cache:dict:all";
+
 	/**
 	 * 表字典信息缓存
 	 */
