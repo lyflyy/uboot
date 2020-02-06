@@ -8,6 +8,7 @@ import org.uboot.modules.system.entity.SysDict;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.uboot.modules.system.entity.SysDictItem;
 import org.uboot.modules.system.model.TreeSelectModel;
+import org.uboot.modules.system.vo.SysDictModel;
 
 /**
  * <p>
@@ -97,5 +98,9 @@ public interface ISysDictService extends IService<SysDict> {
 	 */
 	public List<SysDict> queryDeleteList();
 
-
+    /**
+     * 获取全部字典信息
+     * @return
+     */
+    List<SysDictModel> getAllDict();
 }

@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import org.apache.shiro.SecurityUtils;
+import org.springframework.cache.annotation.Cacheable;
 import org.uboot.common.api.vo.Result;
 import org.uboot.common.constant.CacheConstant;
 import org.uboot.common.constant.CommonConstant;
@@ -26,6 +27,7 @@ import org.uboot.modules.system.model.SysDictTree;
 import org.uboot.modules.system.model.TreeSelectModel;
 import org.uboot.modules.system.service.ISysDictItemService;
 import org.uboot.modules.system.service.ISysDictService;
+import org.uboot.modules.system.vo.SysDictModel;
 import org.uboot.modules.system.vo.SysDictPage;
 import org.jeecgframework.poi.excel.ExcelImportUtil;
 import org.jeecgframework.poi.excel.def.NormalExcelConstants;
@@ -72,6 +74,15 @@ public class SysDictController {
 
 	@Autowired
 	private ISysDictItemService sysDictItemService;
+
+    @RequestMapping(value = "/all", method = RequestMethod.GET)
+    public Result<List<SysDictModel>> queryAll() {
+        Result<List<SysDictModel>> result = new Result<>();
+        List<SysDictModel> sysDicts = sysDictService.getAllDict();
+        result.setSuccess(true);
+        result.setResult(sysDicts);
+        return result;
+    }
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public Result<IPage<SysDict>> queryPageList(SysDict sysDict,@RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
@@ -198,6 +209,7 @@ public class SysDictController {
 	 * @return
 	 */
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
+    @CacheEvict(value= {CacheConstant.SYS_DICT_CACHE_ALL}, allEntries=true)
 	public Result<SysDict> add(@RequestBody SysDict sysDict) {
 		Result<SysDict> result = new Result<SysDict>();
 		try {
@@ -218,6 +230,7 @@ public class SysDictController {
 	 * @return
 	 */
 	@RequestMapping(value = "/edit", method = RequestMethod.PUT)
+    @CacheEvict(value= {CacheConstant.SYS_DICT_CACHE_ALL}, allEntries=true)
 	public Result<SysDict> edit(@RequestBody SysDict sysDict) {
 		Result<SysDict> result = new Result<SysDict>();
 		SysDict sysdict = sysDictService.getById(sysDict.getId());
@@ -240,7 +253,7 @@ public class SysDictController {
 	 * @return
 	 */
 	@RequestMapping(value = "/delete", method = RequestMethod.DELETE)
-	@CacheEvict(value=CacheConstant.SYS_DICT_CACHE, allEntries=true)
+	@CacheEvict(value= {CacheConstant.SYS_DICT_CACHE_ALL, CacheConstant.SYS_DICT_CACHE }, allEntries=true)
 	public Result<SysDict> delete(@RequestParam(name="id",required=true) String id) {
 		Result<SysDict> result = new Result<SysDict>();
 		boolean ok = sysDictService.removeById(id);
@@ -258,7 +271,7 @@ public class SysDictController {
 	 * @return
 	 */
 	@RequestMapping(value = "/deleteBatch", method = RequestMethod.DELETE)
-	@CacheEvict(value= CacheConstant.SYS_DICT_CACHE, allEntries=true)
+    @CacheEvict(value= {CacheConstant.SYS_DICT_CACHE_ALL, CacheConstant.SYS_DICT_CACHE }, allEntries=true)
 	public Result<SysDict> deleteBatch(@RequestParam(name="ids",required=true) String ids) {
 		Result<SysDict> result = new Result<SysDict>();
 		if(oConvertUtils.isEmpty(ids)) {
@@ -314,6 +327,7 @@ public class SysDictController {
 	 * @return
 	 */
 	@RequestMapping(value = "/importExcel", method = RequestMethod.POST)
+    @CacheEvict(value= {CacheConstant.SYS_DICT_CACHE_ALL, CacheConstant.SYS_DICT_CACHE }, allEntries=true)
 	public Result<?> importExcel(HttpServletRequest request, HttpServletResponse response) {
 		MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
 		Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();

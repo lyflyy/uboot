@@ -2,6 +2,7 @@ package org.uboot.common.system.base.controller;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -88,6 +89,45 @@ public class BaseController<T, S extends IService<T>> {
         }
     }
 
+    /**
+     * 获取 转换后的 excel数据
+     * @param request
+     * @param clazz
+     * @return
+     */
+    protected List<T> getExcelData(HttpServletRequest request, Class<T> clazz) {
+        MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
+        Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();
+        List list = Collections.EMPTY_LIST;
+        for (Map.Entry<String, MultipartFile> entity : fileMap.entrySet()) {
+            MultipartFile file = entity.getValue();// 获取上传文件对象
+            ImportParams params = new ImportParams();
+            params.setTitleRows(2);
+            params.setHeadRows(1);
+            params.setNeedSave(true);
+            try {
+               list = ExcelImportUtil.importExcel(file.getInputStream(), clazz, params);
+                //update-begin-author:taoyan date:20190528 for:批量插入数据
+                long start = System.currentTimeMillis();
+                //400条 saveBatch消耗时间1592毫秒  循环插入消耗时间1947毫秒
+                //1200条  saveBatch消耗时间3687毫秒 循环插入消耗时间5212毫秒
+                log.info("消耗时间" + (System.currentTimeMillis() - start) + "毫秒");
+                //update-end-author:taoyan date:20190528 for:批量插入数据
+                return list;
+            } catch (Exception e) {
+                log.error(e.getMessage(), e);
+                return list;
+            } finally {
+                try {
+                    file.getInputStream().close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return list;
+    }
     /**
      * 通过excel导入数据
      *

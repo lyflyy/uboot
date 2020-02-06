@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
 import lombok.extern.slf4j.Slf4j;
+import org.uboot.modules.system.vo.SysDictModel;
 
 /**
  * <p>
@@ -40,7 +41,7 @@ public class SysDictServiceImpl extends ServiceImpl<SysDictMapper, SysDict> impl
     @Autowired
     private SysDictItemMapper sysDictItemMapper;
 
-	/**
+    /**
 	 * 通过查询指定code 获取字典
 	 * @param code
 	 * @return
@@ -186,4 +187,10 @@ public class SysDictServiceImpl extends ServiceImpl<SysDictMapper, SysDict> impl
 	public List<SysDict> queryDeleteList() {
 		return baseMapper.queryDeleteList();
 	}
+
+    @Override
+    @Cacheable(value = CacheConstant.SYS_DICT_CACHE_ALL)
+    public List<SysDictModel> getAllDict() {
+        return baseMapper.queryAllDict();
+    }
 }

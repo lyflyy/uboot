@@ -24,6 +24,8 @@ import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
 
+import static org.uboot.common.util.TenantUtil.getTenantId;
+
 /**
  * @Description: 用户登录鉴权和获取用户授权
  * @Author: Scott
@@ -126,7 +128,8 @@ public class ShiroRealm extends AuthorizingRealm {
 		if (!jwtTokenRefresh(token, username, loginUser.getPassword())) {
 			throw new AuthenticationException("Token失效，请重新登录!");
 		}
-
+		// 从request header 中获取 租户id
+        loginUser.setTenantId(getTenantId());
 		return loginUser;
 	}
 
