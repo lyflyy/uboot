@@ -51,10 +51,7 @@ public class SysDepartServiceImpl extends ServiceImpl<SysDepartMapper, SysDepart
 
     @Override
     public List<SysDepart> queryList() {
-        LambdaQueryWrapper<SysDepart> query = new LambdaQueryWrapper<SysDepart>();
-        query.eq(SysDepart::getDelFlag, CommonConstant.DEL_FLAG_0.toString());
-        query.orderByAsc(SysDepart::getDepartOrder);
-        return this.list(query);
+        return baseMapper.selectAll();
     }
 
     @Cacheable(value = CacheConstant.SYS_DEPART_IDS_CACHE)

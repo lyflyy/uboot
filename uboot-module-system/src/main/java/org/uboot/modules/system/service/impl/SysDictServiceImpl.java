@@ -67,7 +67,12 @@ public class SysDictServiceImpl extends ServiceImpl<SysDictMapper, SysDict> impl
 		return sysDictMapper.queryDictTextByKey(code, key);
 	}
 
-	/**
+    @Override
+    public String queryDictValueByKey(String code, String key) {
+        return sysDictMapper.queryDictValueByKey(code, key);
+    }
+
+    /**
 	 * 通过查询指定table的 text code 获取字典
 	 * dictTableCache采用redis缓存有效期10分钟
 	 * @param table

@@ -41,6 +41,8 @@ public interface SysDictMapper extends BaseMapper<SysDict> {
 
 	public String queryDictTextByKey(@Param("code") String code, @Param("key") String key);
 
+	public String queryDictValueByKey(@Param("code") String code, @Param("key") String key);
+
 	public String queryTableDictTextByKey(@Param("table") String table, @Param("text") String text, @Param("code") String code, @Param("key") String key);
 
 	public List<DictModel> queryTableDictByKeys(@Param("table") String table, @Param("text") String text, @Param("code") String code, @Param("keyArray") String[] keyArray);

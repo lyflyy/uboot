@@ -39,6 +39,12 @@
 		   and s.item_value = #{key}
 	</select>
 
+    <select id="queryDictValueByKey" resultType="java.lang.String">
+        select item_value from sys_dict_item s
+        where s.dict_id = (select id from sys_dict where dict_code = #{code})
+        and s.item_text = #{key}
+    </select>
+
 
 	<!--通过查询指定table的 text code 获取字典-->
 	<select id="queryTableDictItemsByCode" parameterType="String"  resultType="org.uboot.common.system.vo.DictModel">
@@ -115,6 +121,7 @@
 				   </foreach>
 			   </if>
 	</select>
+
 
 
 </mapper>

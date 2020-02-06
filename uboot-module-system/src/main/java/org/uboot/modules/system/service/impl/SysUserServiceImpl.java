@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.SecurityUtils;
 import org.uboot.common.api.vo.Result;
 import org.uboot.common.constant.CacheConstant;
 import org.uboot.common.constant.CommonConstant;
@@ -17,6 +18,7 @@ import org.uboot.common.util.oConvertUtils;
 import org.uboot.modules.system.entity.*;
 import org.uboot.modules.system.mapper.*;
 import org.uboot.modules.system.model.SysUserSysDepartModel;
+import org.uboot.modules.system.service.ISysTenantUserService;
 import org.uboot.modules.system.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -49,6 +51,8 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 	private ISysBaseAPI sysBaseAPI;
 	@Autowired
 	private SysDepartMapper sysDepartMapper;
+	@Autowired
+    private ISysTenantUserService tenantUserService;
 
     @Override
     @CacheEvict(value = {CacheConstant.SYS_USERS_CACHE}, allEntries = true)
@@ -336,4 +340,17 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 		}
 		return result;
 	}
+
+    @Override
+    public void addUserWithTenant(SysUser user) {
+        LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
+        if(null != sysUser.getTenantId()){
+            SysTenantUser tenantUser = new SysTenantUser();
+            tenantUser.setSysTenantId(sysUser.getTenantId());
+            tenantUser.setSysUserId(user.getId());
+            tenantUserService.save(tenantUser);
+        }else{
+            log.error("添加用户：" + user.getRealname() + "时候，租户Id不存在！");
+        }
+    }
 }

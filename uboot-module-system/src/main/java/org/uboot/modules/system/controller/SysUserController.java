@@ -128,6 +128,8 @@ public class SysUserController {
 			user.setDelFlag("0");
 			sysUserService.addUserWithRole(user, selectedRoles);
             sysUserService.addUserWithDepart(user, selectedDeparts);
+            // 添加成功后需处理用户与租户的关系
+            sysUserService.addUserWithTenant(user);
 			result.success("添加成功！");
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);

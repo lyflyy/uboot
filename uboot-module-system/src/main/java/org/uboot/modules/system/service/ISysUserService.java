@@ -178,4 +178,5 @@ public interface ISysUserService extends IService<SysUser> {
 	 */
 	Result checkUserIsEffective(SysUser sysUser);
 
+    void addUserWithTenant(SysUser user);
 }

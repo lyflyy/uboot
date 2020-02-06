@@ -28,6 +28,8 @@ public interface ISysDictService extends IService<SysDict> {
 
     public String queryDictTextByKey(String code, String key);
 
+    public String queryDictValueByKey(String code, String key);
+
 	String queryTableDictTextByKey(String table, String text, String code, String key);
 
 	List<String> queryTableDictByKeys(String table, String text, String code, String[] keyArray);
