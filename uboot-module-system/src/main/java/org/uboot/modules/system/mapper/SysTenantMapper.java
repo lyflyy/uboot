@@ -16,4 +16,10 @@ import org.uboot.modules.system.entity.SysTenantUser;
 public interface SysTenantMapper extends BaseMapper<SysTenant> {
 
     List<SysTenant> selectByUserId(@Param("userId") String userId);
+
+    /**
+     * 根据创建时间获取最后一个租户
+     * @return
+     */
+    SysTenant selectLastByCreateTime();
 }

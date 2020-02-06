@@ -16,4 +16,11 @@ public interface ISysTenantService extends IService<SysTenant> {
 
     List<SysTenant> getByUserId(String userId);
 
+    /**
+     * 根据创建时间获取最后一个租户
+     * @return
+     */
+    SysTenant getLastOne();
+
+    String getLastOneCode();
 }

@@ -8,4 +8,9 @@
         and su.id = stu.sys_user_id
         and su.id = #{userId}
     </select>
+
+    <select id="selectLastByCreateTime" resultType="org.uboot.modules.system.entity.SysTenant">
+        select * from sys_tenant order by create_time desc limit 1
+    </select>
+
 </mapper>

@@ -1,6 +1,7 @@
 package org.uboot.modules.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.uboot.modules.system.entity.SysTenant;
 import org.uboot.modules.system.entity.SysTenantUser;
 import org.uboot.modules.system.mapper.SysTenantMapper;
@@ -25,6 +26,20 @@ public class SysTenantServiceImpl extends ServiceImpl<SysTenantMapper, SysTenant
     @Override
     public List<SysTenant> getByUserId(String userId) {
         return baseMapper.selectByUserId(userId);
+    }
+
+    @Override
+    public SysTenant getLastOne() {
+        return baseMapper.selectLastByCreateTime();
+    }
+
+    @Override
+    public String getLastOneCode() {
+        SysTenant last = getLastOne();
+        if(last != null){
+            return last.getTenantCode();
+        }
+        return null;
     }
 
 }

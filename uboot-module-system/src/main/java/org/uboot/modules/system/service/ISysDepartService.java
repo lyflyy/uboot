@@ -23,6 +23,8 @@ public interface ISysDepartService extends IService<SysDepart>{
      */
     List<SysDepartTreeModel> queryTreeList();
 
+    List<SysDepart> queryList();
+
     /**
      * 查询所有部门DepartId信息,并分节点进行显示
      * @return

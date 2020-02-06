@@ -3,6 +3,8 @@ package org.uboot.modules.system.controller;
 import java.util.Arrays;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang3.StringUtils;
 import org.uboot.common.api.vo.Result;
 import org.uboot.common.system.base.controller.BaseController;
 import org.uboot.common.system.query.QueryGenerator;
@@ -28,6 +30,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.uboot.modules.system.service.ISysTenantUserService;
 import org.uboot.modules.system.service.ISysUserService;
+
+import static org.uboot.common.util.YouBianCodeUtil.getNextYouBianCode;
 
 /**
  * @Description: 租户
@@ -78,7 +82,12 @@ public class SysTenantController extends BaseController<SysTenant, ISysTenantSer
 	@ApiOperation(value="租户-添加", notes="租户-添加")
 	@PostMapping(value = "/add")
 	public Result<?> add(@RequestBody SysTenant sysTenant) {
-		sysTenantService.save(sysTenant);
+//	    if(StringUtils.isBlank(sysTenant.getTenantCode())){
+//            // 如果没有租户code字段，则系统生成 类似 A01
+//        }
+        // 直接系统生成
+        sysTenant.setTenantCode(getNextYouBianCode(sysTenantService.getLastOneCode()));
+        sysTenantService.save(sysTenant);
 		// 租户在添加的时候需要跟吧超级管理员与租户相关联一下, 超级管理员为userName 为 admin的sys_user
         SysTenantUser sysTenantUser = new SysTenantUser();
         sysTenantUser.setSysTenantId(sysTenant.getId());

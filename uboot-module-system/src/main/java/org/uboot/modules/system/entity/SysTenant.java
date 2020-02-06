@@ -32,10 +32,16 @@ public class SysTenant {
 	@TableId(type = IdType.ID_WORKER_STR)
     @ApiModelProperty(value = "id")
 	private String id;
-	/**租户名称*/
-	@Excel(name = "租户名称", width = 15)
+    /**租户名称*/
+    @Excel(name = "租户名称", width = 15)
     @ApiModelProperty(value = "租户名称")
-	private String name;
+    private String name;
+
+    /**租户编号*/
+    @Excel(name = "租户编号", width = 15)
+    @ApiModelProperty(value = "租户编号")
+    private String tenantCode;
+
 	/**备注*/
 	@Excel(name = "备注", width = 15)
     @ApiModelProperty(value = "备注")
