@@ -46,8 +46,9 @@ public class SysTenant {
     @ApiModelProperty(value = "备注")
 	private String remark;
 	/**状态（1归档 0正常）*/
-	@Excel(name = "状态（1归档 0正常）", width = 15)
-    @ApiModelProperty(value = "状态（1归档 0正常）")
+	@Excel(name = "状态（1归档 2正常）", width = 15, dicCode = "tenant_status")
+    @Dict(dicCode = "tenant_status")
+    @ApiModelProperty(value = "状态（1归档 2正常）")
 	private Integer status;
 	/**扩展信息*/
 	@Excel(name = "扩展信息", width = 15)
