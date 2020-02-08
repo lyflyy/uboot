@@ -2,6 +2,7 @@ package org.uboot.modules.system.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
@@ -75,6 +76,7 @@ public class SysDepart implements Serializable {
 	/**删除状态（0，正常，1已删除）*/
 	@Excel(name="删除状态",width=15)
 	@Dict(dicCode = "del_flag")
+    @TableLogic
 	private String delFlag;
 	/**创建人*/
 	private String createBy;

@@ -7,6 +7,7 @@ import java.util.Date;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -77,6 +78,11 @@ public class SysDictItem implements Serializable {
     private String updateBy;
 
     private Date updateTime;
+
+    @Excel(name="删除状态",width=15)
+    @Dict(dicCode = "del_flag")
+    @TableLogic
+    private String delFlag;
 
 
 }

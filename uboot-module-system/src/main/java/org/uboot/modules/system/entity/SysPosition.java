@@ -2,6 +2,7 @@ package org.uboot.modules.system.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
@@ -91,4 +92,9 @@ public class SysPosition {
     @Excel(name = "组织机构编码", width = 15)
     @ApiModelProperty(value = "组织机构编码")
     private String sysOrgCode;
+
+    @Excel(name="删除状态",width=15)
+    @Dict(dicCode = "del_flag")
+    @TableLogic
+    private String delFlag;
 }
