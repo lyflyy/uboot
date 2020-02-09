@@ -34,4 +34,12 @@ public interface ISysUserDepartService extends IService<SysUserDepart> {
 	 * @return
 	 */
 	List<SysUser> queryUserByDepId(String depId);
+
+
+    /**
+     * 根据部门code和用户id删除关联关系,并新建用户与部门关系
+     * @param userId
+     * @return
+     */
+	int updateByDepCodeAndUser(String oldDeptCode, String userId, String newDeptCode);
 }

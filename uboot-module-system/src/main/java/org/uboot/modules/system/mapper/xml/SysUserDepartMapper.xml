@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.uboot.modules.system.mapper.SysUserDepartMapper">
+
     <select id="getUserDepartByUid" parameterType="String" resultType="org.uboot.modules.system.entity.SysUserDepart">
 		SELECT *
 		FROM sys_user_depart
 		WHERE user_id = #{userId, jdbcType=VARCHAR}
     </select>
+
+    <delete id="deleteByDepCodeAndUser">
+        delete from sys_user_depart where dep_id =
+        (select id from sys_depart where org_code = #{deptCode})
+        and user_id = #{userId}
+    </delete>
 </mapper>
