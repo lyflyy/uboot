@@ -1,22 +1,10 @@
 package org.uboot.common.system.base.controller;
 
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.shiro.SecurityUtils;
-import org.uboot.common.api.vo.Result;
-import org.uboot.common.system.query.QueryGenerator;
-import org.uboot.common.system.vo.LoginUser;
-import org.uboot.common.util.oConvertUtils;
 import org.jeecgframework.poi.excel.ExcelImportUtil;
 import org.jeecgframework.poi.excel.def.NormalExcelConstants;
 import org.jeecgframework.poi.excel.entity.ExportParams;
@@ -26,10 +14,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
+import org.uboot.common.api.vo.Result;
+import org.uboot.common.system.query.QueryGenerator;
+import org.uboot.common.system.vo.LoginUser;
+import org.uboot.common.util.oConvertUtils;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-
-import lombok.extern.slf4j.Slf4j;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @Description: Controller基类
@@ -106,9 +103,9 @@ public class BaseController<T, S extends IService<T>> {
             params.setHeadRows(1);
             params.setNeedSave(true);
             try {
+                long start = System.currentTimeMillis();
                list = ExcelImportUtil.importExcel(file.getInputStream(), clazz, params);
                 //update-begin-author:taoyan date:20190528 for:批量插入数据
-                long start = System.currentTimeMillis();
                 //400条 saveBatch消耗时间1592毫秒  循环插入消耗时间1947毫秒
                 //1200条  saveBatch消耗时间3687毫秒 循环插入消耗时间5212毫秒
                 log.info("消耗时间" + (System.currentTimeMillis() - start) + "毫秒");
