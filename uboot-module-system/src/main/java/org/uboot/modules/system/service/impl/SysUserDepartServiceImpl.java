@@ -3,6 +3,8 @@ package org.uboot.modules.system.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.transaction.annotation.Transactional;
+import org.uboot.common.exception.UBootException;
 import org.uboot.modules.system.entity.SysDepart;
 import org.uboot.modules.system.entity.SysUser;
 import org.uboot.modules.system.entity.SysUserDepart;
@@ -90,5 +92,17 @@ public class SysUserDepartServiceImpl extends ServiceImpl<SysUserDepartMapper, S
 		}
 		return new ArrayList<SysUser>();
 	}
+
+    @Override
+    @Transactional
+    public int updateByDepCodeAndUser(String oldDeptCode, String userId, String newDeptCode) {
+	    // 删除原关系
+        baseMapper.deleteByDepCodeAndUser(oldDeptCode, userId);
+        // 新增新关系
+        SysDepart sysDepart = sysDepartService.getOne(new LambdaQueryWrapper<SysDepart>().eq(SysDepart::getOrgCode, newDeptCode));
+        if(null == sysDepart) throw new UBootException("修改用户部门关系时，新部门不存在！");
+        SysUserDepart sysUserDepart = new SysUserDepart(userId, sysDepart.getId());
+        return baseMapper.insert(sysUserDepart);
+    }
 
 }
