@@ -18,6 +18,7 @@ import java.util.Vector;
  * @Email: lyflyyvip@163.com
  * @create: 2020-02-13 01:37
  * @Description:
+ * todo - 这个对象，spring bean直接获取，并且每一次操作都会修改对象的属性，会有并发的问题
  **/
 public abstract class ParseSqlVariable {
 
