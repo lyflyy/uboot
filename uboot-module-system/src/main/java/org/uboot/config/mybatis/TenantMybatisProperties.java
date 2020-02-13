@@ -14,4 +14,6 @@ public class TenantMybatisProperties {
     List<String> tableExclusives;
 
     List<String> selectExclusives;
+
+    List<String> departExclusives;
 }
