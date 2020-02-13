@@ -9,14 +9,13 @@ import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.plugin.*;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.SystemMetaObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Component;
-import org.uboot.common.util.SpringContextUtils;
 import org.uboot.config.mybatis.permission.ParseSql;
 import org.uboot.config.mybatis.permission.annotation.DepartPermission;
 
 import javax.annotation.Resource;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.util.List;
@@ -32,7 +31,10 @@ import java.util.Properties;
 public class DepartPermissionInterceptor implements Interceptor {
 
     @Resource
-    TenantMybatisProperties tenantMybatisProperties;
+    TenantProperties tenantProperties;
+
+    @Autowired
+    private ParseSql parseSql;
 
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
@@ -49,9 +51,8 @@ public class DepartPermissionInterceptor implements Interceptor {
                 //获取sql
                 BoundSql boundSql = handler.getBoundSql();
                 String sql = boundSql.getSql();
-                ParseSql parseSql = new ParseSql(sql);
                 //将增强后的sql放回
-                statementHandler.setValue("delegate.boundSql.sql",parseSql.handle());
+                statementHandler.setValue("delegate.boundSql.sql",parseSql.handle(sql));
             }
         }
         return invocation.proceed();
@@ -85,7 +86,7 @@ public class DepartPermissionInterceptor implements Interceptor {
             }
         }
         DepartPermission departPermission = AnnotationUtils.findAnnotation(mapperClass, DepartPermission.class);
-        List<String> departExclusives = tenantMybatisProperties.getDepartExclusives();
+        List<String> departExclusives = tenantProperties.getDepartExclusives();
         if(departExclusives != null && departExclusives.contains(mapperId)){
             // 配置文件排除该sql，不需要处理了
             return false;

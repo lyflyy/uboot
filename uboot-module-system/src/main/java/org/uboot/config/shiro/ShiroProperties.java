@@ -3,8 +3,10 @@ package org.uboot.config.shiro;
 import lombok.Data;
 import org.apache.shiro.util.AntPathMatcher;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
+import org.uboot.common.handler.YamlPropertySourceFactory;
 
 import java.util.List;
 import java.util.regex.Pattern;
@@ -16,10 +18,10 @@ import java.util.regex.Pattern;
  * @Description:
  **/
 @Data
-//@PropertySource({"shiroExcludeUrls.yaml"})
-@Component
+@Configuration
+@PropertySource(value = {"classpath:config/shiro-properties.yml"}, factory = YamlPropertySourceFactory.class)
 @ConfigurationProperties("shiro")
-public class ShiroExcludeProperties {
+public class ShiroProperties {
 
     private List<String> excludeUrls;
 

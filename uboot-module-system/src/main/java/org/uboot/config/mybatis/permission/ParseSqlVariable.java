@@ -9,9 +9,9 @@ import net.sf.jsqlparser.statement.select.Select;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Vector;
 
 /**
  * @author: LiYang
@@ -22,15 +22,9 @@ import java.util.List;
 public abstract class ParseSqlVariable {
 
     /**
-     * 符合条件的表，也就是包含user_id的表,从配置文件中读取
-     */
-    final List<String> tables = Arrays.asList("sys_user", "sys_user_depart", "sys_depart", "wm_soldier_info");
-
-    /**
      * 三张系统表，固定表
      */
     final List<String> fromTables = Arrays.asList("sys_user", "sys_user_depart", "sys_depart");
-
 
     /**
      * 要设置的被join的表的新的alias
@@ -82,7 +76,7 @@ public abstract class ParseSqlVariable {
     /**
      * 该sql所操作的所有的表
      */
-    protected List<Table> tableList = new ArrayList<>();
+    protected Vector<Table> tableList = new Vector<>();
 
     /**
      * 该sql所关联的所有表，包括子查询表

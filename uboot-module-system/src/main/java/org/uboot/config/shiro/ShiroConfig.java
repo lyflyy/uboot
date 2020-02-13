@@ -11,7 +11,6 @@ import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.crazycake.shiro.RedisCacheManager;
 import org.crazycake.shiro.RedisManager;
 import org.uboot.common.util.oConvertUtils;
-import org.uboot.config.shiro.ShiroExcludeProperties;
 import org.uboot.modules.shiro.authc.ShiroRealm;
 import org.uboot.modules.shiro.authc.aop.JwtFilter;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
@@ -39,7 +38,7 @@ import java.util.Map;
 public class ShiroConfig {
 
     @Resource
-	private ShiroExcludeProperties shiroExcludeProperties;
+	private ShiroProperties shiroProperties;
 
     @Value("${spring.redis.port}")
     private String port;
@@ -63,7 +62,7 @@ public class ShiroConfig {
 		shiroFilterFactoryBean.setSecurityManager(securityManager);
 		// 拦截器
 		Map<String, String> filterChainDefinitionMap = new LinkedHashMap<String, String>();
-        List<String> excludeUrls = shiroExcludeProperties.getExcludeUrls();
+        List<String> excludeUrls = shiroProperties.getExcludeUrls();
 		if(oConvertUtils.isNotEmpty(excludeUrls)){
 			for(String url : excludeUrls){
 				filterChainDefinitionMap.put(url,"anon");

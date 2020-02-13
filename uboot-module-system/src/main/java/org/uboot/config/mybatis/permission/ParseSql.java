@@ -3,6 +3,11 @@ package org.uboot.config.mybatis.permission;
 import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.schema.Table;
 import net.sf.jsqlparser.statement.select.*;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
+
+import java.util.List;
 
 import static org.uboot.config.mybatis.permission.ParseSqlUtil.judgeIncludeCollections;
 
@@ -12,11 +17,11 @@ import static org.uboot.config.mybatis.permission.ParseSqlUtil.judgeIncludeColle
  * @create: 2020-02-12 16:47
  * @Description:
  **/
+@Component
 public class ParseSql extends AbstractParseSql{
 
-    public ParseSql(String sql) throws JSQLParserException {
-        super(sql);
-    }
+    @Resource
+    private PermissionProperties permissionProperties;
 
     /**
      * 使用条件
@@ -39,7 +44,15 @@ public class ParseSql extends AbstractParseSql{
      */
     // todo - 非子查询，子查询暂时没处理，如果一个sql中除子查询的sql
     //  都不符合权限查询表规则的话，子查询是没有处理的，这个sql就没办法使用该权限规则
-    public String handle() throws JSQLParserException {
+    public String handle(String sql) throws JSQLParserException {
+
+        List<String> tables = permissionProperties.getTables();
+
+        /**
+         * 必须要先执行init方法
+         */
+        super.init(sql);
+
         Table table = (Table) selectBody.getFromItem();
         /**
          * 从该sql所查询的所有表中过滤是否包含三张系统表

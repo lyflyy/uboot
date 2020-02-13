@@ -13,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Vector;
 
 import static org.uboot.config.mybatis.permission.ParseSqlUtil.*;
 
@@ -49,7 +50,14 @@ public abstract class AbstractParseSql extends ParseSqlVariable {
         return fromItem;
     }
 
-    AbstractParseSql(String sql) throws JSQLParserException {
+
+    /**
+     * 初始化
+     * @param sql
+     * @throws JSQLParserException
+     */
+    public void init(String sql) throws JSQLParserException {
+        tableList = new Vector<>();
         select = (Select) CCJSqlParserUtil.parse(sql);
         selectBody = (PlainSelect) select.getSelectBody();
         tableList.add((Table) selectBody.getFromItem());
