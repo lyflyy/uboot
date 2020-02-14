@@ -22,6 +22,7 @@ import org.uboot.common.util.oConvertUtils;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -70,6 +71,28 @@ public class BaseController<T, S extends IService<T>> {
         mv.addObject(NormalExcelConstants.DATA_LIST, exportList);
         return mv;
     }
+
+
+    /**
+     * 导出excel 模板
+     *
+     * @param request
+     */
+    protected ModelAndView exportTemplateXls(HttpServletRequest request, T object, Class<T> clazz, String title) {
+        // Step.1 组装查询条件
+        LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
+        // Step.2 获取导出数据
+        List<T> exportList = new ArrayList<>();
+
+        // Step.3 AutoPoi 导出Excel
+        ModelAndView mv = new ModelAndView(new JeecgEntityExcelView());
+        mv.addObject(NormalExcelConstants.FILE_NAME, title); //此处设置的filename无效 ,前端会重更新设置一下
+        mv.addObject(NormalExcelConstants.CLASS, clazz);
+        mv.addObject(NormalExcelConstants.PARAMS, new ExportParams(title + "报表", "导出人:" + sysUser.getRealname(), title));
+        mv.addObject(NormalExcelConstants.DATA_LIST, exportList);
+        return mv;
+    }
+
 
 
     /**
