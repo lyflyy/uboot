@@ -24,7 +24,7 @@ public abstract class ParseSqlVariable {
     /**
      * 三张系统表，固定表
      */
-    final List<String> fromTables = Arrays.asList("sys_user", "sys_user_depart", "sys_depart");
+    final List<String> fromTables = Arrays.asList("sys_user");
 
     /**
      * 要设置的被join的表的新的alias

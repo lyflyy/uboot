@@ -21,6 +21,11 @@ import java.util.Vector;
 public class ParseSqlVo {
 
     /**
+     * 当前登陆用户的部门code
+     */
+    protected String currentOrgCode = "";
+
+    /**
      * sql的主要查询的主体
      */
     protected PlainSelect selectBody = null;

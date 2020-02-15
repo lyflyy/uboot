@@ -24,6 +24,8 @@ public class PermissionProperties {
     /**
      * 符合条件的表，也就是包含user_id的表,从配置文件中读取
      */
-    List<String> tables = Arrays.asList("sys_user", "sys_user_depart", "sys_depart", "wm_soldier_info");
+    List<String> tables;
+
+    List<String> departExclusives;
 
 }

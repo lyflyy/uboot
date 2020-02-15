@@ -142,10 +142,8 @@ public abstract class AbstractParseSql extends ParseSqlVariable {
     void handledoNotBelongSystem(FromItem item, int skip){
         setFromItem(item, ORIGIN_TABLE_ALIAS);
         Join user = generJoin("sys_user", "sys_user_alias_su", "sys_user_alias_su.id", "sys_user_alias_origin.sys_user_id");
-        Join uerDepart = generJoin("sys_user_depart", "sys_depart_alias_sud", "sys_depart_alias_sud.user_id", "sys_user_alias_su.id");
-        Join depart = generJoin("sys_depart", "sys_depart_alias_sd", "sys_depart_alias_sd.id", "sys_depart_alias_sud.dep_id");
         List<Join> newJoins = new ArrayList<>();
-        newJoins.addAll(Arrays.asList(user, uerDepart, depart));
+        newJoins.add(user);
         List<Join> oldJoins = parseSqlVo.getSelectBody().getJoins();
         if(oldJoins != null && oldJoins.size() > 0) {
             handleOldJoinAlias(parseSqlVo.getOldAliasName(), oldJoins, parseSqlVo.getFromTable());
@@ -163,25 +161,10 @@ public abstract class AbstractParseSql extends ParseSqlVariable {
      * 拼接的时候三张表不一样，拼接的顺序也不一样
      */
     void handleBelongSystem(String joinTableName, FromItem item, int skip){
-        Join join1 = null;
-        Join join2 = null;
         List<Join> newJoins = new ArrayList<>();
-        switch (joinTableName){
-            case "sys_user":
-                // origin 要修改成sys_user 的alias
-                setFromItem(item, "sys_user_alias_su");
-                join1 = generJoin("sys_user_depart", "sys_depart_alias_sud", "sys_depart_alias_sud.user_id", "sys_user_alias_su.id");
-                join2 = generJoin("sys_depart", "sys_depart_alias_sd", "sys_depart_alias_sd.id", "sys_depart_alias_sud.dep_id");
-                newJoins.addAll(Arrays.asList(join1, join2));
-                break;
-            case "sys_user_depart":
-                setFromItem(item, "sys_depart_alias_sud");
-                join1 = generJoin("sys_depart", "sys_depart_alias_sd", "sys_depart_alias_sd.id", "sys_depart_alias_sud.dep_id");
-                newJoins.addAll(Arrays.asList(join1));
-                break;
-            case "sys_depart":
-                setFromItem(item, "sys_depart_alias_sd");
-                break;
+        if(joinTableName.equals("sys_user")){
+            // origin 要修改成sys_user 的alias
+            setFromItem(item, "sys_user_alias_su");
         }
         List<Join> oldJoins = parseSqlVo.getSelectBody().getJoins();
         if(oldJoins != null && oldJoins.size() > 0) {
@@ -203,7 +186,7 @@ public abstract class AbstractParseSql extends ParseSqlVariable {
         Expression where = parseSqlVo.getSelectBody().getWhere();
         // 多个where条件的话，除了最后一个条件，剩下的都会出现在左expression，右只会剩下一个，递归处理左侧的条件+右1
         handleLeftExpression(where, parseSqlVo.getOldAliasName(), fromTable);
-        Expression departWhere = CCJSqlParserUtil.parseCondExpression("sys_depart_alias_sd.org_code like sys_user_alias_su.org_code");
+        Expression departWhere = CCJSqlParserUtil.parseCondExpression("sys_user_alias_su.org_code LIKE '" + parseSqlVo.getCurrentOrgCode() + "%'");
         if(where == null){
             parseSqlVo.getSelectBody().setWhere(departWhere);
         }else{

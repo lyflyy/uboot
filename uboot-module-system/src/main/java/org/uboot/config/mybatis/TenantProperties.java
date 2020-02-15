@@ -18,5 +18,4 @@ public class TenantProperties {
 
     List<String> selectExclusives;
 
-    List<String> departExclusives;
 }

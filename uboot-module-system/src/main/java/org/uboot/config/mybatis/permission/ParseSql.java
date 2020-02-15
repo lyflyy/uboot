@@ -3,7 +3,10 @@ package org.uboot.config.mybatis.permission;
 import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.schema.Table;
 import net.sf.jsqlparser.statement.select.Join;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.stereotype.Component;
+import org.uboot.common.exception.UBootException;
+import org.uboot.common.system.vo.LoginUser;
 
 import javax.annotation.Resource;
 
@@ -65,8 +68,16 @@ public class ParseSql extends AbstractParseSql{
 
         if(permissionProperties == null){
             tables = Arrays.asList("sys_user", "sys_user_depart", "sys_depart", "wm_soldier_info");
+            parseSqlVo.setCurrentOrgCode("A03");
         }else{
             tables = permissionProperties.getTables();
+            LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
+
+            if(sysUser == null){
+                throw new UBootException("无数据权限，此操作需用户登录！");
+            }
+
+            parseSqlVo.setCurrentOrgCode(sysUser.getOrgCode());
         }
 
         /**

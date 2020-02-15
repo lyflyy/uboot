@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Component;
 import org.uboot.config.mybatis.permission.ParseSql;
+import org.uboot.config.mybatis.permission.PermissionProperties;
 import org.uboot.config.mybatis.permission.annotation.DepartPermission;
 
 import javax.annotation.Resource;
@@ -31,7 +32,7 @@ import java.util.Properties;
 public class DepartPermissionInterceptor implements Interceptor {
 
     @Resource
-    TenantProperties tenantProperties;
+    PermissionProperties permissionProperties;
 
     @Autowired
     private ParseSql parseSql;
@@ -86,7 +87,7 @@ public class DepartPermissionInterceptor implements Interceptor {
             }
         }
         DepartPermission departPermission = AnnotationUtils.findAnnotation(mapperClass, DepartPermission.class);
-        List<String> departExclusives = tenantProperties.getDepartExclusives();
+        List<String> departExclusives = permissionProperties.getDepartExclusives();
         if(departExclusives != null && departExclusives.contains(mapperId)){
             // 配置文件排除该sql，不需要处理了
             return false;
