@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.uboot.config.mybatis.permission.ParseSqlUtil.judgeIncludeCollections;
 
 /**
  * @author: LiYang
@@ -41,11 +40,11 @@ public class ParseSql extends AbstractParseSql{
      * 1. fromtable是否符合条件，mapper上增加注解，筛选符合权限操作的mapper id
      * 2. 判断执行方式，
      *      1-fromtable符合条件
-     *          1-不属于三张系统表
-     *          2-属于三张系统表
+     *          1-不属于系统表
+     *          2-属于系统表
      *      2-jointable符合条件
-     *          1-不属于三张系统表
-     *          2-属于三张系统表
+     *          1-不属于系统表
+     *          2-属于系统表
      *      3-都不符合条件，这个sql不需要处理，但是如果这个sql被添加了注解，则需要抛出异常
      *
      * 如果主表是子查询的话，没办法处理，只能处理剩下的表，因为子查询不能知道查询出来的内容是否包含user_id 能做的上关联，
@@ -87,12 +86,12 @@ public class ParseSql extends AbstractParseSql{
 
         Table table = (Table) parseSqlVo.getSelectBody().getFromItem();
         /**
-         * 从该sql所查询的所有表中过滤是否包含三张系统表
+         * 从该sql所查询的所有表中过滤是否包含系统表
          */
         if(judgeIncludeCollections(parseSqlVo.getTableList(), fromTables)){
-            // 所有表中肯定包含三张系统表
+            // 所有表中肯定包含系统表
             // 1. 先检查fromtable是否为系统表
-            if(parseSqlVo.getSelectBody().getFromItem() instanceof Table && fromTables.contains(table.getName())){
+            if(parseSqlVo.getSelectBody().getFromItem() instanceof Table && fromTables.equals(table.getName())){
                 handleBelongSystem(table.getName(), parseSqlVo.getSelectBody().getFromItem(), 0);
             }else{
                 // 2. 再检查jointable 是否为系统表
@@ -100,15 +99,15 @@ public class ParseSql extends AbstractParseSql{
                     for (int i = 0; i < parseSqlVo.getJoins().size(); i++) {
                         Join join = parseSqlVo.getJoins().get(i);
                         Table joinTable = (Table) join.getRightItem();
-                        // jointable 非子查询并且为系统三张表
-                        if(join.getRightItem() instanceof Table && fromTables.contains(joinTable.getName())){
+                        // jointable 非子查询并且为系统表
+                        if(join.getRightItem() instanceof Table && fromTables.equals(joinTable.getName())){
                             handleBelongSystem(joinTable.getName(), join.getRightItem(), i + 1);
                         }
                     }
                 }
             }
         }else{
-            // 该sql所查询到的表不包含三张系统表，判断是否符合条件的表，也就是包含user_id字段的表
+            // 该sql所查询到的表不包含系统表，判断是否符合条件的表，也就是包含user_id字段的表
             if(parseSqlVo.getSelectBody().getFromItem() instanceof Table && tables.contains(table.getName())){
                 // 主表符合条件
                 handledoNotBelongSystem(parseSqlVo.getSelectBody().getFromItem(), 0);

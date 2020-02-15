@@ -226,5 +226,14 @@ public abstract class AbstractParseSql extends ParseSqlVariable {
         }
     }
 
+    protected boolean judgeIncludeCollections(Vector<Table> tableList, String fromTables) {
+        for (Table table : tableList) {
+            if(table.getName().equals(fromTables)){
+                return true;
+            }
+        }
+        return false;
+    }
+
 
 }

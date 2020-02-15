@@ -201,21 +201,6 @@ public class ParseSqlUtil {
         return list;
     }
 
-    /**
-     * 判断两个list是否包含相同元素
-     * @param l1
-     * @param l2
-     * @return
-     */
-    protected static Boolean judgeIncludeCollections(List<Table> l1, List<String> l2){
-        Set<String> t1 = new HashSet<>(l1.stream()
-                .filter(e -> e != null && StringUtils.isNoneBlank(e.getName()))
-                .map(e -> e.getName()).collect(Collectors.toList()));
-        Set<String> t2 = new HashSet<>(l2);
-        t1.addAll(t2);
-        return t1.size() != l1.size() + l2.size();
-    }
-
 
 
 }
