@@ -116,7 +116,7 @@ public abstract class AbstractParseSql extends ParseSqlVariable {
         if(orderTable != null &&
                 (StringUtils.isBlank(orderTable.getName()) ||
                         orderTable.getName().equals(parseSqlVo.getOldAliasName()))){
-            orderTable.setName(parseSqlVo.getOldAlias().getName());
+            orderTable.setName(parseSqlVo.getNewAlias().getName());
         }
     }
 
