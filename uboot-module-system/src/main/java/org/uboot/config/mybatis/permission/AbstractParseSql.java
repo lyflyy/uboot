@@ -26,6 +26,11 @@ import static org.uboot.config.mybatis.permission.ParseSqlUtil.*;
 public abstract class AbstractParseSql extends ParseSqlVariable {
 
     /**
+     * 变量提取，防止并发问题
+     */
+    protected ParseSqlVo parseSqlVo;
+
+    /**
      * 设置主表
      * 从主表中获取主表 table
      * 获取alias以及alias name 可能为空
@@ -35,19 +40,23 @@ public abstract class AbstractParseSql extends ParseSqlVariable {
     public FromItem setFromItem(FromItem item, String newAliasName){
         // 如果主表为三张系统表的话，主表的alias需要修改为三张系统表的alias
         ORIGIN_TABLE_ALIAS = newAliasName;
-        newAlias = new Alias(newAliasName);
-        fromItem = item;
+        parseSqlVo.setNewAlias(new Alias(newAliasName));
+        parseSqlVo.setFromItem(item);
         //之前主表的alias
-        if(fromItem.getAlias() != null){
-            oldAlias = fromItem.getAlias();
-            oldAliasName = fromItem.getAlias().getName();
+        if(parseSqlVo.getFromItem().getAlias() != null){
+            parseSqlVo.setOldAlias(
+                    parseSqlVo.getFromItem().getAlias()
+            );
+            parseSqlVo.setOldAliasName(
+                    parseSqlVo.getFromItem().getAlias().getName()
+            );
         }
         // 为主表设置新的alias
-        fromItem.setAlias(newAlias);
+        parseSqlVo.getFromItem().setAlias(parseSqlVo.getNewAlias());
         Table t = (Table) item;
         // 被操作的主表
-        fromTable = t;
-        return fromItem;
+        parseSqlVo.setFromTable(t);
+        return parseSqlVo.getFromItem();
     }
 
 
@@ -57,14 +66,20 @@ public abstract class AbstractParseSql extends ParseSqlVariable {
      * @throws JSQLParserException
      */
     public void init(String sql) throws JSQLParserException {
-        tableList = new Vector<>();
-        select = (Select) CCJSqlParserUtil.parse(sql);
-        selectBody = (PlainSelect) select.getSelectBody();
-        tableList.add((Table) selectBody.getFromItem());
-        joins = selectBody.getJoins();
+        Select select = (Select) CCJSqlParserUtil.parse(sql);
+        PlainSelect selectBody = (PlainSelect) select.getSelectBody();
+
+        parseSqlVo.getTableList().clear();
+        parseSqlVo.setSelect(select);
+        parseSqlVo.setSelectBody(selectBody);
+
+        parseSqlVo.getTableList().add((Table) selectBody.getFromItem());
+
+        List<Join> joins = selectBody.getJoins();
+        parseSqlVo.setJoins(selectBody.getJoins());
         if(joins != null){
             for (Join join : joins) {
-                tableList.add((Table) join.getRightItem());
+                parseSqlVo.getTableList().add((Table) join.getRightItem());
             }
         }
     }
@@ -73,7 +88,7 @@ public abstract class AbstractParseSql extends ParseSqlVariable {
      * 只处理带有alias的表的order by
      */
     protected void handleOrderByAlias(){
-        List<OrderByElement> orderByElements = selectBody.getOrderByElements();
+        List<OrderByElement> orderByElements = parseSqlVo.getSelectBody().getOrderByElements();
         if(orderByElements != null)
             for (OrderByElement orderByElement : orderByElements) {
                 handleColumnList(orderByElement.getExpression());
@@ -84,10 +99,10 @@ public abstract class AbstractParseSql extends ParseSqlVariable {
      * 跟order by 一样的路子
      */
     protected void handleGroupByAlias() {
-        List<Expression> list = selectBody.getGroupByColumnReferences();
+        List<Expression> list = parseSqlVo.getSelectBody().getGroupByColumnReferences();
         if(list != null && list.size() > 0)
         for (Expression expression : list) {
-            handleConditionAlias(oldAliasName, expression, fromTable);
+            handleConditionAlias(parseSqlVo.getOldAliasName(), expression, parseSqlVo.getFromTable());
         }
     }
 
@@ -98,8 +113,10 @@ public abstract class AbstractParseSql extends ParseSqlVariable {
     private void handleColumnList(Expression expression){
         Column column = (Column) expression;
         Table orderTable = column.getTable();
-        if(orderTable != null && (StringUtils.isBlank(orderTable.getName()) || orderTable.getName().equals(oldAliasName))){
-            orderTable.setName(newAlias.getName());
+        if(orderTable != null &&
+                (StringUtils.isBlank(orderTable.getName()) ||
+                        orderTable.getName().equals(parseSqlVo.getOldAliasName()))){
+            orderTable.setName(parseSqlVo.getOldAlias().getName());
         }
     }
 
@@ -108,9 +125,10 @@ public abstract class AbstractParseSql extends ParseSqlVariable {
      * 多个having条件的话，除了最后一个条件，剩下的都会出现在左expression，右只会剩下一个，递归处理左侧的条件+右1
      */
     protected void handleHavingAlias(Table fromtable){
-        Expression having = selectBody.getHaving();
+
+        Expression having = parseSqlVo.getSelectBody().getHaving();
         // 多个where条件的话，除了最后一个条件，剩下的都会出现在左expression，右只会剩下一个，递归处理左侧的条件+右1
-        handleLeftExpression(having, oldAliasName, fromtable);
+        handleLeftExpression(having, parseSqlVo.getOldAliasName(), fromtable);
     }
 
 
@@ -128,12 +146,12 @@ public abstract class AbstractParseSql extends ParseSqlVariable {
         Join depart = generJoin("sys_depart", "sys_depart_alias_sd", "sys_depart_alias_sd.id", "sys_depart_alias_sud.dep_id");
         List<Join> newJoins = new ArrayList<>();
         newJoins.addAll(Arrays.asList(user, uerDepart, depart));
-        List<Join> oldJoins = selectBody.getJoins();
+        List<Join> oldJoins = parseSqlVo.getSelectBody().getJoins();
         if(oldJoins != null && oldJoins.size() > 0) {
-            handleOldJoinAlias(oldAliasName, oldJoins, fromTable);
+            handleOldJoinAlias(parseSqlVo.getOldAliasName(), oldJoins, parseSqlVo.getFromTable());
             newJoins = handleJoins(oldJoins, newJoins, skip);
         }
-        selectBody.setJoins(newJoins);
+        parseSqlVo.getSelectBody().setJoins(newJoins);
     }
 
 
@@ -165,12 +183,12 @@ public abstract class AbstractParseSql extends ParseSqlVariable {
                 setFromItem(item, "sys_depart_alias_sd");
                 break;
         }
-        List<Join> oldJoins = selectBody.getJoins();
+        List<Join> oldJoins = parseSqlVo.getSelectBody().getJoins();
         if(oldJoins != null && oldJoins.size() > 0) {
-            handleOldJoinAlias(oldAliasName, oldJoins, fromTable);
+            handleOldJoinAlias(parseSqlVo.getOldAliasName(), oldJoins, parseSqlVo.getFromTable());
             newJoins = handleJoins(oldJoins, newJoins, skip);
         }
-        selectBody.setJoins(newJoins);
+        parseSqlVo.getSelectBody().setJoins(newJoins);
     }
 
 
@@ -182,15 +200,15 @@ public abstract class AbstractParseSql extends ParseSqlVariable {
      */
     protected void handleWhereAlias(Table fromTable) throws JSQLParserException {
         // 处理where 中 左右链接的alias
-        Expression where = selectBody.getWhere();
+        Expression where = parseSqlVo.getSelectBody().getWhere();
         // 多个where条件的话，除了最后一个条件，剩下的都会出现在左expression，右只会剩下一个，递归处理左侧的条件+右1
-        handleLeftExpression(where, oldAliasName, fromTable);
+        handleLeftExpression(where, parseSqlVo.getOldAliasName(), fromTable);
         Expression departWhere = CCJSqlParserUtil.parseCondExpression("sys_depart_alias_sd.org_code like sys_user_alias_su.org_code");
         if(where == null){
-            selectBody.setWhere(departWhere);
+            parseSqlVo.getSelectBody().setWhere(departWhere);
         }else{
-            AndExpression and = new AndExpression(selectBody.getWhere(), departWhere);
-            selectBody.setWhere(and);
+            AndExpression and = new AndExpression(parseSqlVo.getSelectBody().getWhere(), departWhere);
+            parseSqlVo.getSelectBody().setWhere(and);
         }
     }
 
@@ -198,12 +216,12 @@ public abstract class AbstractParseSql extends ParseSqlVariable {
      * 处理select 字段 中 的alias
      */
     void handleSelectAlias() {
-        List<SelectItem> selectItems = selectBody.getSelectItems();
+        List<SelectItem> selectItems = parseSqlVo.getSelectBody().getSelectItems();
         for (SelectItem selectItem : selectItems) {
             if(selectItem instanceof AllTableColumns){
                 AllTableColumns allColumns = (AllTableColumns) selectItem;
                 Table t = allColumns.getTable();
-                if(t != null && t.getName().equals(oldAliasName)){
+                if(t != null && t.getName().equals(parseSqlVo.getOldAliasName())){
                     t.setName(ORIGIN_TABLE_ALIAS);
                 }
             }
@@ -219,7 +237,7 @@ public abstract class AbstractParseSql extends ParseSqlVariable {
                         table.setName(ORIGIN_TABLE_ALIAS);
                     }
                 }
-                handleConditionAlias(oldAliasName, selectExpressionItem.getExpression(), fromTable);
+                handleConditionAlias(parseSqlVo.getOldAliasName(), selectExpressionItem.getExpression(), parseSqlVo.getFromTable());
             }
 
         }

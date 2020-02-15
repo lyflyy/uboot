@@ -2,11 +2,13 @@ package org.uboot.config.mybatis.permission;
 
 import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.schema.Table;
-import net.sf.jsqlparser.statement.select.*;
+import net.sf.jsqlparser.statement.select.Join;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.uboot.config.mybatis.permission.ParseSqlUtil.judgeIncludeCollections;
@@ -22,6 +24,11 @@ public class ParseSql extends AbstractParseSql{
 
     @Resource
     private PermissionProperties permissionProperties;
+
+    private void initializesObject(){
+        ParseSqlVo vo = new ParseSqlVo();
+        this.parseSqlVo = vo;
+    }
 
     /**
      * 使用条件
@@ -46,27 +53,41 @@ public class ParseSql extends AbstractParseSql{
     //  都不符合权限查询表规则的话，子查询是没有处理的，这个sql就没办法使用该权限规则
     public String handle(String sql) throws JSQLParserException {
 
-        List<String> tables = permissionProperties.getTables();
+        /**
+         * 初始化变量对象
+         */
+        this.initializesObject();
+
+        /**
+         * 为本地main方法可以进行调用，该list需要修改
+         */
+        List<String> tables;
+
+        if(permissionProperties == null){
+            tables = Arrays.asList("sys_user", "sys_user_depart", "sys_depart", "wm_soldier_info");
+        }else{
+            tables = permissionProperties.getTables();
+        }
 
         /**
          * 必须要先执行init方法
          */
         super.init(sql);
 
-        Table table = (Table) selectBody.getFromItem();
+        Table table = (Table) parseSqlVo.getSelectBody().getFromItem();
         /**
          * 从该sql所查询的所有表中过滤是否包含三张系统表
          */
-        if(judgeIncludeCollections(tableList, fromTables)){
+        if(judgeIncludeCollections(parseSqlVo.getTableList(), fromTables)){
             // 所有表中肯定包含三张系统表
             // 1. 先检查fromtable是否为系统表
-            if(selectBody.getFromItem() instanceof Table && fromTables.contains(table.getName())){
-                handleBelongSystem(table.getName(), selectBody.getFromItem(), 0);
+            if(parseSqlVo.getSelectBody().getFromItem() instanceof Table && fromTables.contains(table.getName())){
+                handleBelongSystem(table.getName(), parseSqlVo.getSelectBody().getFromItem(), 0);
             }else{
                 // 2. 再检查jointable 是否为系统表
-                if(joins != null && joins.size() > 0){
-                    for (int i = 0; i < joins.size(); i++) {
-                        Join join = joins.get(i);
+                if(parseSqlVo.getJoins() != null && parseSqlVo.getJoins().size() > 0){
+                    for (int i = 0; i < parseSqlVo.getJoins().size(); i++) {
+                        Join join = parseSqlVo.getJoins().get(i);
                         Table joinTable = (Table) join.getRightItem();
                         // jointable 非子查询并且为系统三张表
                         if(join.getRightItem() instanceof Table && fromTables.contains(joinTable.getName())){
@@ -77,13 +98,13 @@ public class ParseSql extends AbstractParseSql{
             }
         }else{
             // 该sql所查询到的表不包含三张系统表，判断是否符合条件的表，也就是包含user_id字段的表
-            if(selectBody.getFromItem() instanceof Table && tables.contains(table.getName())){
+            if(parseSqlVo.getSelectBody().getFromItem() instanceof Table && tables.contains(table.getName())){
                 // 主表符合条件
-                handledoNotBelongSystem(selectBody.getFromItem(), 0);
+                handledoNotBelongSystem(parseSqlVo.getSelectBody().getFromItem(), 0);
             }else{
                 // 主表不符合条件，遍历jointables
-                for (int i = 0; i < joins.size(); i++) {
-                    Join join = joins.get(i);
+                for (int i = 0; i < parseSqlVo.getJoins().size(); i++) {
+                    Join join = parseSqlVo.getJoins().get(i);
                     // jointable 不是子查询
                     Table joinTable = (Table) join.getRightItem();
                     if(join.getRightItem() instanceof Table && tables.contains(joinTable.getName())){
@@ -99,15 +120,15 @@ public class ParseSql extends AbstractParseSql{
         // 处理select 字段 中 的alias
         handleSelectAlias();
         // 处理where 中 左右链接的alias
-        handleWhereAlias(fromTable);
+        handleWhereAlias(parseSqlVo.getFromTable());
         // 处理having 中的alias
-        handleHavingAlias(fromTable);
+        handleHavingAlias(parseSqlVo.getFromTable());
         // 处理order by 中 的alias
         handleOrderByAlias();
         // 处理group by 中 的alias
         handleGroupByAlias();
         // limit 不需要处理
-        return select.toString();
+        return parseSqlVo.getSelect().toString();
     }
 
 }
