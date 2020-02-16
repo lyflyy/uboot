@@ -3,6 +3,7 @@ package org.uboot.modules.system.mapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.ibatis.annotations.Param;
+import org.uboot.config.mybatis.permission.annotation.DepartPermission;
 import org.uboot.modules.system.entity.SysUser;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.uboot.modules.system.model.SysUserSysDepartModel;
@@ -17,6 +18,7 @@ import java.util.List;
  * @Author scott
  * @since 2018-12-20
  */
+@DepartPermission
 public interface SysUserMapper extends BaseMapper<SysUser> {
 	/**
 	  * 通过用户账号查询用户信息

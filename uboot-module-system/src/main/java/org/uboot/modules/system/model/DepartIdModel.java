@@ -15,7 +15,7 @@ import org.uboot.modules.system.entity.SysDepart;
  * @Since 2019-01-22
  *
  */
-public class DepartIdModel implements Serializable {
+public class DepartIdModel<T extends SysDepartModel> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -35,7 +35,7 @@ public class DepartIdModel implements Serializable {
      * @param treeModel
      * @return
      */
-    public DepartIdModel convert(SysDepartTreeModel treeModel) {
+    public DepartIdModel convert(T treeModel) {
         this.key = treeModel.getId();
         this.value = treeModel.getId();
         this.title = treeModel.getDepartName();

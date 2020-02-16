@@ -12,6 +12,7 @@ import org.uboot.modules.system.entity.SysDepart;
 import org.uboot.modules.system.mapper.SysDepartMapper;
 import org.uboot.modules.system.model.DepartIdModel;
 import org.uboot.modules.system.model.SysDepartTreeModel;
+import org.uboot.modules.system.model.SysDepartTreeWithManagerModel;
 import org.uboot.modules.system.service.ISysDepartService;
 import org.uboot.modules.system.util.FindsDepartsChildrenUtil;
 import org.springframework.cache.annotation.Cacheable;
@@ -199,7 +200,13 @@ public class SysDepartServiceImpl extends ServiceImpl<SysDepartMapper, SysDepart
 		this.removeByIds(idList);
 
 	}
-	/**
+
+    @Override
+    public List<SysDepartTreeWithManagerModel> getByUser(String id) {
+        return baseMapper.selectAllDepartByUser(id);
+    }
+
+    /**
 	 * <p>
 	 * 根据关键字搜索相关的部门数据
 	 * </p>

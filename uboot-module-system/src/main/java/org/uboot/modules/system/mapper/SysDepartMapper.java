@@ -2,8 +2,11 @@ package org.uboot.modules.system.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Select;
+import org.uboot.common.aspect.annotation.PermissionData;
+import org.uboot.config.mybatis.permission.annotation.DepartPermission;
 import org.uboot.modules.system.entity.SysDepart;
 import org.uboot.modules.system.model.SysDepartTreeModel;
+import org.uboot.modules.system.model.SysDepartTreeWithManagerModel;
 import org.uboot.modules.system.model.TreeModel;
 import org.springframework.data.repository.query.Param;
 
@@ -48,4 +51,22 @@ public interface SysDepartMapper extends BaseMapper<SysDepart> {
 
     @Select("SELECT*FROM sys_depart WHERE del_flag=0")
     List<SysDepart> selectAll();
+
+
+    /**
+     * 根据当前登陆的用户的orgcode 获取当前用户所属部别以及所有子部别
+     * @param id
+     * @return
+     */
+    List<SysDepartTreeWithManagerModel> selectAllDepartByUser(@Param("id") String id);
+
+
+    /**
+     * 根据parent_id 获取部别
+     * mybatis 递归
+     * @param id
+     * @return
+     */
+    List<SysDepartTreeModel> selectByParentId(@Param("id") String id);
+
 }

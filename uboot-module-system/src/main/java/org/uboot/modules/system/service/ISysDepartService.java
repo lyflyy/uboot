@@ -1,9 +1,12 @@
 package org.uboot.modules.system.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.springframework.data.repository.query.Param;
 import org.uboot.modules.system.entity.SysDepart;
 import org.uboot.modules.system.model.DepartIdModel;
 import org.uboot.modules.system.model.SysDepartTreeModel;
+import org.uboot.modules.system.model.SysDepartTreeWithManagerModel;
+
 import java.util.List;
 
 /**
@@ -94,5 +97,13 @@ public interface ISysDepartService extends IService<SysDepart>{
      * @return
      */
 	void deleteBatchWithChildren(List<String> ids);
+
+
+    /**
+     * 根据当前登陆的用户的orgcode 获取当前用户所属部别以及所有子部别
+     * @param id
+     * @return
+     */
+    List<SysDepartTreeWithManagerModel> getByUser(String id);
 
 }
