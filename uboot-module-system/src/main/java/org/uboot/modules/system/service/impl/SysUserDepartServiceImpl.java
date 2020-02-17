@@ -3,12 +3,15 @@ package org.uboot.modules.system.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.boot.autoconfigure.AutoConfigurationPackage;
 import org.springframework.transaction.annotation.Transactional;
 import org.uboot.common.exception.UBootException;
 import org.uboot.modules.system.entity.SysDepart;
 import org.uboot.modules.system.entity.SysUser;
 import org.uboot.modules.system.entity.SysUserDepart;
+import org.uboot.modules.system.mapper.SysDepartMapper;
 import org.uboot.modules.system.mapper.SysUserDepartMapper;
+import org.uboot.modules.system.mapper.SysUserMapper;
 import org.uboot.modules.system.model.DepartIdModel;
 import org.uboot.modules.system.service.ISysDepartService;
 import org.uboot.modules.system.service.ISysUserDepartService;
@@ -28,10 +31,12 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
  */
 @Service
 public class SysUserDepartServiceImpl extends ServiceImpl<SysUserDepartMapper, SysUserDepart> implements ISysUserDepartService {
+
 	@Autowired
-	private ISysDepartService sysDepartService;
-	@Autowired
-	private ISysUserService sysUserService;
+    private SysUserMapper sysUserMapper;
+
+    @Autowired
+    private SysDepartMapper sysDepartMapper;
 
 
 	/**
@@ -51,7 +56,8 @@ public class SysUserDepartServiceImpl extends ServiceImpl<SysUserDepartMapper, S
 					depIdList.add(userDepart.getDepId());
 				}
 			queryDep.in(SysDepart::getId, depIdList);
-			List<SysDepart> depList = sysDepartService.list(queryDep);
+
+			List<SysDepart> depList = sysDepartMapper.selectList(queryDep);
 			if(depList != null || depList.size() > 0) {
 				for(SysDepart depart : depList) {
 					depIdModelList.add(new DepartIdModel().convertByUserDepart(depart));
@@ -81,7 +87,7 @@ public class SysUserDepartServiceImpl extends ServiceImpl<SysUserDepartMapper, S
 			for(SysUserDepart uDep : uDepList) {
 				userIdList.add(uDep.getUserId());
 			}
-			List<SysUser> userList = (List<SysUser>) sysUserService.listByIds(userIdList);
+            List<SysUser> userList = sysUserMapper.selectBatchIds(userIdList);
 			//update-begin-author:taoyan date:201905047 for:接口调用查询返回结果不能返回密码相关信息
 			for (SysUser sysUser : userList) {
 				sysUser.setSalt("");
@@ -99,7 +105,7 @@ public class SysUserDepartServiceImpl extends ServiceImpl<SysUserDepartMapper, S
 	    // 删除原关系
         baseMapper.deleteByDepCodeAndUser(oldDeptCode, userId);
         // 新增新关系
-        SysDepart sysDepart = sysDepartService.getOne(new LambdaQueryWrapper<SysDepart>().eq(SysDepart::getOrgCode, newDeptCode));
+        SysDepart sysDepart = sysDepartMapper.selectOne(new LambdaQueryWrapper<SysDepart>().eq(SysDepart::getOrgCode, newDeptCode));
         if(null == sysDepart) throw new UBootException("修改用户部门关系时，新部门不存在！");
         SysUserDepart sysUserDepart = new SysUserDepart(userId, sysDepart.getId());
         return baseMapper.insert(sysUserDepart);

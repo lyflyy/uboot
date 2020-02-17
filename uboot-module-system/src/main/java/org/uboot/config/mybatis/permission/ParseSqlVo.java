@@ -75,5 +75,10 @@ public class ParseSqlVo {
      */
     protected List<Join> joins;
 
+    /**
+     * 要设置的被join的表的新的alias
+     */
+    public String originTableAlias;
+
 
 }

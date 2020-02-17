@@ -19,7 +19,7 @@ public class PermissionSqlTest {
 
     static Logger logger = LoggerFactory.getLogger(PermissionSqlTest.class);
 
-    public static final String ORIGIN_TABLE_ALIAS = "sys_user_alias_origin";
+    public static final String originTableAlias = "sys_user_alias_origin";
 
 
     public static void main(String[] args) throws JSQLParserException {
@@ -59,13 +59,7 @@ public class PermissionSqlTest {
 //        HAVING a.id is not null and d.id is not null
 //        ORDER BY a.id
 
-        String sql = "select id, d.*, a.id, sum(d.id)  from wm_soldier_phy a, sys_user d, wm_soldier_info b left join wm_soldier_body c\n" +
-                "on c.user_id = b.id\n" +
-                "where a.user_id = b.id \n" +
-                "and b.id = d.id\n" +
-                "GROUP BY a.id, b.id, c.id\n" +
-                "HAVING a.id is not null and d.id is not null\n" +
-                "ORDER BY a.id";
+        String sql = "SELECT id,tenant_id,NAME,soldier_no,STATUS,head_img,birthday,sex,nation,native_place,politics_status,education,specialty,position,rank,has_wristband,is_admin,create_by,create_time,update_by,update_time,del_flag,sys_user_id FROM wm_soldier_info WHERE del_flag='0' ORDER BY create_time DESC";
 
 //        Select select = (Select) CCJSqlParserUtil.parse(sql);
 //        PlainSelect selectBody = (PlainSelect) select.getSelectBody();

@@ -4,9 +4,12 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import org.springframework.boot.autoconfigure.AutoConfigurationPackage;
 import org.uboot.modules.system.entity.SysRole;
 import org.uboot.modules.system.entity.SysUser;
 import org.uboot.modules.system.entity.SysUserRole;
+import org.uboot.modules.system.mapper.SysUserMapper;
 import org.uboot.modules.system.mapper.SysUserRoleMapper;
 import org.uboot.modules.system.service.ISysRoleService;
 import org.uboot.modules.system.service.ISysUserRoleService;
@@ -28,9 +31,10 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 public class SysUserRoleServiceImpl extends ServiceImpl<SysUserRoleMapper, SysUserRole> implements ISysUserRoleService {
 
 	@Autowired
-	private ISysUserService userService;
-	@Autowired
 	private ISysRoleService roleService;
+
+	@Autowired
+    private SysUserMapper sysUserMapper;
 
 	/**
 	 * 查询所有用户对应的角色信息
@@ -38,7 +42,7 @@ public class SysUserRoleServiceImpl extends ServiceImpl<SysUserRoleMapper, SysUs
 	@Override
 	public Map<String,String> queryUserRole() {
 		List<SysUserRole> uRoleList = this.list();
-		List<SysUser> userList = userService.list();
+		List<SysUser> userList = sysUserMapper.selectList(Wrappers.emptyWrapper());
 		List<SysRole> roleList = roleService.list();
 		Map<String,String> map = new IdentityHashMap<>();
 		String userId = "";

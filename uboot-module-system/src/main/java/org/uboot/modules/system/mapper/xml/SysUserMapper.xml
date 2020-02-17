@@ -28,7 +28,14 @@
 		UPDATE sys_user SET org_code = #{orgCode} where username = #{username}
 	</update>
 
-	<!-- 根据手机号查询 -->
+    <update id="updateOrgCodeBatch">
+        update sys_user set org_code = #{orgCode} where id in
+        <foreach item="id" collection="userId" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <!-- 根据手机号查询 -->
 	<select id="getUserByPhone"  resultType="org.uboot.modules.system.entity.SysUser">
 		select * from  sys_user  where phone = #{phone} and del_flag = '0'
 	</select>

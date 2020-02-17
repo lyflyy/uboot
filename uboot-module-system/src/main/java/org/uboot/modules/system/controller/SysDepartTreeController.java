@@ -5,23 +5,26 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.web.bind.annotation.*;
 import org.uboot.common.api.vo.Result;
 import org.uboot.common.aspect.annotation.PermissionData;
+import org.uboot.common.constant.CacheConstant;
 import org.uboot.common.system.base.controller.BaseController;
 import org.uboot.common.system.query.QueryGenerator;
+import org.uboot.common.system.util.JwtUtil;
 import org.uboot.common.system.vo.LoginUser;
 import org.uboot.modules.system.entity.SysDepart;
 import org.uboot.modules.system.model.DepartIdModel;
-import org.uboot.modules.system.model.SysDepartTreeModel;
+import org.uboot.modules.system.model.SysDepartModel;
 import org.uboot.modules.system.model.SysDepartTreeWithManagerModel;
-import org.uboot.modules.system.service.ISysDepartService;
+import org.uboot.modules.system.service.*;
 import org.uboot.modules.system.util.FindsDepartsChildrenUtil;
+import org.uboot.modules.system.vo.SysDepartManagersVO;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @Description: sys_depart 拥有数据权限的部门操作
@@ -54,10 +57,7 @@ public class SysDepartTreeController extends BaseController<SysDepart, ISysDepar
                                    HttpServletRequest req) {
         LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
         if(sysUser.getUsername().equals("admin")){
-            QueryWrapper<SysDepart> queryWrapper = QueryGenerator.initQueryWrapper(sysDepart1, req.getParameterMap());
-            List<SysDepart> pageList = sysDepartService.list(queryWrapper);
-            List<SysDepartTreeWithManagerModel> listResult = FindsDepartsChildrenUtil.wrapTreeDataToTreeList(pageList);
-            return Result.ok(listResult);
+            return Result.ok(sysDepartService.getAll());
         }else{
             return Result.ok(sysDepartService.getByUser(sysUser.getId()));
         }
@@ -71,9 +71,9 @@ public class SysDepartTreeController extends BaseController<SysDepart, ISysDepar
     @RequestMapping(value = "/queryIdTree", method = RequestMethod.GET)
     public Result<List<DepartIdModel>> queryIdTree() {
         LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
-        List<SysDepartTreeWithManagerModel> listResult;
+        List<SysDepartModel> listResult;
         if(sysUser.getUsername().equals("admin")){
-            QueryWrapper<SysDepart> queryWrapper = QueryGenerator.initQueryWrapper(null, null);
+            QueryWrapper<SysDepart> queryWrapper = new QueryWrapper<>();
             List<SysDepart> pageList = sysDepartService.list(queryWrapper);
             listResult = FindsDepartsChildrenUtil.wrapTreeDataToTreeList(pageList);
         }else{
@@ -107,15 +107,69 @@ public class SysDepartTreeController extends BaseController<SysDepart, ISysDepar
         return Result.ok(sysDepart1);
     }
 
-    private void handleDepartIdModel(List<SysDepartTreeWithManagerModel> listResult, List<DepartIdModel> result){
+    /**
+     * 添加新数据 添加用户新建的部门对象数据,并保存到数据库
+     *
+     * @param sysDepart
+     * @return
+     */
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    @CacheEvict(value= {CacheConstant.SYS_DEPARTS_CACHE,CacheConstant.SYS_DEPART_IDS_CACHE}, allEntries=true)
+    public Result<SysDepart> add(@RequestBody SysDepartManagersVO sysDepart, HttpServletRequest request) {
+        Result<SysDepart> result = new Result<SysDepart>();
+        String username = JwtUtil.getUserNameByToken(request);
+        try {
+            sysDepart.setCreateBy(username);
+            sysDepartService.saveDepartData(sysDepart, username);
+            // 为管理员赋予相应角色
+            if(sysDepart.getUserId() != null && sysDepart.getUserId().size() > 0){
+                sysDepartService.toProcessAddMangers(sysDepart);
+            }
+            result.success("添加成功！");
+        } catch (Exception e) {
+            log.error(e.getMessage(),e);
+            result.error500("操作失败");
+        }
+        return result;
+    }
+
+    /**
+     * 编辑数据 编辑部门的部分数据,并保存到数据库
+     *
+     * @param sysDepart
+     * @return
+     */
+    @RequestMapping(value = "/edit", method = RequestMethod.PUT)
+    @CacheEvict(value= {CacheConstant.SYS_DEPARTS_CACHE,CacheConstant.SYS_DEPART_IDS_CACHE}, allEntries=true)
+    public Result<SysDepart> edit(@RequestBody SysDepartManagersVO sysDepart, HttpServletRequest request) {
+        String username = JwtUtil.getUserNameByToken(request);
+        sysDepart.setUpdateBy(username);
+        Result<SysDepart> result = new Result<SysDepart>();
+        SysDepart sysDepartEntity = sysDepartService.getById(sysDepart.getId());
+        if (sysDepartEntity == null) {
+            result.error500("未找到对应实体");
+        } else {
+            // TODO 返回false说明什么？
+            if (sysDepartService.updateDepartDataById(sysDepart, username)) {
+                // 为管理员赋予相应角色
+                if(sysDepart.getUserId() != null && sysDepart.getUserId().size() > 0){
+                    sysDepartService.toProcessUpdateMangers(sysDepart);
+                }
+                result.success("修改成功!");
+            }
+        }
+        return result;
+    }
+
+    private void handleDepartIdModel(List<SysDepartModel> listResult, List<DepartIdModel> result){
         if(listResult != null && listResult.size() > 0){
-            for (SysDepartTreeWithManagerModel sysDepartTreeModel : listResult) {
+            for (SysDepartModel sysDepartModel : listResult) {
                 DepartIdModel d = new DepartIdModel();
-                d.convert(sysDepartTreeModel);
+                d.convert(sysDepartModel);
                 result.add(d);
-                if(sysDepartTreeModel.getChildren() != null && sysDepartTreeModel.getChildren().size() > 0){
+                if(sysDepartModel.getChildren() != null && sysDepartModel.getChildren().size() > 0){
                     List<DepartIdModel> children = new ArrayList<>();
-                    handleDepartIdModel(sysDepartTreeModel.getChildren(), children);
+                    handleDepartIdModel(sysDepartModel.getChildren(), children);
                     d.setChildren(children);
                 }
             }

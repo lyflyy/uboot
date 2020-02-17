@@ -26,11 +26,6 @@ public abstract class ParseSqlVariable {
      */
     final String fromTables = "sys_user";
 
-    /**
-     * 要设置的被join的表的新的alias
-     */
-    public static String ORIGIN_TABLE_ALIAS = "sys_user_alias_origin";
-
     static final Logger logger = LoggerFactory.getLogger(ParseSql.class);
 
 }

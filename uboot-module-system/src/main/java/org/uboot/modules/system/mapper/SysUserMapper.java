@@ -85,4 +85,5 @@ public interface SysUserMapper extends BaseMapper<SysUser> {
      */
     Integer getUserByOrgCodeTotal(@Param("orgCode") String orgCode, @Param("userParams") SysUser userParams);
 
+    int updateOrgCodeBatch(@Param("userId") List<String> userId,@Param("orgCode") String orgCode);
 }

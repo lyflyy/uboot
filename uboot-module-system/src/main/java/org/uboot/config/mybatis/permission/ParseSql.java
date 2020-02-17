@@ -92,6 +92,7 @@ public class ParseSql extends AbstractParseSql{
             // 所有表中肯定包含系统表
             // 1. 先检查fromtable是否为系统表
             if(parseSqlVo.getSelectBody().getFromItem() instanceof Table && fromTables.equals(table.getName())){
+                // 是系统表sys_user
                 handleBelongSystem(table.getName(), parseSqlVo.getSelectBody().getFromItem(), 0);
             }else{
                 // 2. 再检查jointable 是否为系统表
@@ -128,7 +129,7 @@ public class ParseSql extends AbstractParseSql{
             }
         }
         // 处理select 字段 中 的alias
-        handleSelectAlias();
+        handleSelectAlias(parseSqlVo.getOriginTableAlias());
         // 处理where 中 左右链接的alias
         handleWhereAlias(parseSqlVo.getFromTable());
         // 处理having 中的alias
@@ -136,7 +137,7 @@ public class ParseSql extends AbstractParseSql{
         // 处理order by 中 的alias
         handleOrderByAlias();
         // 处理group by 中 的alias
-        handleGroupByAlias();
+        handleGroupByAlias(parseSqlVo.getOriginTableAlias());
         // limit 不需要处理
         return parseSqlVo.getSelect().toString();
     }

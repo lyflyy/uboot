@@ -30,8 +30,19 @@
         select <include refid="modelColumns" /> from sys_depart sd, sys_user su where sd.org_code = su.org_code and su.id = #{id}
     </select>
 
-    <select id="selectByParentId" resultType="org.uboot.modules.system.model.SysDepartTreeModel">
+    <select id="selectAllDepart" resultMap="sysDepartTreeModelMap">
+        select <include refid="modelColumns" /> from sys_depart sd where sd.parent_id = ''
+    </select>
+
+    <select id="selectByParentId" resultMap="sysDepartTreeModelMap">
         select <include refid="modelColumns" /> from sys_depart sd where sd.parent_id = #{id}
+    </select>
+
+    <select id="selectManagersByDepartId" resultType="org.uboot.modules.system.entity.SysUser">
+        select su.* from sys_user su, sys_user_depart sud
+        where sud.dep_id = #{id}
+        and sud.user_id = su.id
+        and sud.is_manager = 1
     </select>
 
     <resultMap id="sysDepartTreeModelMap" type="org.uboot.modules.system.model.SysDepartTreeWithManagerModel">
@@ -59,10 +70,16 @@
                      select="selectByParentId"
                      column="id">
         </association>
+        <association property="userList"
+                     select="selectManagersByDepartId"
+                     column="id">
+        </association>
     </resultMap>
 
     <sql id="modelColumns">
         sd.id AS `key`, sd.id AS `value`, sd.depart_name AS title, sd.id, sd.tenant_id, sd.parent_id, sd.depart_name, sd.depart_name_en, sd.depart_name_abbr, sd.depart_order, sd.description, sd.org_category, sd.org_type, sd.org_code, sd.mobile, sd.fax, sd.address, sd.memo, sd.STATUS, sd.del_flag, sd.create_by, sd.create_time, sd.update_by, sd.update_time
     </sql>
+
+
 
 </mapper>

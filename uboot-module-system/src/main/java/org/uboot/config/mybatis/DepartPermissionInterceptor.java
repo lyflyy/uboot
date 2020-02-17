@@ -9,9 +9,11 @@ import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.plugin.*;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.SystemMetaObject;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Component;
+import org.uboot.common.system.vo.LoginUser;
 import org.uboot.config.mybatis.permission.ParseSql;
 import org.uboot.config.mybatis.permission.PermissionProperties;
 import org.uboot.config.mybatis.permission.annotation.DepartPermission;
@@ -43,6 +45,13 @@ public class DepartPermissionInterceptor implements Interceptor {
         //由于mappedStatement中有需要的方法id,但却是protected的，所以要通过反射获取
         MetaObject statementHandler = SystemMetaObject.forObject(handler);
         MappedStatement mappedStatement = (MappedStatement) statementHandler.getValue("delegate.mappedStatement");
+
+        LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
+        if(sysUser == null){
+            return invocation.proceed();
+        }else if(sysUser.getUsername().equals("admin")){
+            return invocation.proceed();
+        }
 
         //获得方法类型 (如select,update)
         SqlCommandType sqlCommandType = mappedStatement.getSqlCommandType();

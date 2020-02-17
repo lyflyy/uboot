@@ -2,6 +2,7 @@ package org.uboot.modules.system.model;
 
 import lombok.Data;
 import org.uboot.modules.system.entity.SysDepart;
+import org.uboot.modules.system.entity.SysUser;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -24,5 +25,6 @@ public class SysDepartTreeWithManagerModel extends SysDepartModel implements Ser
 
     private static final long serialVersionUID = 1L;
 
+    private List<SysUser> userList;
 
 }

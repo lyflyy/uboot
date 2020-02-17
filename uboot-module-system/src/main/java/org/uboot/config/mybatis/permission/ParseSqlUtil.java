@@ -16,10 +16,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static org.uboot.config.mybatis.permission.ParseSql.ORIGIN_TABLE_ALIAS;
 
 /**
  * @author: LiYang
@@ -37,26 +35,30 @@ public class ParseSqlUtil {
      * @param oldAlias
      * @param fromtable
      */
-    public static void handleLeftExpression(Expression where, String oldAlias, Table fromtable){
-        if(where != null && where.getClass().getSimpleName().equals("AndExpression")){
+    public static void handleLeftExpression(Expression where, String oldAlias, Table fromtable, String originTableAlias){
+        //BinaryExpression
+        if(where != null && (
+                where.getClass().getSimpleName().equals("AndExpression") ||
+                where.getClass().getSimpleName().equals("EqualsTo")
+            )){
             // 多and条件，左侧为多and 右侧为一个条件
             BinaryExpression whereOperator = (BinaryExpression) where;
-            handleConditionAlias(oldAlias, whereOperator.getRightExpression(), fromtable);
+            handleConditionAlias(oldAlias, whereOperator.getRightExpression(), fromtable, originTableAlias);
             Expression leftExpression = whereOperator.getLeftExpression();
             if(leftExpression != null && leftExpression.getClass().getSimpleName().equals("AndExpression")){
-                handleLeftExpression(leftExpression, oldAlias, fromtable);
+                handleLeftExpression(leftExpression, oldAlias, fromtable, originTableAlias);
             }else{
-                handleConditionAlias(oldAlias, leftExpression, fromtable);
+                handleConditionAlias(oldAlias, leftExpression, fromtable, originTableAlias);
             }
         }
     }
 
-    private static void checkFucntionExpression(String oldAlias, Expression expression, Table fromTable){
+    private static void checkFucntionExpression(String oldAlias, Expression expression, Table fromTable, String originTableAlias){
         if(expression.getClass().getSimpleName().equals("Function")){
             Function f = (Function) expression;
             ExpressionList expressionList = f.getParameters();
             for (Expression expressionListExpression : expressionList.getExpressions()) {
-                handleConditionAlias(oldAlias, expressionListExpression, fromTable);
+                handleConditionAlias(oldAlias, expressionListExpression, fromTable, originTableAlias);
             }
         }
     }
@@ -68,38 +70,39 @@ public class ParseSqlUtil {
      * 右侧同理
      * @param oldAlias
      * @param expression
+     * @param originTableAlias
      */
-    public static void handleConditionAlias(String oldAlias, Expression expression, Table fromTable){
+    public static void handleConditionAlias(String oldAlias, Expression expression, Table fromTable, String originTableAlias){
         if(expression == null) return;
         // 处理原表中的alias
 
         if (expression instanceof Column) {
             Column left = (Column) expression;
-            handleTableAlias(left.getTable(), oldAlias, fromTable);
+            handleTableAlias(left.getTable(), oldAlias, fromTable, originTableAlias);
         }
 
         if (expression instanceof Function) {
-            checkFucntionExpression(oldAlias, expression, fromTable);
+            checkFucntionExpression(oldAlias, expression, fromTable, originTableAlias);
         }
 
         if (expression instanceof BinaryExpression) {
             BinaryExpression minorThan = (BinaryExpression) expression;
             // 检查是否是mysql的函数
-            checkFucntionExpression(oldAlias, minorThan, fromTable);
+            checkFucntionExpression(oldAlias, minorThan, fromTable, originTableAlias);
             try{
-                checkFucntionExpression(oldAlias, minorThan.getLeftExpression(), fromTable);
+                checkFucntionExpression(oldAlias, minorThan.getLeftExpression(), fromTable, originTableAlias);
                 Column left = (Column) minorThan.getLeftExpression();
                 if(left != null){
-                    handleTableAlias(left.getTable(), oldAlias, fromTable);
+                    handleTableAlias(left.getTable(), oldAlias, fromTable, originTableAlias);
                 }
             }catch (ClassCastException e){
                 logger.info("sql parse MinorThan left is not expression :{}", minorThan.getLeftExpression());
             }
             try{
-                checkFucntionExpression(oldAlias, minorThan.getRightExpression(), fromTable);
+                checkFucntionExpression(oldAlias, minorThan.getRightExpression(), fromTable, originTableAlias);
                 Column right = (Column) minorThan.getRightExpression();
                 if(right != null){
-                    handleTableAlias(right.getTable(), oldAlias, fromTable);
+                    handleTableAlias(right.getTable(), oldAlias, fromTable, originTableAlias);
                 }
             }catch (ClassCastException e){
                 logger.info("sql parse MinorThan right is not expression :{}", minorThan.getLeftExpression());
@@ -109,14 +112,14 @@ public class ParseSqlUtil {
             IsNullExpression isNullExpression = (IsNullExpression) expression;
             Column left = (Column) isNullExpression.getLeftExpression();
             if(left != null){
-                handleTableAlias(left.getTable(), oldAlias, fromTable);
+                handleTableAlias(left.getTable(), oldAlias, fromTable, originTableAlias);
             }
         }
         if(expression instanceof Between){
             Between between = (Between) expression;
             Column left = (Column) between.getLeftExpression();
             if(left != null){
-                handleTableAlias(left.getTable(), oldAlias, fromTable);
+                handleTableAlias(left.getTable(), oldAlias, fromTable, originTableAlias);
             }
         }
     }
@@ -126,15 +129,16 @@ public class ParseSqlUtil {
      * @param table
      * @param oldAlias
      * @param fromTable
+     * @param originTableAlias
      */
-    private static void handleTableAlias(Table table, String oldAlias, Table fromTable) {
+    private static void handleTableAlias(Table table, String oldAlias, Table fromTable, String originTableAlias) {
         if(table == null) return;
         String tmpStr[] = table.getFullyQualifiedName().split("\\.");
         // length = 3 database.table.column - length = 2 table/alias.column - length = 1 column
         // length = 3 newAlias.column - length = 2 newAlias.column - length = 1 newAlias.column
         String alias = tmpStr.length == 3 ? tmpStr[1] : tmpStr.length == 2 ? tmpStr[0] : tmpStr[0];
         if(alias.equals(oldAlias) || alias.equals(fromTable.getName()) || StringUtils.isBlank(alias)){
-            table.setAlias(new Alias(ORIGIN_TABLE_ALIAS));
+            table.setAlias(new Alias(originTableAlias));
         }
     }
 
@@ -144,9 +148,9 @@ public class ParseSqlUtil {
      * @param oldJoins
      * @param fromTable
      */
-    public static void handleOldJoinAlias(String oldAlias, List<Join> oldJoins, Table fromTable){
+    public static void handleOldJoinAlias(String oldAlias, List<Join> oldJoins, Table fromTable, String originTableAlias){
         for (Join oldJoin : oldJoins) {
-            handleConditionAlias(oldAlias, oldJoin.getOnExpression(), fromTable);
+            handleConditionAlias(oldAlias, oldJoin.getOnExpression(), fromTable, originTableAlias);
         }
     }
 

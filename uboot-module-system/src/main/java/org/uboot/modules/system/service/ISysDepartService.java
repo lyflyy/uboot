@@ -1,11 +1,11 @@
 package org.uboot.modules.system.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import org.springframework.data.repository.query.Param;
 import org.uboot.modules.system.entity.SysDepart;
 import org.uboot.modules.system.model.DepartIdModel;
+import org.uboot.modules.system.model.SysDepartModel;
 import org.uboot.modules.system.model.SysDepartTreeModel;
-import org.uboot.modules.system.model.SysDepartTreeWithManagerModel;
+import org.uboot.modules.system.vo.SysDepartManagersVO;
 
 import java.util.List;
 
@@ -104,6 +104,17 @@ public interface ISysDepartService extends IService<SysDepart>{
      * @param id
      * @return
      */
-    List<SysDepartTreeWithManagerModel> getByUser(String id);
+    List<SysDepartModel> getByUser(String id);
 
+    List<SysDepartModel> getAll();
+
+    /**
+     * 处理部门新增的时候管理员信息
+     * 处理 管理员与部门的关系
+     * 处理 管理员与角色的关系
+     * @param sysDepart
+     */
+    void toProcessAddMangers(SysDepartManagersVO sysDepart);
+
+    void toProcessUpdateMangers(SysDepartManagersVO sysDepart);
 }
