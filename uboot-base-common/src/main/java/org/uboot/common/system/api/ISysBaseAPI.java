@@ -163,5 +163,17 @@ public interface ISysBaseAPI {
      */
     public List<SysDepartModel> getAllSysDepart();
 
+    /**
+     * 根据部门id与用户id列表，批量删除用户与部门的关系
+     */
+    int removeDepartUsers(List<String> userIds);
+
+
+    /**
+     * 根据部门id与用户id列表，批量删除用户与角色的关系
+     * 注意，是删除用户所有的角色
+     */
+    int removeRoleUsers(List<String> userIds);
+
 }
 

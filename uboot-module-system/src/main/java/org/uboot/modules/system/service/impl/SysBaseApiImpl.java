@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.uboot.common.constant.CacheConstant;
 import org.uboot.common.constant.CommonConstant;
@@ -366,4 +367,20 @@ public class SysBaseApiImpl implements ISysBaseAPI {
 		}
 		return departModelList;
 	}
+
+    @Override
+    public int removeDepartUsers(List<String> userIds) {
+	    if(userIds != null && userIds.size() > 0){
+            return departMapper.deleteDepartUsers(userIds);
+        }
+	    return 0;
+    }
+
+    @Override
+    public int removeRoleUsers(List<String> userIds) {
+        if(userIds != null && userIds.size() > 0){
+            return roleMapper.deleteRoleUsers(userIds);
+        }
+        return 0;
+    }
 }

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.uboot.modules.system.mapper.SysDepartMapper">
 
-	<select id="queryUserDeparts" parameterType="String" resultType="org.uboot.modules.system.entity.SysDepart">
+    <select id="queryUserDeparts" parameterType="String" resultType="org.uboot.modules.system.entity.SysDepart">
 	   select * from sys_depart where id IN ( select dep_id from sys_user_depart where user_id = #{userId} )
 	</select>
 
@@ -79,6 +79,13 @@
     <sql id="modelColumns">
         sd.id AS `key`, sd.id AS `value`, sd.depart_name AS title, sd.id, sd.tenant_id, sd.parent_id, sd.depart_name, sd.depart_name_en, sd.depart_name_abbr, sd.depart_order, sd.description, sd.org_category, sd.org_type, sd.org_code, sd.mobile, sd.fax, sd.address, sd.memo, sd.STATUS, sd.del_flag, sd.create_by, sd.create_time, sd.update_by, sd.update_time
     </sql>
+
+    <delete id="deleteDepartUsers">
+        delete from sys_user_depart where user_id in
+        <foreach item="id" collection="list" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
 
 
 

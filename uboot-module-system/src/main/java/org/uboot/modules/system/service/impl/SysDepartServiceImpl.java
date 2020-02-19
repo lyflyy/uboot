@@ -1,18 +1,17 @@
 package org.uboot.modules.system.service.impl;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uboot.common.constant.CacheConstant;
 import org.uboot.common.constant.CommonConstant;
 import org.uboot.common.exception.UBootException;
+import org.uboot.common.system.api.ISysBaseAPI;
 import org.uboot.common.util.YouBianCodeUtil;
 import org.uboot.modules.system.entity.*;
 import org.uboot.modules.system.mapper.SysDepartMapper;
+import org.uboot.modules.system.mapper.SysRoleMapper;
 import org.uboot.modules.system.mapper.SysUserMapper;
 import org.uboot.modules.system.model.DepartIdModel;
 import org.uboot.modules.system.model.SysDepartManagerModel;
@@ -253,9 +252,7 @@ public class SysDepartServiceImpl extends ServiceImpl<SysDepartMapper, SysDepart
         if(sysRole == null) throw new UBootException("部门角色信息为空，请联系管理员！");
         // 所有被选中管理员的用户应该删除该用户与原部门的关系，并新建该用户与该部门的关系，并标示为管理员
         if(sysDepart.getUserId() != null && sysDepart.getUserId().size() > 0){
-            sysUserDepartService.remove(new LambdaQueryWrapper<SysUserDepart>()
-                    .in(SysUserDepart::getUserId, sysDepart.getUserId())
-            );
+            baseMapper.deleteDepartUsers(sysDepart.getUserId());
             sysUserRoleService.remove(new LambdaQueryWrapper<SysUserRole>().
                     in(SysUserRole::getUserId, sysDepart.getUserId())
                     .eq(SysUserRole::getRoleId, sysRole.getId())
@@ -285,20 +282,18 @@ public class SysDepartServiceImpl extends ServiceImpl<SysDepartMapper, SysDepart
                 .eq(SysUserDepart::getIsManager, true)
                 .eq(SysUserDepart::getDepId, sysDepart.getId())
         );
+        List<String> ids = new ArrayList<>();
         if(oldUsers != null && oldUsers.size() > 0){
-            // 1. 删除这些管理员的角色信息
-            List<String> ids = new ArrayList<>();
             ids.addAll(oldUsers.stream().map(e -> e.getUserId()).collect(Collectors.toList()));
-            ids.addAll(sysDepart.getUserId());
-            sysUserRoleService.remove(new LambdaQueryWrapper<SysUserRole>().
-                    in(SysUserRole::getUserId, ids)
-                    .eq(SysUserRole::getRoleId, sysRole.getId())
-            );
-            // 2. 删除老管理员 + 新管理员所有与部门的关系
-            sysUserDepartService.remove(new LambdaQueryWrapper<SysUserDepart>()
-                    .in(SysUserDepart::getUserId, ids)
-            );
         }
+        // 1. 删除这些管理员的角色信息
+        ids.addAll(sysDepart.getUserId());
+        // 2. 删除老管理员 + 新管理员所有与部门的关系
+        baseMapper.deleteDepartUsers(ids);
+        sysUserRoleService.remove(new LambdaQueryWrapper<SysUserRole>().
+                in(SysUserRole::getUserId, ids)
+                .eq(SysUserRole::getRoleId, sysRole.getId())
+        );
         processSaveDepartManagers(sysDepart, sysRole.getId());
     }
 

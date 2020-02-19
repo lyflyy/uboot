@@ -216,7 +216,10 @@ public abstract class AbstractParseSql extends ParseSqlVariable {
             if(selectItem instanceof AllTableColumns){
                 AllTableColumns allColumns = (AllTableColumns) selectItem;
                 Table t = allColumns.getTable();
-                if(t != null && t.getName().equals(parseSqlVo.getOldAliasName())){
+                if(t != null && (
+                        t.getName().equals(parseSqlVo.getOldAliasName())) ||
+                        t.getName().equals(parseSqlVo.getFromTable().getName())
+                ){
                     t.setName(parseSqlVo.getOriginTableAlias());
                 }
             }

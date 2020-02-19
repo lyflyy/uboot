@@ -1,8 +1,11 @@
 package org.uboot.modules.system.mapper;
 
+import org.springframework.data.repository.query.Param;
 import org.uboot.modules.system.entity.SysRole;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+
+import java.util.List;
 
 /**
  * <p>
@@ -14,4 +17,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface SysRoleMapper extends BaseMapper<SysRole> {
 
+    int deleteRoleUsers(List<String> userIds);
 }

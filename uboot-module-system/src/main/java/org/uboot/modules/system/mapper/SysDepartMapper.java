@@ -77,4 +77,10 @@ public interface SysDepartMapper extends BaseMapper<SysDepart> {
      */
     List<SysUser> selectManagersByDepartId(@Param("id") String id);
 
+    /**
+     * 根据部门id与用户id列表，批量删除用户与部门的关系
+     * @param userIds
+     * @return
+     */
+    int deleteDepartUsers(@Param("userIds") List<String> userIds);
 }
