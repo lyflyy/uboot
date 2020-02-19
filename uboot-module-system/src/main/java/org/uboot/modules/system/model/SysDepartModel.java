@@ -71,6 +71,16 @@ public abstract class SysDepartModel<T> implements Serializable {
 
     protected Date updateTime;
 
+    protected Integer organization;
+
+    public Integer getOrganization() {
+        return organization;
+    }
+
+    public void setOrganization(Integer organization) {
+        this.organization = organization;
+    }
+
     List<T> children = new ArrayList<>();
 
     public List<T> getChildren() {

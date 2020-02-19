@@ -96,4 +96,11 @@ public class SysDepart implements Serializable {
      */
     private String tenantId;
 
+    /**编制*/
+    @Excel(name="编制",width=15, dicCode = "depart_organization_type")
+    @Dict(dicCode = "depart_organization_type")
+    private Integer organization;
+
+
+
 }

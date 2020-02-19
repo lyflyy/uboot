@@ -1,5 +1,6 @@
 package org.uboot.modules.system.controller;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -107,6 +108,9 @@ public class SysTenantController extends BaseController<SysTenant, ISysTenantSer
 	@ApiOperation(value="租户-编辑", notes="租户-编辑")
 	@PutMapping(value = "/edit")
 	public Result<?> edit(@RequestBody SysTenant sysTenant) {
+        if(sysTenant.getStatus().equals(1)){
+            sysTenant.setFileTime(new Date());
+        }
 		sysTenantService.updateById(sysTenant);
 		return Result.ok("编辑成功!");
 	}

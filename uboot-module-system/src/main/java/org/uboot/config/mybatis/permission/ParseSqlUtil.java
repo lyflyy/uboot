@@ -34,9 +34,6 @@ public class ParseSqlUtil {
      * @param where
      */
     public static void handleLeftExpression(Expression where, ParseSqlVo parseSqlVo){
-        String oldAlias = parseSqlVo.getOldAliasName();
-        Table fromtable = parseSqlVo.getFromTable();
-        String originTableAlias = parseSqlVo.getOriginTableAlias();
         //BinaryExpression
         if(where != null && (
                 where.getClass().getSimpleName().equals("AndExpression") ||
@@ -90,6 +87,7 @@ public class ParseSqlUtil {
             checkFucntionExpression(parseSqlVo, minorThan);
             try{
                 checkFucntionExpression(parseSqlVo, minorThan.getLeftExpression());
+                handleLeftExpression(minorThan.getLeftExpression(), parseSqlVo);
                 Column left = (Column) minorThan.getLeftExpression();
                 if(left != null){
                     handleTableAlias(left.getTable(), parseSqlVo);
@@ -99,6 +97,7 @@ public class ParseSqlUtil {
             }
             try{
                 checkFucntionExpression(parseSqlVo, minorThan.getRightExpression());
+                handleLeftExpression(minorThan.getRightExpression(), parseSqlVo);
                 Column right = (Column) minorThan.getRightExpression();
                 if(right != null){
                     handleTableAlias(right.getTable(), parseSqlVo);

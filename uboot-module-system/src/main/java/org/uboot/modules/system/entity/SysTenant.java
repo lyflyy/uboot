@@ -59,11 +59,18 @@ public class SysTenant {
     @ApiModelProperty(value = "createBy")
 	private String createBy;
 	/**createTime*/
-	@Excel(name = "createTime", width = 20, format = "yyyy-MM-dd HH:mm:ss")
-	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "createTime", width = 20, format = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "createTime")
-	private Date createTime;
+    private Date createTime;
+
+    @Excel(name = "createTime", width = 20, format = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @ApiModelProperty(value = "fileTime")
+    private Date fileTime;
+
 	/**updateBy*/
 	@Excel(name = "updateBy", width = 15)
     @ApiModelProperty(value = "updateBy")

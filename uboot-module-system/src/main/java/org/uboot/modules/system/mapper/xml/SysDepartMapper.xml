@@ -66,6 +66,7 @@
         <result property="createTime" column="create_time"></result>
         <result property="updateBy" column="update_by"></result>
         <result property="updateTime" column="update_time"></result>
+        <result property="organization" column="organization"></result>
         <association property="children"
                      select="selectByParentId"
                      column="id">
@@ -74,10 +75,23 @@
                      select="selectManagersByDepartId"
                      column="id">
         </association>
+        <association property="userCount"
+                     select="selectDepartUserCount"
+                     column="id">
+        </association>
     </resultMap>
 
+    <select id="selectDepartUserCount" resultType="java.lang.Integer">
+        SELECT
+        count(sud.user_id)
+        FROM
+            sys_depart depart left join sys_user_depart sud on depart.id = sud.dep_id
+        WHERE
+            depart.id = #{id}
+    </select>
+
     <sql id="modelColumns">
-        sd.id AS `key`, sd.id AS `value`, sd.depart_name AS title, sd.id, sd.tenant_id, sd.parent_id, sd.depart_name, sd.depart_name_en, sd.depart_name_abbr, sd.depart_order, sd.description, sd.org_category, sd.org_type, sd.org_code, sd.mobile, sd.fax, sd.address, sd.memo, sd.STATUS, sd.del_flag, sd.create_by, sd.create_time, sd.update_by, sd.update_time
+        sd.id AS `key`, sd.id AS `value`, sd.depart_name AS title, sd.id, sd.tenant_id, sd.parent_id, sd.depart_name, sd.depart_name_en, sd.depart_name_abbr, sd.depart_order, sd.description, sd.org_category, sd.org_type, sd.org_code, sd.mobile, sd.fax, sd.address, sd.memo, sd.STATUS, sd.del_flag, sd.create_by, sd.create_time, sd.update_by, sd.update_time, sd.organization
     </sql>
 
     <delete id="deleteDepartUsers">

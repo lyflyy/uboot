@@ -27,4 +27,6 @@ public class SysDepartTreeWithManagerModel extends SysDepartModel implements Ser
 
     private List<SysUser> userList;
 
+    private Integer userCount;
+
 }
