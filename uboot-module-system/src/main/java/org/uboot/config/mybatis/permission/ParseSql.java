@@ -129,15 +129,15 @@ public class ParseSql extends AbstractParseSql{
             }
         }
         // 处理select 字段 中 的alias
-        handleSelectAlias(parseSqlVo.getOriginTableAlias());
+        handleSelectAlias();
         // 处理where 中 左右链接的alias
-        handleWhereAlias(parseSqlVo.getFromTable());
+        handleWhereAlias();
         // 处理having 中的alias
-        handleHavingAlias(parseSqlVo.getFromTable());
+        handleHavingAlias();
         // 处理order by 中 的alias
         handleOrderByAlias();
         // 处理group by 中 的alias
-        handleGroupByAlias(parseSqlVo.getOriginTableAlias());
+        handleGroupByAlias();
         // limit 不需要处理
         return parseSqlVo.getSelect().toString();
     }

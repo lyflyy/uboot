@@ -97,16 +97,11 @@ public abstract class AbstractParseSql extends ParseSqlVariable {
     /**
      * 跟order by 一样的路子
      */
-    protected void handleGroupByAlias(String originTableAlias) {
+    protected void handleGroupByAlias() {
         List<Expression> list = parseSqlVo.getSelectBody().getGroupByColumnReferences();
         if(list != null && list.size() > 0)
         for (Expression expression : list) {
-            handleConditionAlias(
-                    parseSqlVo.getOldAliasName(),
-                    expression,
-                    parseSqlVo.getFromTable(),
-                    originTableAlias
-            );
+            handleConditionAlias(parseSqlVo, expression);
         }
     }
 
@@ -128,11 +123,11 @@ public abstract class AbstractParseSql extends ParseSqlVariable {
      * having 与where 一样的套路
      * 多个having条件的话，除了最后一个条件，剩下的都会出现在左expression，右只会剩下一个，递归处理左侧的条件+右1
      */
-    protected void handleHavingAlias(Table fromtable){
+    protected void handleHavingAlias(){
 
         Expression having = parseSqlVo.getSelectBody().getHaving();
         // 多个where条件的话，除了最后一个条件，剩下的都会出现在左expression，右只会剩下一个，递归处理左侧的条件+右1
-        handleLeftExpression(having, parseSqlVo.getOldAliasName(), fromtable, parseSqlVo.getOriginTableAlias());
+        handleLeftExpression(having, parseSqlVo);
     }
 
 
@@ -150,12 +145,7 @@ public abstract class AbstractParseSql extends ParseSqlVariable {
         newJoins.add(user);
         List<Join> oldJoins = parseSqlVo.getSelectBody().getJoins();
         if(oldJoins != null && oldJoins.size() > 0) {
-            handleOldJoinAlias(
-                    parseSqlVo.getOldAliasName(),
-                    oldJoins,
-                    parseSqlVo.getFromTable(),
-                    parseSqlVo.getOriginTableAlias()
-            );
+            handleOldJoinAlias(parseSqlVo, oldJoins);
             newJoins = handleJoins(oldJoins, newJoins, skip);
         }
         parseSqlVo.getSelectBody().setJoins(newJoins);
@@ -180,7 +170,7 @@ public abstract class AbstractParseSql extends ParseSqlVariable {
         List<Join> joins = parseSqlVo.getSelectBody().getJoins();
         // 处理关联表的alias
         if(joins != null && joins.size() > 0) {
-            handleOldJoinAlias(parseSqlVo.getOldAliasName(), joins, parseSqlVo.getFromTable(), parseSqlVo.getOriginTableAlias());
+            handleOldJoinAlias(parseSqlVo, joins);
             newJoins = handleJoins(joins, newJoins, skip);
         }
         parseSqlVo.getSelectBody().setJoins(newJoins);
@@ -191,13 +181,12 @@ public abstract class AbstractParseSql extends ParseSqlVariable {
      * 处理where 中 左右链接的alias
      * 并且拼装 最后的权限控制sql
      * @throws JSQLParserException
-     * @param fromTable
      */
-    protected void handleWhereAlias(Table fromTable) throws JSQLParserException {
+    protected void handleWhereAlias() throws JSQLParserException {
         // 处理where 中 左右链接的alias
         Expression where = parseSqlVo.getSelectBody().getWhere();
         // 多个where条件的话，除了最后一个条件，剩下的都会出现在左expression，右只会剩下一个，递归处理左侧的条件+右1
-        handleLeftExpression(where, parseSqlVo.getOldAliasName(), fromTable, parseSqlVo.getOriginTableAlias());
+        handleLeftExpression(where, parseSqlVo);
         Expression departWhere = CCJSqlParserUtil.parseCondExpression("sys_user_alias_su.org_code LIKE '" + parseSqlVo.getCurrentOrgCode() + "%'");
         if(where == null){
             parseSqlVo.getSelectBody().setWhere(departWhere);
@@ -210,7 +199,7 @@ public abstract class AbstractParseSql extends ParseSqlVariable {
     /**
      * 处理select 字段 中 的alias
      */
-    void handleSelectAlias(String originTableAlias) {
+    void handleSelectAlias() {
         List<SelectItem> selectItems = parseSqlVo.getSelectBody().getSelectItems();
         for (SelectItem selectItem : selectItems) {
             if(selectItem instanceof AllTableColumns){
@@ -235,12 +224,7 @@ public abstract class AbstractParseSql extends ParseSqlVariable {
                         table.setName(parseSqlVo.getOriginTableAlias());
                     }
                 }
-                handleConditionAlias(
-                        parseSqlVo.getOldAliasName(),
-                        selectExpressionItem.getExpression(),
-                        parseSqlVo.getFromTable(),
-                        originTableAlias
-                );
+                handleConditionAlias(parseSqlVo, selectExpressionItem.getExpression());
             }
 
         }
