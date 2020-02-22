@@ -1,36 +1,42 @@
 package org.uboot.modules.system.service.impl;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import io.netty.util.internal.StringUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.uboot.common.constant.CacheConstant;
-import org.uboot.common.constant.CommonConstant;
-import org.uboot.common.exception.UBootException;
-import org.uboot.common.system.api.ISysBaseAPI;
-import org.uboot.common.util.YouBianCodeUtil;
-import org.uboot.modules.system.entity.*;
-import org.uboot.modules.system.mapper.SysDepartMapper;
-import org.uboot.modules.system.mapper.SysRoleMapper;
-import org.uboot.modules.system.mapper.SysUserMapper;
-import org.uboot.modules.system.model.DepartIdModel;
-import org.uboot.modules.system.model.SysDepartManagerModel;
-import org.uboot.modules.system.model.SysDepartModel;
-import org.uboot.modules.system.model.SysDepartTreeModel;
-import org.uboot.modules.system.service.*;
-import org.uboot.modules.system.util.FindsDepartsChildrenUtil;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-
-import io.netty.util.internal.StringUtil;
-import org.uboot.modules.system.vo.SysDepartManagersVO;
-
+import org.uboot.common.constant.CacheConstant;
 import static org.uboot.common.constant.CacheKeyConstant.CACHE_DEPART_ROLE_CODE;
 import static org.uboot.common.constant.CacheKeyConstant.CACHE_DEPART_ROLE_KEY;
+import org.uboot.common.constant.CommonConstant;
+import org.uboot.common.exception.UBootException;
+import org.uboot.common.util.YouBianCodeUtil;
+import org.uboot.modules.system.entity.SysDepart;
+import org.uboot.modules.system.entity.SysRole;
+import org.uboot.modules.system.entity.SysUserDepart;
+import org.uboot.modules.system.entity.SysUserRole;
+import org.uboot.modules.system.mapper.SysDepartMapper;
+import org.uboot.modules.system.mapper.SysUserMapper;
+import org.uboot.modules.system.model.DepartIdModel;
+import org.uboot.modules.system.model.SysDepartModel;
+import org.uboot.modules.system.model.SysDepartTreeModel;
+import org.uboot.modules.system.service.ISysDepartService;
+import org.uboot.modules.system.service.ISysDictService;
+import org.uboot.modules.system.service.ISysRoleService;
+import org.uboot.modules.system.service.ISysUserDepartService;
+import org.uboot.modules.system.service.ISysUserRoleService;
+import org.uboot.modules.system.util.FindsDepartsChildrenUtil;
+import org.uboot.modules.system.vo.SysDepartManagersVO;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -385,7 +391,30 @@ public class SysDepartServiceImpl extends ServiceImpl<SysDepartMapper, SysDepart
         return baseMapper.queryUserDepartsByTenantId(userId, tenantId);
     }
 
-    @Override
+	/**
+	 * 根据部门id 获取上级部门
+	 *
+	 * @param sysCode
+	 * @return
+	 */
+	@Override
+	public List<SysDepart> queryParents(String sysCode) {
+		List<SysDepart> departs = new ArrayList<>();
+		recursiveParents(departs, sysCode);
+		return departs;
+	}
+
+	private void recursiveParents(List<SysDepart> departs, String sysCode){
+		QueryWrapper<SysDepart> where = new QueryWrapper<>();
+		where.eq("org_code", sysCode);
+		SysDepart depart = baseMapper.selectOne(where);
+		departs.add(depart);
+		if(StringUtils.isNotEmpty(depart.getParentId())){
+			recursiveParents(departs, depart.getParentId());
+		}
+	}
+
+	@Override
 	public List<SysDepart> queryDepartsByUsername(String username) {
 		return baseMapper.queryDepartsByUsername(username);
 	}

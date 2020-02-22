@@ -84,6 +84,14 @@ public interface ISysDepartService extends IService<SysDepart>{
 	public List<SysDepart> queryUserDepartsByTenantId(String userId, String tenantId);
 
     /**
+     * 根据部门id 获取上级部门
+     *
+     * @param sysCode
+     * @return
+     */
+    List<SysDepart> queryParents(String sysCode);
+
+    /**
      * 根据用户名查询部门
      *
      * @param username
