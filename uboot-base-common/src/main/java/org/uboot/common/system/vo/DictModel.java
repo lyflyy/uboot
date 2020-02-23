@@ -18,10 +18,16 @@ public class DictModel implements Serializable{
 	public DictModel() {
 	}
 
-	public DictModel(String value, String text) {
-		this.value = value;
-		this.text = text;
-	}
+    public DictModel(String value, String text, String description) {
+        this.value = value;
+        this.text = text;
+        this.description = description;
+    }
+
+    public DictModel(String value, String text) {
+        this.value = value;
+        this.text = text;
+    }
 
 	/**
 	 * 字典value
@@ -32,6 +38,11 @@ public class DictModel implements Serializable{
 	 */
 	private String text;
 
+    /**
+     * 描述
+     */
+	private String description;
+
 	/**
 	 * 特殊用途： JgEditableTable
 	 * @return
@@ -39,5 +50,8 @@ public class DictModel implements Serializable{
 	public String getTitle() {
 		return this.text;
 	}
+
+
+
 
 }

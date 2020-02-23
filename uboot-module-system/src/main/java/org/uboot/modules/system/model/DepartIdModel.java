@@ -28,7 +28,17 @@ public class DepartIdModel<T extends SysDepartModel> implements Serializable {
     // 部门名称
     private String title;
 
+    private String code;
+
     List<DepartIdModel> children = new ArrayList<>();
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
 
     /**
      * 将SysDepartTreeModel的部分数据放在该对象当中
@@ -39,6 +49,7 @@ public class DepartIdModel<T extends SysDepartModel> implements Serializable {
         this.key = treeModel.getId();
         this.value = treeModel.getId();
         this.title = treeModel.getDepartName();
+        this.code = treeModel.getOrgCode();
         return this;
     }
 
@@ -51,6 +62,7 @@ public class DepartIdModel<T extends SysDepartModel> implements Serializable {
         this.key = sysDepart.getId();
         this.value = sysDepart.getId();
         this.title = sysDepart.getDepartName();
+        this.code = sysDepart.getOrgCode();
         return this;
     }
 
