@@ -53,6 +53,13 @@ public interface ISysBaseAPI {
     List<String> getDepartIdsByUsername(String username);
 
     /**
+     * 根据用户id获取用户部门id集合
+     * @param username
+     * @return
+     */
+    List<String> getDepartIdsByUserId(String username);
+
+    /**
      * 通过用户账号查询部门 name
      * @param username
      * @return 部门 name

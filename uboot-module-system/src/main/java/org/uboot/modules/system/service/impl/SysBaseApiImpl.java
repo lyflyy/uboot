@@ -150,7 +150,12 @@ public class SysBaseApiImpl implements ISysBaseAPI {
 		return result;
 	}
 
-	@Override
+    @Override
+    public List<String> getDepartIdsByUserId(String userId) {
+        return sysDepartService.queryDepartsByUserId(userId);
+    }
+
+    @Override
 	public List<String> getDepartNamesByUsername(String username) {
 		List<SysDepart> list = sysDepartService.queryDepartsByUsername(username);
 		List<String> result = new ArrayList<>(list.size());

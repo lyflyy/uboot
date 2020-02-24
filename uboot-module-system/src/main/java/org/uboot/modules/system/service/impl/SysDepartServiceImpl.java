@@ -303,6 +303,11 @@ public class SysDepartServiceImpl extends ServiceImpl<SysDepartMapper, SysDepart
         processSaveDepartManagers(sysDepart, sysRole.getId());
     }
 
+    @Override
+    public List<String> queryDepartsByUserId(String userId) {
+        return baseMapper.queryDepartsByUserId(userId);
+    }
+
     private void processSaveDepartManagers(SysDepartManagersVO sysDepart, String roleId){
         // 新增用户与该部门的关系，并标示为管理员
         List<SysUserDepart> userDeparts = new ArrayList<>();

@@ -125,4 +125,6 @@ public interface ISysDepartService extends IService<SysDepart>{
     void toProcessAddMangers(SysDepartManagersVO sysDepart);
 
     void toProcessUpdateMangers(SysDepartManagersVO sysDepart);
+
+    List<String> queryDepartsByUserId(String userId);
 }

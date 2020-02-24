@@ -90,4 +90,6 @@ public interface SysDepartMapper extends BaseMapper<SysDepart> {
      * @return
      */
     int deleteDepartUsers(@Param("userIds") List<String> userIds);
+
+    List<String> queryDepartsByUserId(@Param("userId") String userId);
 }
