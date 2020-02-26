@@ -15,6 +15,7 @@ import org.uboot.common.system.vo.LoginUser;
 import org.uboot.common.system.vo.SysUserCacheInfo;
 import org.uboot.common.util.PasswordUtil;
 import org.uboot.common.util.oConvertUtils;
+import org.uboot.modules.system.base.model.SysUserModel;
 import org.uboot.modules.system.entity.*;
 import org.uboot.modules.system.mapper.*;
 import org.uboot.modules.system.model.SysUserSysDepartModel;
@@ -35,7 +36,6 @@ import java.util.*;
  * @Author: scott
  * @Date: 2018-12-20
  */
-@Service
 @Slf4j
 public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> implements ISysUserService {
 
@@ -118,7 +118,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 	}
 
 	@Override
-	public SysUser getUserByName(String username) {
+	public SysUserModel getUserByName(String username) {
 		return userMapper.getUserByName(username);
 	}
 

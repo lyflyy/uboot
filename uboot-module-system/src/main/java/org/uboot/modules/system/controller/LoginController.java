@@ -16,6 +16,7 @@ import org.uboot.common.system.vo.LoginUser;
 import org.uboot.common.util.*;
 import org.uboot.common.util.encryption.EncryptedString;
 import org.uboot.modules.shiro.vo.DefContants;
+import org.uboot.modules.system.base.model.SysUserModel;
 import org.uboot.modules.system.entity.SysDepart;
 import org.uboot.modules.system.entity.SysTenant;
 import org.uboot.modules.system.entity.SysTenantUser;
@@ -81,7 +82,7 @@ public class LoginController {
 		//update-end-author:taoyan date:20190828 for:校验验证码
 
 		//1. 校验用户是否有效
-		SysUser sysUser = sysUserService.getUserByName(username);
+        SysUserModel sysUser = sysUserService.getUserByName(username);
 		result = sysUserService.checkUserIsEffective(sysUser);
 		if(!result.isSuccess()) {
 			return result;

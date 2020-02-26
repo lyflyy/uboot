@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 import org.uboot.common.api.vo.Result;
 import org.uboot.common.system.vo.SysUserCacheInfo;
+import org.uboot.modules.system.base.model.SysUserModel;
 import org.uboot.modules.system.entity.SysUser;
 
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -57,7 +58,7 @@ public interface ISysUserService extends IService<SysUser> {
 	 */
 	public boolean deleteBatchUsers(String userIds);
 
-	public SysUser getUserByName(String username);
+	public SysUserModel getUserByName(String username);
 
 	/**
 	 * 添加用户和用户角色关系

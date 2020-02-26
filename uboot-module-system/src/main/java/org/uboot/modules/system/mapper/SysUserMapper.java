@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.ibatis.annotations.Param;
 import org.uboot.config.mybatis.permission.annotation.DepartPermission;
+import org.uboot.modules.system.base.model.SysUserModel;
 import org.uboot.modules.system.entity.SysUser;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.uboot.modules.system.model.SysUserSysDepartModel;
@@ -25,7 +26,7 @@ public interface SysUserMapper extends BaseMapper<SysUser> {
 	 * @param username
 	 * @return
 	 */
-	public SysUser getUserByName(@Param("username") String username);
+	public SysUserModel getUserByName(@Param("username") String username);
 
 	/**
 	 *  根据部门Id查询用户信息

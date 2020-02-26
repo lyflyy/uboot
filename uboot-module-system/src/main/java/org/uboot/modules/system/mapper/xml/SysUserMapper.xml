@@ -3,7 +3,7 @@
 <mapper namespace="org.uboot.modules.system.mapper.SysUserMapper">
 
 	<!-- 根据用户名查询 -->
-	<select id="getUserByName" resultType="org.uboot.modules.system.entity.SysUser">
+	<select id="getUserByName" resultType="org.uboot.modules.system.base.model.SysUserModel">
 		select * from  sys_user  where username = #{username} and del_flag = '0'
 	</select>
 
