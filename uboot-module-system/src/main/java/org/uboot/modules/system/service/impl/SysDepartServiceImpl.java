@@ -5,23 +5,29 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.netty.util.internal.StringUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.jeecgframework.poi.excel.ExcelImportUtil;
+import org.jeecgframework.poi.excel.entity.ImportParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import org.uboot.common.constant.CacheConstant;
 import static org.uboot.common.constant.CacheKeyConstant.CACHE_DEPART_ROLE_CODE;
 import static org.uboot.common.constant.CacheKeyConstant.CACHE_DEPART_ROLE_KEY;
 import org.uboot.common.constant.CommonConstant;
 import org.uboot.common.exception.UBootException;
+import org.uboot.common.system.util.JwtUtil;
 import org.uboot.common.util.YouBianCodeUtil;
 import org.uboot.modules.system.entity.SysDepart;
 import org.uboot.modules.system.entity.SysRole;
 import org.uboot.modules.system.entity.SysUserDepart;
 import org.uboot.modules.system.entity.SysUserRole;
 import org.uboot.modules.system.mapper.SysDepartMapper;
+import org.uboot.modules.system.mapper.SysDictMapper;
 import org.uboot.modules.system.mapper.SysUserMapper;
 import org.uboot.modules.system.model.DepartIdModel;
+import org.uboot.modules.system.model.DuplicateCheckVo;
 import org.uboot.modules.system.model.SysDepartModel;
 import org.uboot.modules.system.model.SysDepartTreeModel;
 import org.uboot.modules.system.service.ISysDepartService;
@@ -32,6 +38,7 @@ import org.uboot.modules.system.service.ISysUserRoleService;
 import org.uboot.modules.system.util.FindsDepartsChildrenUtil;
 import org.uboot.modules.system.vo.SysDepartManagersVO;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -63,6 +70,9 @@ public class SysDepartServiceImpl extends ServiceImpl<SysDepartMapper, SysDepart
 
     @Autowired
     private SysUserMapper sysUserMapper;
+
+    @Autowired
+    SysDictMapper sysDictMapper;
 
 	/**
 	 * queryTreeList 对应 queryTreeList 查询所有的部门数据,以树结构形式响应给前端
@@ -306,6 +316,80 @@ public class SysDepartServiceImpl extends ServiceImpl<SysDepartMapper, SysDepart
     @Override
     public List<String> queryDepartsByUserId(String userId) {
         return baseMapper.queryDepartsByUserId(userId);
+    }
+
+    @Override
+    public SysDepart findIdByName(String paretnName) {
+        List<SysDepart> sysDeparts = baseMapper.selectList(new LambdaQueryWrapper<SysDepart>().eq(SysDepart::getDepartName, paretnName));
+        if(sysDeparts == null){
+            throw new UBootException("根据部别名称未查找到对应部别！");
+        }
+        if( sysDeparts.size() > 1 ){
+            throw new UBootException("存在同名部别！");
+        }
+        return sysDeparts.get(0);
+    }
+
+    private Boolean checkDupli(String depName){
+        DuplicateCheckVo vo = new DuplicateCheckVo();
+        vo.setTableName("sys_depart");
+        vo.setFieldName("depart_name");
+        vo.setFieldVal(depName);
+        Long num = sysDictMapper.duplicateCheckCountSqlNoDataId(vo);
+        if (num == null || num == 0) {
+            return true;
+        }
+        throw new UBootException("系统已存在相同名称部别[" + depName + "]，请更换部别名称");
+    }
+
+    @Override
+    @Transactional
+    public int importDepart(HttpServletRequest request, MultipartFile file, ImportParams params) throws Exception {
+        String username = JwtUtil.getUserNameByToken(request);
+        List<SysDepart> listSysDeparts = ExcelImportUtil.importExcel(file.getInputStream(), SysDepart.class, params);
+        // 一级部别处理
+        List<SysDepart> firstDeparts = listSysDeparts.stream().filter(e -> e.getDepartName().indexOf("/") == -1).collect(Collectors.toList());
+        for (SysDepart firstDepart : firstDeparts) {
+            firstDepart.setCreateBy(username);
+            if(checkDupli(firstDepart.getDepartName())){
+                saveDepartData(firstDepart, username);
+            }
+        }
+        // 再处理不是一级部别的部别
+        List<SysDepart> otherDeparts = listSysDeparts.stream().filter(e -> e.getDepartName().indexOf("/") > -1).collect(Collectors.toList());
+        if(otherDeparts == null){
+            return firstDeparts.size();
+        }
+        // 最多处理1000个层级
+        for (int i = 2; i < 1000; i++) {
+            // 从不是一级的部别列表中筛选出带i个/的  依次向上，这样就可以从最大部别依次导入了
+            if(otherDeparts.size() == 0){
+                break;
+            }
+            List<SysDepart> departs = new ArrayList<>();
+            for (SysDepart otherDepart : otherDeparts) {
+                if(otherDepart.getDepartName().split("/").length == i){
+//                    otherDeparts.remove(otherDepart);
+                    departs.add(otherDepart);
+                }
+            }
+            if(departs.size() == 0){
+                continue;
+            }
+            for (SysDepart sysDepart : departs) {
+                String depNames[] = sysDepart.getDepartName().split("/");
+                // 只需要找到这个部别的名字的上级部别，aaa/bbb/ccc,想要添加的是ccc，需要找到bbb，并找到他的id
+                String paretnName = depNames[depNames.length - 2];
+                // 根据这个name去查询这个部别的id
+                SysDepart parentDepart = findIdByName(paretnName);
+                sysDepart.setDepartName(depNames[depNames.length - 1]);
+                sysDepart.setParentId(parentDepart.getId());
+                if(checkDupli(sysDepart.getDepartName())){
+                    saveDepartData(sysDepart, username);
+                }
+            }
+        }
+        return listSysDeparts.size();
     }
 
     private void processSaveDepartManagers(SysDepartManagersVO sysDepart, String roleId){

@@ -4,18 +4,29 @@ package org.uboot.modules.system.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
+import org.jeecgframework.poi.excel.ExcelImportUtil;
+import org.jeecgframework.poi.excel.def.NormalExcelConstants;
+import org.jeecgframework.poi.excel.entity.ExportParams;
+import org.jeecgframework.poi.excel.entity.ImportParams;
+import org.jeecgframework.poi.excel.view.JeecgEntityExcelView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.servlet.ModelAndView;
 import org.uboot.common.api.vo.Result;
 import org.uboot.common.aspect.annotation.PermissionData;
 import org.uboot.common.constant.CacheConstant;
+import org.uboot.common.exception.UBootException;
 import org.uboot.common.system.base.controller.BaseController;
 import org.uboot.common.system.query.QueryGenerator;
 import org.uboot.common.system.util.JwtUtil;
 import org.uboot.common.system.vo.LoginUser;
 import org.uboot.modules.system.entity.SysDepart;
+import org.uboot.modules.system.mapper.SysDictMapper;
 import org.uboot.modules.system.model.DepartIdModel;
+import org.uboot.modules.system.model.DuplicateCheckVo;
 import org.uboot.modules.system.model.SysDepartModel;
 import org.uboot.modules.system.model.SysDepartTreeWithManagerModel;
 import org.uboot.modules.system.service.*;
@@ -23,8 +34,10 @@ import org.uboot.modules.system.util.FindsDepartsChildrenUtil;
 import org.uboot.modules.system.vo.SysDepartManagersVO;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.List;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @Description: sys_depart 拥有数据权限的部门操作
@@ -174,6 +187,70 @@ public class SysDepartTreeController extends BaseController<SysDepart, ISysDepar
                 }
             }
         }
+    }
+
+    /**
+     * 导出excel
+     *
+     * @param request
+     * @param response
+     */
+    @RequestMapping(value = "/exportXls")
+    public ModelAndView exportXls(SysDepart sysDepart, HttpServletRequest request) {
+        // Step.1 组装查询条件
+        QueryWrapper<SysDepart> queryWrapper = QueryGenerator.initQueryWrapper(sysDepart, request.getParameterMap());
+        //Step.2 AutoPoi 导出Excel
+        ModelAndView mv = new ModelAndView(new JeecgEntityExcelView());
+        List<SysDepart> pageList = sysDepartService.list(queryWrapper);
+        //按字典排序
+        Collections.sort(pageList, new Comparator<SysDepart>() {
+            @Override
+            public int compare(SysDepart arg0, SysDepart arg1) {
+                return arg0.getOrgCode().compareTo(arg1.getOrgCode());
+            }
+        });
+        //导出文件名称
+        mv.addObject(NormalExcelConstants.FILE_NAME, "部门列表");
+        mv.addObject(NormalExcelConstants.CLASS, SysDepart.class);
+        LoginUser user = (LoginUser) SecurityUtils.getSubject().getPrincipal();
+        mv.addObject(NormalExcelConstants.PARAMS, new ExportParams("部门列表数据", "导出人:"+user.getRealname(), "导出信息"));
+        mv.addObject(NormalExcelConstants.DATA_LIST, pageList);
+        return mv;
+    }
+
+    /**
+     * 通过excel导入数据
+     *
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping(value = "/importExcel", method = RequestMethod.POST)
+    @CacheEvict(value= {CacheConstant.SYS_DEPARTS_CACHE,CacheConstant.SYS_DEPART_IDS_CACHE}, allEntries=true)
+    public Result<?> importExcel(HttpServletRequest request, HttpServletResponse response) {
+        MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
+        Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();
+        for (Map.Entry<String, MultipartFile> entity : fileMap.entrySet()) {
+            MultipartFile file = entity.getValue();// 获取上传文件对象
+            ImportParams params = new ImportParams();
+            params.setTitleRows(2);
+            params.setHeadRows(1);
+            params.setNeedSave(true);
+            try {
+                int num = sysDepartService.importDepart(request, file, params);
+                return Result.ok("文件导入成功！数据行数：" + num);
+            } catch (Exception e) {
+                log.error(e.getMessage(),e);
+                return Result.error("文件导入失败:"+e.getMessage());
+            } finally {
+                try {
+                    file.getInputStream().close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return Result.error("文件导入失败！");
     }
 
 }

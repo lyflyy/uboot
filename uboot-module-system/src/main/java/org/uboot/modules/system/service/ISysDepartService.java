@@ -1,12 +1,15 @@
 package org.uboot.modules.system.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.jeecgframework.poi.excel.entity.ImportParams;
+import org.springframework.web.multipart.MultipartFile;
 import org.uboot.modules.system.entity.SysDepart;
 import org.uboot.modules.system.model.DepartIdModel;
 import org.uboot.modules.system.model.SysDepartModel;
 import org.uboot.modules.system.model.SysDepartTreeModel;
 import org.uboot.modules.system.vo.SysDepartManagersVO;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -127,4 +130,13 @@ public interface ISysDepartService extends IService<SysDepart>{
     void toProcessUpdateMangers(SysDepartManagersVO sysDepart);
 
     List<String> queryDepartsByUserId(String userId);
+
+    /**
+     * 根据部别name去查询部别id
+     * @param paretnName
+     * @return
+     */
+    SysDepart findIdByName(String paretnName);
+
+    int importDepart(HttpServletRequest request, MultipartFile file, ImportParams params) throws Exception;
 }

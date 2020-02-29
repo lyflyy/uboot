@@ -38,43 +38,43 @@ public class SysDepart implements Serializable {
 	@Excel(name="机构/部门名称",width=15)
 	private String departName;
 	/**英文名*/
-	@Excel(name="英文名",width=15)
+//	@Excel(name="英文名",width=15)
 	private String departNameEn;
 	/**缩写*/
 	private String departNameAbbr;
 	/**排序*/
-	@Excel(name="排序",width=15)
+//	@Excel(name="排序",width=15)
 	private Integer departOrder;
 	/**描述*/
 	@Excel(name="描述",width=15)
 	private Object description;
 	/**机构类别 1组织机构，2岗位*/
-	@Excel(name="机构类别",width=15)
+//	@Excel(name="机构类别",width=15)
 	private String orgCategory;
 	/**机构类型*/
-	@Excel(name="机构类型",width=15)
+//	@Excel(name="机构类型",width=15)
 	private String orgType;
 	/**机构编码*/
 	@Excel(name="机构编码",width=15)
 	private String orgCode;
 	/**手机号*/
-	@Excel(name="手机号",width=15)
+//	@Excel(name="手机号",width=15)
 	private String mobile;
 	/**传真*/
-	@Excel(name="传真",width=15)
+//	@Excel(name="传真",width=15)
 	private String fax;
 	/**地址*/
-	@Excel(name="地址",width=15)
+//	@Excel(name="地址",width=15)
 	private String address;
 	/**备注*/
 	@Excel(name="备注",width=15)
 	private String memo;
 	/**状态（1启用，0不启用）*/
-	@Excel(name="状态",width=15)
+//	@Excel(name="状态",width=15)
 	@Dict(dicCode = "depart_status")
 	private String status;
 	/**删除状态（0，正常，1已删除）*/
-	@Excel(name="删除状态",width=15)
+//	@Excel(name="删除状态",width=15)
 	@Dict(dicCode = "del_flag")
     @TableLogic
 	private String delFlag;
