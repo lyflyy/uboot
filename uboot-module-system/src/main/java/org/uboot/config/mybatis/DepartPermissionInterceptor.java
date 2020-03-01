@@ -46,7 +46,7 @@ public class DepartPermissionInterceptor implements Interceptor {
         MetaObject statementHandler = SystemMetaObject.forObject(handler);
         MappedStatement mappedStatement = (MappedStatement) statementHandler.getValue("delegate.mappedStatement");
 
-        LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
+        LoginUser sysUser = getLoginUser();
         if(sysUser == null){
             return invocation.proceed();
         }else if(sysUser.getUsername().equals("admin")){
@@ -117,5 +117,21 @@ public class DepartPermissionInterceptor implements Interceptor {
             }
         }
     }
+
+
+
+    //update-begin--Author:scott  Date:20191213 for：关于使用Quzrtz 开启线程任务， #465
+    private LoginUser getLoginUser() {
+        LoginUser sysUser = null;
+        try {
+            sysUser = SecurityUtils.getSubject().getPrincipal() != null ? (LoginUser) SecurityUtils.getSubject().getPrincipal() : null;
+        } catch (Exception e) {
+            //e.printStackTrace();
+            sysUser = null;
+        }
+        return sysUser;
+    }
+    //update-end--Author:scott  Date:20191213 for：关于使用Quzrtz 开启线程任务， #465
+
 
 }
