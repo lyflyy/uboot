@@ -73,7 +73,7 @@ public class MybatisPlusConfig {
             @Override
             public Expression getTenantId() {
                 // 从 MilitaryContext 中取实例id
-                LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
+                LoginUser sysUser = getLoginUser();
                 LOGGER.info("login user is -:{}", sysUser);
                 return new StringValue((sysUser == null || sysUser.getTenantId() == null) ? "-" : sysUser.getTenantId());
             }
@@ -135,6 +135,20 @@ public class MybatisPlusConfig {
             configuration.setDefaultEnumTypeHandler(EnumTypeHandler.class);
         }
     }
+
+
+    //update-begin--Author:scott  Date:20191213 for：关于使用Quzrtz 开启线程任务， #465
+    private LoginUser getLoginUser() {
+        LoginUser sysUser = null;
+        try {
+            sysUser = SecurityUtils.getSubject().getPrincipal() != null ? (LoginUser) SecurityUtils.getSubject().getPrincipal() : null;
+        } catch (Exception e) {
+            //e.printStackTrace();
+            sysUser = null;
+        }
+        return sysUser;
+    }
+    //update-end--Author:scott  Date:20191213 for：关于使用Quzrtz 开启线程任务， #465
 
 
 }
