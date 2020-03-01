@@ -133,10 +133,10 @@ public interface ISysDepartService extends IService<SysDepart>{
 
     /**
      * 根据部别name去查询部别id
-     * @param paretnName
+     * @param sql
      * @return
      */
-    SysDepart findIdByName(String paretnName);
+    String findParentIdByName(String name, String sql);
 
     int importDepart(HttpServletRequest request, MultipartFile file, ImportParams params) throws Exception;
 }

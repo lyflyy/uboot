@@ -2,6 +2,7 @@ package org.uboot.modules.system.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Select;
+import org.uboot.common.system.vo.SqlVo;
 import org.uboot.modules.system.entity.SysDepart;
 import org.uboot.modules.system.entity.SysUser;
 import org.uboot.modules.system.model.SysDepartModel;
@@ -93,4 +94,10 @@ public interface SysDepartMapper extends BaseMapper<SysDepart> {
 
     List<String> queryDepartsByUserId(@Param("userId") String userId);
 
+    /**
+     * sql由java拼写
+     * @param sql
+     * @return
+     */
+    List<String> selectParentIdByName(SqlVo sql);
 }

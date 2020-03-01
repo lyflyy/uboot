@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.netty.util.internal.StringUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.SecurityUtils;
 import org.jeecgframework.poi.excel.ExcelImportUtil;
 import org.jeecgframework.poi.excel.entity.ImportParams;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,8 @@ import static org.uboot.common.constant.CacheKeyConstant.CACHE_DEPART_ROLE_KEY;
 import org.uboot.common.constant.CommonConstant;
 import org.uboot.common.exception.UBootException;
 import org.uboot.common.system.util.JwtUtil;
+import org.uboot.common.system.vo.LoginUser;
+import org.uboot.common.system.vo.SqlVo;
 import org.uboot.common.util.YouBianCodeUtil;
 import org.uboot.modules.system.entity.SysDepart;
 import org.uboot.modules.system.entity.SysRole;
@@ -39,10 +42,7 @@ import org.uboot.modules.system.util.FindsDepartsChildrenUtil;
 import org.uboot.modules.system.vo.SysDepartManagersVO;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -319,15 +319,19 @@ public class SysDepartServiceImpl extends ServiceImpl<SysDepartMapper, SysDepart
     }
 
     @Override
-    public SysDepart findIdByName(String paretnName) {
-        List<SysDepart> sysDeparts = baseMapper.selectList(new LambdaQueryWrapper<SysDepart>().eq(SysDepart::getDepartName, paretnName));
-        if(sysDeparts == null){
-            throw new UBootException("根据部别名称未查找到对应部别！");
+    public String findParentIdByName(String name, String sql) {
+        SqlVo sqlVo = new SqlVo(sql);
+        List<String> strs = baseMapper.selectParentIdByName(sqlVo);
+        if(strs == null){
+            throw new UBootException("根据部别:"+ name +"未查找到对应部别！");
         }
-        if( sysDeparts.size() > 1 ){
-            throw new UBootException("存在同名部别！");
+        if( strs.size() == 0 ){
+            throw new UBootException("根据部别:"+ name +"未查找到对应部别！");
         }
-        return sysDeparts.get(0);
+        if( strs.size() > 1 ){
+            throw new UBootException("部别" + name + "存在同名部别！");
+        }
+        return strs.get(0);
     }
 
     private Boolean checkDupli(String depName){
@@ -345,6 +349,8 @@ public class SysDepartServiceImpl extends ServiceImpl<SysDepartMapper, SysDepart
     @Override
     @Transactional
     public int importDepart(HttpServletRequest request, MultipartFile file, ImportParams params) throws Exception {
+        LoginUser user = (LoginUser) SecurityUtils.getSubject().getPrincipal();
+
         String username = JwtUtil.getUserNameByToken(request);
         List<SysDepart> listSysDeparts = ExcelImportUtil.importExcel(file.getInputStream(), SysDepart.class, params);
         // 一级部别处理
@@ -369,7 +375,6 @@ public class SysDepartServiceImpl extends ServiceImpl<SysDepartMapper, SysDepart
             List<SysDepart> departs = new ArrayList<>();
             for (SysDepart otherDepart : otherDeparts) {
                 if(otherDepart.getDepartName().split("/").length == i){
-//                    otherDeparts.remove(otherDepart);
                     departs.add(otherDepart);
                 }
             }
@@ -379,17 +384,61 @@ public class SysDepartServiceImpl extends ServiceImpl<SysDepartMapper, SysDepart
             for (SysDepart sysDepart : departs) {
                 String depNames[] = sysDepart.getDepartName().split("/");
                 // 只需要找到这个部别的名字的上级部别，aaa/bbb/ccc,想要添加的是ccc，需要找到bbb，并找到他的id
-                String paretnName = depNames[depNames.length - 2];
                 // 根据这个name去查询这个部别的id
-                SysDepart parentDepart = findIdByName(paretnName);
+                String parentId = findParentIdByName(sysDepart.getDepartName(), getParentIdByNames(depNames, user.getTenantId()));
                 sysDepart.setDepartName(depNames[depNames.length - 1]);
-                sysDepart.setParentId(parentDepart.getId());
+                sysDepart.setParentId(parentId);
                 if(checkDupli(sysDepart.getDepartName())){
                     saveDepartData(sysDepart, username);
                 }
             }
         }
         return listSysDeparts.size();
+    }
+
+
+    /**
+     * / 分割的部别名称，查询父级id
+     * @param departNames
+     * @return
+     */
+    private String getParentIdByNames(String departNames[], String tenantId){
+        /**
+         * SELECT id FROM sys_depart WHERE sys_depart.tenant_id='1224364946117206017' AND tenant_id='1224364946117206017' AND depart_name='某A团' AND parent_id IN
+         * (
+         * 	SELECT id FROM sys_depart WHERE tenant_id='1224364946117206017' AND depart_name='某A师' AND parent_id IN
+         * 		(
+         * 			SELECT id FROM sys_depart WHERE tenant_id='1224364946117206017' AND depart_name='某A旅' AND parent_id IN
+         * 				(
+         * 					SELECT id FROM sys_depart WHERE tenant_id='1224364946117206017' AND depart_name='某A军'
+         * 				)
+         * 		)
+         * )
+         */
+        List<String> list = new ArrayList<>();
+        list.addAll(Arrays.asList(departNames));
+        list.remove(list.size() - 1);
+        // 第一个sql
+
+        String sql = "select id from sys_depart where tenant_id = '" + tenantId + "' and depart_name = '" + list.get(list.size() - 1) + "'";
+        list.remove(list.size() - 1);
+        if(departNames.length == 2){
+            // 如果数组只有两个值的话，就直接查询第一个值的id就可以了
+            return sql;
+        }
+        sql += " and parent_id in ";
+        // 最中间的一个sql
+        String innerSql = "(select id from sys_depart where tenant_id = '" + tenantId + "' and depart_name = '" + list.get(0) + "'";
+        list.remove(0);
+        Collections.reverse(list);
+        for (String s : list) {
+            sql += "( select id from sys_depart where tenant_id = '" + tenantId + "' and depart_name = '" + s + "' and parent_id in ";
+        }
+        sql += innerSql;
+        for (int i = 0; i < departNames.length - 2; i++) {
+            sql += ")";
+        }
+        return sql;
     }
 
     private void processSaveDepartManagers(SysDepartManagersVO sysDepart, String roleId){

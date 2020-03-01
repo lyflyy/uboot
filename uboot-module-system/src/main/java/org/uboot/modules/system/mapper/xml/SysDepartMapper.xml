@@ -96,6 +96,10 @@
         where su.id = #{userId}
     </select>
 
+    <select id="selectParentIdByName" parameterType="org.uboot.common.system.vo.SqlVo" resultType="java.lang.String">
+        ${sql}
+    </select>
+
     <sql id="modelColumns">
         sd.id AS `key`, sd.id AS `value`, sd.depart_name AS title, sd.id, sd.tenant_id, sd.parent_id, sd.depart_name, sd.depart_name_en, sd.depart_name_abbr, sd.depart_order, sd.description, sd.org_category, sd.org_type, sd.org_code, sd.mobile, sd.fax, sd.address, sd.memo, sd.STATUS, sd.del_flag, sd.create_by, sd.create_time, sd.update_by, sd.update_time, sd.organization
     </sql>

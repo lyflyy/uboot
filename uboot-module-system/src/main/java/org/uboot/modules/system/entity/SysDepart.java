@@ -46,47 +46,64 @@ public class SysDepart implements Serializable {
 //	@Excel(name="排序",width=15)
 	private Integer departOrder;
 	/**描述*/
-	@Excel(name="描述",width=15)
+//	@Excel(name="描述",width=15)
 	private Object description;
+
 	/**机构类别 1组织机构，2岗位*/
 //	@Excel(name="机构类别",width=15)
 	private String orgCategory;
+
 	/**机构类型*/
 //	@Excel(name="机构类型",width=15)
 	private String orgType;
+
 	/**机构编码*/
 	@Excel(name="机构编码",width=15)
 	private String orgCode;
+
 	/**手机号*/
 //	@Excel(name="手机号",width=15)
 	private String mobile;
+
 	/**传真*/
 //	@Excel(name="传真",width=15)
 	private String fax;
+
 	/**地址*/
 //	@Excel(name="地址",width=15)
 	private String address;
+
 	/**备注*/
 	@Excel(name="备注",width=15)
 	private String memo;
+
 	/**状态（1启用，0不启用）*/
 //	@Excel(name="状态",width=15)
 	@Dict(dicCode = "depart_status")
 	private String status;
+
 	/**删除状态（0，正常，1已删除）*/
 //	@Excel(name="删除状态",width=15)
 	@Dict(dicCode = "del_flag")
     @TableLogic
 	private String delFlag;
+
 	/**创建人*/
+    @Excel(name="创建人",width=15)
 	private String createBy;
+
 	/**创建日期*/
 	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @Excel(name="创建日期",width=15)
 	private Date createTime;
+
 	/**更新人*/
+    @Excel(name="更新人",width=15)
 	private String updateBy;
+
 	/**更新日期*/
+    @Excel(name="更新日期",width=15)
 	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	private Date updateTime;
@@ -100,7 +117,5 @@ public class SysDepart implements Serializable {
     @Excel(name="编制",width=15, dicCode = "depart_organization_type")
     @Dict(dicCode = "depart_organization_type")
     private Integer organization;
-
-
 
 }
