@@ -357,7 +357,9 @@ public class SysDepartServiceImpl extends ServiceImpl<SysDepartMapper, SysDepart
         List<SysDepart> firstDeparts = listSysDeparts.stream().filter(e -> e.getDepartName().indexOf("/") == -1).collect(Collectors.toList());
         for (SysDepart firstDepart : firstDeparts) {
             firstDepart.setCreateBy(username);
-            saveDepartData(firstDepart, username);
+            if(checkDupli(firstDepart.getDepartName())){
+                saveDepartData(firstDepart, username);
+            }
         }
         // 再处理不是一级部别的部别
         List<SysDepart> otherDeparts = listSysDeparts.stream().filter(e -> e.getDepartName().indexOf("/") > -1).collect(Collectors.toList());
@@ -386,7 +388,6 @@ public class SysDepartServiceImpl extends ServiceImpl<SysDepartMapper, SysDepart
                 String parentId = findParentIdByName(sysDepart.getDepartName(), getParentIdByNames(depNames, user.getTenantId()));
                 sysDepart.setDepartName(depNames[depNames.length - 1]);
                 sysDepart.setParentId(parentId);
-                saveDepartData(sysDepart, username);
             }
         }
         return listSysDeparts.size();
