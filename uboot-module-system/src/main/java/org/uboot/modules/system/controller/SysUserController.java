@@ -105,6 +105,7 @@ public class SysUserController {
         Result<IPage<SysUser>> result = new Result<IPage<SysUser>>();
         QueryWrapper<SysUser> queryWrapper = QueryGenerator.initQueryWrapper(user, req.getParameterMap());
         Page<SysUser> page = new Page<SysUser>(pageNo, pageSize);
+        queryWrapper.eq("wm_train_data.del_flag", "0");
         IPage<SysUser> pageList = sysUserService.page(page, queryWrapper);
         result.setSuccess(true);
         result.setResult(pageList);
