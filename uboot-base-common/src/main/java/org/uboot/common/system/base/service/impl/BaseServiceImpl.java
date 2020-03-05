@@ -14,6 +14,6 @@ import lombok.extern.slf4j.Slf4j;
  * @Version: 1.0
  */
 @Slf4j
-public class IBaseServiceImpl<M extends BaseMapper<T>, T extends BaseEntity> extends ServiceImpl<M, T> implements IBaseService<T> {
+public class BaseServiceImpl<M extends BaseMapper<T>, T extends BaseEntity> extends ServiceImpl<M, T> implements IBaseService<T> {
 
 }

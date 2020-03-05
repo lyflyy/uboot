@@ -3,7 +3,8 @@
 <mapper namespace="org.uboot.modules.system.mapper.SysDepartMapper">
 
     <select id="queryUserDeparts" parameterType="String" resultType="org.uboot.modules.system.entity.SysDepart">
-	   select * from sys_depart where id IN ( select dep_id from sys_user_depart where user_id = #{userId} )
+	   select * from sys_depart sd where sd.id IN ( select dep_id from sys_user_depart where user_id = #{userId} )
+	   and sd.del_flag = '0'
 	</select>
 
     <!-- 根据username查询所拥有的部门 -->
@@ -19,23 +20,28 @@
                 WHERE username = #{username}
             )
         )
+        and del_flag = '0'
     </select>
 
     <select id="queryUserDepartsByTenantId" resultType="org.uboot.modules.system.entity.SysDepart">
         select * from sys_depart where id IN ( select dep_id from sys_user_depart where user_id = #{userId} )
         and tenant_id = #{tenantId}
+        and del_flag = '0'
     </select>
 
     <select id="selectAllDepartByUser" resultMap="sysDepartTreeModelMap">
         select <include refid="modelColumns" /> from sys_depart sd, sys_user su where sd.org_code = su.org_code and su.id = #{id}
+        and sd.del_flag = '0'
     </select>
 
     <select id="selectAllDepart" resultMap="sysDepartTreeModelMap">
         select <include refid="modelColumns" /> from sys_depart sd where sd.parent_id = ''
+        and sd.del_flag = '0'
     </select>
 
     <select id="selectByParentId" resultMap="sysDepartTreeModelMap">
         select <include refid="modelColumns" /> from sys_depart sd where sd.parent_id = #{id}
+        and sd.del_flag = '0'
     </select>
 
     <select id="selectManagersByDepartId" resultType="org.uboot.modules.system.entity.SysUser">
@@ -88,6 +94,7 @@
             sys_depart depart left join sys_user_depart sud on depart.id = sud.dep_id
         WHERE
             depart.id = #{id}
+            and depart.del_flag = '0'
     </select>
 
     <select id="queryDepartsByUserId" resultType="java.lang.String">

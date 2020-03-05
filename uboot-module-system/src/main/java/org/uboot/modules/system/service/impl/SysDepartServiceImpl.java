@@ -347,7 +347,7 @@ public class SysDepartServiceImpl extends ServiceImpl<SysDepartMapper, SysDepart
     }
 
     @Override
-    @Transactional
+//    @Transactional
     public int importDepart(HttpServletRequest request, MultipartFile file, ImportParams params) throws Exception {
         LoginUser user = (LoginUser) SecurityUtils.getSubject().getPrincipal();
 
@@ -388,6 +388,7 @@ public class SysDepartServiceImpl extends ServiceImpl<SysDepartMapper, SysDepart
                 String parentId = findParentIdByName(sysDepart.getDepartName(), getParentIdByNames(depNames, user.getTenantId()));
                 sysDepart.setDepartName(depNames[depNames.length - 1]);
                 sysDepart.setParentId(parentId);
+                saveDepartData(sysDepart, username);
             }
         }
         return listSysDeparts.size();
