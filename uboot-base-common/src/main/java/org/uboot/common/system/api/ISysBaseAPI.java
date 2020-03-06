@@ -182,5 +182,12 @@ public interface ISysBaseAPI {
      */
     int removeRoleUsers(List<String> userIds);
 
+
+    /**
+     * 获取某个tenant下的第一个部别
+     * @return
+     */
+    String getFirstDepartIdByTenant();
+
 }
 

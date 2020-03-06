@@ -107,6 +107,13 @@
         ${sql}
     </select>
 
+    <select id="getFirstDepartId" resultType="org.uboot.modules.system.entity.SysDepart">
+        select * from sys_depart
+        where del_flag = 0 and parent_id = ''
+        order by create_time
+        limit 1
+    </select>
+
     <sql id="modelColumns">
         sd.id AS `key`, sd.id AS `value`, sd.depart_name AS title, sd.id, sd.tenant_id, sd.parent_id, sd.depart_name, sd.depart_name_en, sd.depart_name_abbr, sd.depart_order, sd.description, sd.org_category, sd.org_type, sd.org_code, sd.mobile, sd.fax, sd.address, sd.memo, sd.STATUS, sd.del_flag, sd.create_by, sd.create_time, sd.update_by, sd.update_time, sd.organization
     </sql>

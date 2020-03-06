@@ -100,4 +100,6 @@ public interface SysDepartMapper extends BaseMapper<SysDepart> {
      * @return
      */
     List<String> selectParentIdByName(SqlVo sql);
+
+    SysDepart getFirstDepartId();
 }

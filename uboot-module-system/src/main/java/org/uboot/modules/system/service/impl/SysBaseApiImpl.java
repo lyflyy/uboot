@@ -388,4 +388,10 @@ public class SysBaseApiImpl implements ISysBaseAPI {
         }
         return 0;
     }
+
+    @Override
+    public String getFirstDepartIdByTenant() {
+        SysDepart sysDepart = departMapper.getFirstDepartId();
+        return sysDepart != null ? sysDepart.getId() : "";
+    }
 }
