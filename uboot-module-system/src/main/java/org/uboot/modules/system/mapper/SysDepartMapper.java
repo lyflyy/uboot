@@ -99,7 +99,7 @@ public interface SysDepartMapper extends BaseMapper<SysDepart> {
      * @param sql
      * @return
      */
-    List<String> selectParentIdByName(SqlVo sql);
+    List<SysDepart> selectParentIdByName(SqlVo sql);
 
     SysDepart getFirstDepartId();
 }

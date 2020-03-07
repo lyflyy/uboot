@@ -103,7 +103,7 @@
         where su.id = #{userId}
     </select>
 
-    <select id="selectParentIdByName" parameterType="org.uboot.common.system.vo.SqlVo" resultType="java.lang.String">
+    <select id="selectParentIdByName" parameterType="org.uboot.common.system.vo.SqlVo" resultType="org.uboot.modules.system.entity.SysDepart">
         ${sql}
     </select>
 

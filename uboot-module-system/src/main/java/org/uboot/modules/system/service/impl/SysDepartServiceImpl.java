@@ -319,9 +319,9 @@ public class SysDepartServiceImpl extends ServiceImpl<SysDepartMapper, SysDepart
     }
 
     @Override
-    public String findParentIdByName(String name, String sql) {
+    public SysDepart findParentIdByName(String name, String sql) {
         SqlVo sqlVo = new SqlVo(sql);
-        List<String> strs = baseMapper.selectParentIdByName(sqlVo);
+        List<SysDepart> strs = baseMapper.selectParentIdByName(sqlVo);
         if(strs == null){
             throw new UBootException("根据部别:"+ name +"未查找到对应部别！");
         }
@@ -385,9 +385,9 @@ public class SysDepartServiceImpl extends ServiceImpl<SysDepartMapper, SysDepart
                 String depNames[] = sysDepart.getDepartName().split("/");
                 // 只需要找到这个部别的名字的上级部别，aaa/bbb/ccc,想要添加的是ccc，需要找到bbb，并找到他的id
                 // 根据这个name去查询这个部别的id
-                String parentId = findParentIdByName(sysDepart.getDepartName(), getParentIdByNames(depNames, user.getTenantId()));
+                SysDepart parentId = findParentIdByName(sysDepart.getDepartName(), getParentIdByNames(depNames, user.getTenantId()));
                 sysDepart.setDepartName(depNames[depNames.length - 1]);
-                sysDepart.setParentId(parentId);
+                sysDepart.setParentId(parentId.getId());
                 saveDepartData(sysDepart, username);
             }
         }
@@ -400,7 +400,7 @@ public class SysDepartServiceImpl extends ServiceImpl<SysDepartMapper, SysDepart
      * @param departNames
      * @return
      */
-    private String getParentIdByNames(String departNames[], String tenantId){
+    public String getParentIdByNames(String departNames[], String tenantId){
         /**
          * SELECT id FROM sys_depart WHERE sys_depart.tenant_id='1224364946117206017' AND tenant_id='1224364946117206017' AND depart_name='某A团' AND parent_id IN
          * (
@@ -418,7 +418,7 @@ public class SysDepartServiceImpl extends ServiceImpl<SysDepartMapper, SysDepart
         list.remove(list.size() - 1);
         // 第一个sql
 
-        String sql = "select id from sys_depart where tenant_id = '" + tenantId + "' and depart_name = '" + list.get(list.size() - 1) + "'";
+        String sql = "select * from sys_depart where tenant_id = '" + tenantId + "' and depart_name = '" + list.get(list.size() - 1) + "'";
         list.remove(list.size() - 1);
         if(departNames.length == 2){
             // 如果数组只有两个值的话，就直接查询第一个值的id就可以了
@@ -434,6 +434,45 @@ public class SysDepartServiceImpl extends ServiceImpl<SysDepartMapper, SysDepart
         }
         sql += innerSql;
         for (int i = 0; i < departNames.length - 2; i++) {
+            sql += ")";
+        }
+        return sql;
+    }
+
+    @Override
+    public String getCurrentIdByNames(String[] departNames, String tenantId) {
+        /**
+         * SELECT id FROM sys_depart WHERE sys_depart.tenant_id='1224364946117206017' AND tenant_id='1224364946117206017' AND depart_name='某A团' AND parent_id IN
+         * (
+         * 	SELECT id FROM sys_depart WHERE tenant_id='1224364946117206017' AND depart_name='某A师' AND parent_id IN
+         * 		(
+         * 			SELECT id FROM sys_depart WHERE tenant_id='1224364946117206017' AND depart_name='某A旅' AND parent_id IN
+         * 				(
+         * 					SELECT id FROM sys_depart WHERE tenant_id='1224364946117206017' AND depart_name='某A军'
+         * 				)
+         * 		)
+         * )
+         */
+        List<String> list = new ArrayList<>();
+        list.addAll(Arrays.asList(departNames));
+        // 第一个sql
+
+        String sql = "select * from sys_depart where tenant_id = '" + tenantId + "' and depart_name = '" + list.get(list.size() - 1) + "'";
+        list.remove(list.size() - 1);
+        if(departNames.length == 2){
+            // 如果数组只有两个值的话，就直接查询第一个值的id就可以了
+            return sql;
+        }
+        sql += " and parent_id in ";
+        // 最中间的一个sql
+        String innerSql = "(select id from sys_depart where tenant_id = '" + tenantId + "' and depart_name = '" + list.get(0) + "'";
+        list.remove(0);
+        Collections.reverse(list);
+        for (String s : list) {
+            sql += "( select id from sys_depart where tenant_id = '" + tenantId + "' and depart_name = '" + s + "' and parent_id in ";
+        }
+        sql += innerSql;
+        for (int i = 0; i < departNames.length - 1; i++) {
             sql += ")";
         }
         return sql;

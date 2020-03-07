@@ -136,7 +136,17 @@ public interface ISysDepartService extends IService<SysDepart>{
      * @param sql
      * @return
      */
-    String findParentIdByName(String name, String sql);
+    SysDepart findParentIdByName(String name, String sql);
 
     int importDepart(HttpServletRequest request, MultipartFile file, ImportParams params) throws Exception;
+
+    /**
+     * 根据分割的部别名称，查询父级id
+     * @param departNames
+     * @param tenantId
+     * @return
+     */
+    String getParentIdByNames(String departNames[], String tenantId);
+
+    String getCurrentIdByNames(String departNames[], String tenantId);
 }
