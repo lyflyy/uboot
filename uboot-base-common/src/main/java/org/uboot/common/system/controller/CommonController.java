@@ -1,31 +1,26 @@
 package org.uboot.common.system.controller;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.util.AntPathMatcher;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.HandlerMapping;
+import org.springframework.web.servlet.ModelAndView;
+import org.uboot.common.api.vo.Result;
+import org.uboot.common.system.vo.UploadFileInfoVo;
+import org.uboot.common.util.UFileUtils;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.uboot.common.api.vo.Result;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.util.AntPathMatcher;
-import org.springframework.util.FileCopyUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.servlet.HandlerMapping;
-import org.springframework.web.servlet.ModelAndView;
-
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * <p>
@@ -54,33 +49,16 @@ public class CommonController {
 
 	@PostMapping(value = "/upload")
 	public Result<?> upload(HttpServletRequest request, HttpServletResponse response) {
-		Result<?> result = new Result<>();
-		try {
-			String ctxPath = uploadpath;
-			String fileName = null;
-			String bizPath = "files";
-			String nowday = new SimpleDateFormat("yyyyMMdd").format(new Date());
-			File file = new File(ctxPath + File.separator + bizPath + File.separator + nowday);
-			if (!file.exists()) {
-				file.mkdirs();// 创建文件根目录
-			}
-			MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
-			MultipartFile mf = multipartRequest.getFile("file");// 获取上传文件对象
-			String orgName = mf.getOriginalFilename();// 获取文件名
-			fileName = orgName.substring(0, orgName.lastIndexOf(".")) + "_" + System.currentTimeMillis() + orgName.substring(orgName.indexOf("."));
-			String savePath = file.getPath() + File.separator + fileName;
-			File savefile = new File(savePath);
-			FileCopyUtils.copy(mf.getBytes(), savefile);
-			String dbpath = bizPath + File.separator + nowday + File.separator + fileName;
-			if (dbpath.contains("\\")) {
-				dbpath = dbpath.replace("\\", "/");
-			}
-			result.setMessage(dbpath);
+		Result<Object> result = new Result<>();
+		String bizPath = "files";
+		UploadFileInfoVo fileInfoVo = UFileUtils.saveUploadFile(uploadpath, bizPath,request);
+		if (fileInfoVo != null) {
+			result.setResult(fileInfoVo);
+			result.setMessage(fileInfoVo.getDbpath());
 			result.setSuccess(true);
-		} catch (IOException e) {
+		} else {
+			result.setMessage("文件上传失败");
 			result.setSuccess(false);
-			result.setMessage(e.getMessage());
-			log.error(e.getMessage(), e);
 		}
 		return result;
 	}
