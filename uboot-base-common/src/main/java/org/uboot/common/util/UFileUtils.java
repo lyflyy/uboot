@@ -73,23 +73,58 @@ public class UFileUtils {
         return fileInfoVo;
     }
 
+
+    public static UploadFileInfoVo saveUploadFileFromMultipartFile(String uploadpath, String bizPath, MultipartFile mf) {
+        UploadFileInfoVo fileInfoVo = new UploadFileInfoVo();
+        try {
+            String fileName = null;
+            bizPath = StringUtils.isBlank(bizPath) ? "files" : bizPath;
+            String nowday = new SimpleDateFormat("yyyyMMdd").format(new Date());
+            File file = new File(uploadpath + File.separator + bizPath + File.separator + nowday);
+            if (!file.exists()) {
+                file.mkdirs();// 创建文件根目录
+            }
+            String orgName = mf.getOriginalFilename();// 获取文件名
+            String name = orgName.substring(0, orgName.lastIndexOf("."));
+            fileName = orgName.substring(0, orgName.lastIndexOf(".")) + "_" + System.currentTimeMillis() + orgName.substring(orgName.indexOf("."));
+            String savePath = file.getPath() + File.separator + fileName;
+            File savefile = new File(savePath);
+            FileCopyUtils.copy(mf.getBytes(), savefile);
+            String dbpath = bizPath + File.separator + nowday + File.separator + fileName;
+            if (dbpath.contains("\\")) {
+                dbpath = dbpath.replace("\\", "/");
+            }
+            fileInfoVo.setDbpath(dbpath);
+            fileInfoVo.setPath(savePath);
+            fileInfoVo.setName(name);
+            fileInfoVo.setOrName(orgName);
+            fileInfoVo.setNewName(fileName);
+        } catch (IOException e) {
+            log.info("saveUploadFileError:", e);
+            fileInfoVo = null;
+        }
+        return fileInfoVo;
+    }
+
     /**
      * 解压到指定目录
+     *
      * @param zipPath
      * @param descDir
      */
-    public static void unZipFiles(String zipPath, String descDir) throws IOException{
+    public static void unZipFiles(String zipPath, String descDir) throws IOException {
         unZipFiles(new File(zipPath), descDir);
     }
 
     /**
      * 解压文件到指定目录
      * 解压后的文件名，和之前一致
-     * @param zipFile    待解压的zip文件
-     * @param descDir    指定目录
+     *
+     * @param zipFile 待解压的zip文件
+     * @param descDir 指定目录
      */
     @SuppressWarnings("rawtypes")
-    public static String unZipFiles(File zipFile, String descDir)  {
+    public static String unZipFiles(File zipFile, String descDir) {
 
         ZipFile zip = null;//解决中文文件夹乱码
         try {
@@ -102,11 +137,11 @@ public class UFileUtils {
             if (!pathFile.exists()) {
                 pathFile.mkdirs();
             }
-            for (Enumeration<? extends ZipEntry> entries = zip.entries(); entries.hasMoreElements();) {
+            for (Enumeration<? extends ZipEntry> entries = zip.entries(); entries.hasMoreElements(); ) {
                 ZipEntry entry = entries.nextElement();
                 String zipEntryName = entry.getName();
                 InputStream in = zip.getInputStream(entry);
-                String outPath = (descDir +"/"+ zipEntryName).replaceAll("\\*", "/");
+                String outPath = (descDir + "/" + zipEntryName).replaceAll("\\*", "/");
                 // 判断路径是否存在,不存在则创建文件路径
                 File file = new File(outPath.substring(0, outPath.lastIndexOf('/')));
                 if (!file.exists()) {
@@ -137,7 +172,7 @@ public class UFileUtils {
     public static String getFileName(String zipPath) {
         String reg = "([^<>/\\\\|:\"\"\\*\\?]+)\\.\\w+$+";
         Matcher m = Pattern.compile(reg).matcher(zipPath); //uri为需要匹配的路径
-        String filename =  null;
+        String filename = null;
         if (m.find()) {
             filename = m.group(1);
         }

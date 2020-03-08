@@ -11,16 +11,24 @@ import org.jeecgframework.poi.excel.entity.ExportParams;
 import org.jeecgframework.poi.excel.entity.ImportParams;
 import org.jeecgframework.poi.excel.view.JeecgEntityExcelView;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.uboot.common.api.vo.Result;
+import org.uboot.common.system.base.entity.WmImportLog;
+import org.uboot.common.system.base.service.IWmImportLogService;
 import org.uboot.common.system.query.QueryGenerator;
 import org.uboot.common.system.vo.LoginUser;
+import org.uboot.common.system.vo.UploadFileInfoVo;
+import org.uboot.common.util.UFileUtils;
 import org.uboot.common.util.oConvertUtils;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,6 +47,22 @@ import java.util.stream.Collectors;
 public class BaseController<T, S extends IService<T>> {
     @Autowired
     S service;
+
+    @Resource
+    IWmImportLogService wmImportLogService;
+
+    @Value(value = "${uboot.path.upload}")
+    private String uploadpath;
+
+    protected void saveImportLog(UploadFileInfoVo fileInfoVo, Integer size, String module) {
+        log.info("saveImportLogParam:{},{},{}", fileInfoVo, size, module);
+        WmImportLog log = new WmImportLog();
+        log.setExcelName(fileInfoVo.getOrName());
+        log.setExcelUrl(fileInfoVo.getDbpath());
+        log.setType(module);
+        log.setDataSize(size);
+        wmImportLogService.save(log);
+    }
 
     /**
      * 导出excel
@@ -94,7 +118,6 @@ public class BaseController<T, S extends IService<T>> {
     }
 
 
-
     /**
      * 获取对象ID
      *
@@ -111,6 +134,7 @@ public class BaseController<T, S extends IService<T>> {
 
     /**
      * 获取 转换后的 excel数据
+     *
      * @param request
      * @param clazz
      * @return
@@ -121,13 +145,16 @@ public class BaseController<T, S extends IService<T>> {
         List list = Collections.EMPTY_LIST;
         for (Map.Entry<String, MultipartFile> entity : fileMap.entrySet()) {
             MultipartFile file = entity.getValue();// 获取上传文件对象
+            UploadFileInfoVo fileInfoVo = UFileUtils.saveUploadFileFromMultipartFile(uploadpath, "excel", file);
             ImportParams params = new ImportParams();
             params.setTitleRows(2);
             params.setHeadRows(1);
             params.setNeedSave(true);
             try {
                 long start = System.currentTimeMillis();
-               list = ExcelImportUtil.importExcel(file.getInputStream(), clazz, params);
+                FileInputStream inputStream = new FileInputStream(new File(fileInfoVo.getPath()));
+                list = ExcelImportUtil.importExcel(inputStream, clazz, params);
+                saveImportLog(fileInfoVo, list.size(), clazz.getSimpleName());
                 //update-begin-author:taoyan date:20190528 for:批量插入数据
                 //400条 saveBatch消耗时间1592毫秒  循环插入消耗时间1947毫秒
                 //1200条  saveBatch消耗时间3687毫秒 循环插入消耗时间5212毫秒
@@ -148,6 +175,7 @@ public class BaseController<T, S extends IService<T>> {
 
         return list;
     }
+
     /**
      * 通过excel导入数据
      *
@@ -160,15 +188,18 @@ public class BaseController<T, S extends IService<T>> {
         Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();
         for (Map.Entry<String, MultipartFile> entity : fileMap.entrySet()) {
             MultipartFile file = entity.getValue();// 获取上传文件对象
+            UploadFileInfoVo fileInfoVo = UFileUtils.saveUploadFileFromMultipartFile(uploadpath, "excel", file);
             ImportParams params = new ImportParams();
             params.setTitleRows(2);
             params.setHeadRows(1);
             params.setNeedSave(true);
             try {
-                List<T> list = ExcelImportUtil.importExcel(file.getInputStream(), clazz, params);
+                FileInputStream inputStream = new FileInputStream(new File(fileInfoVo.getPath()));
+                List<T> list = ExcelImportUtil.importExcel(inputStream, clazz, params);
                 //update-begin-author:taoyan date:20190528 for:批量插入数据
                 long start = System.currentTimeMillis();
                 service.saveBatch(list);
+                saveImportLog(fileInfoVo, list.size(), clazz.getSimpleName());
                 //400条 saveBatch消耗时间1592毫秒  循环插入消耗时间1947毫秒
                 //1200条  saveBatch消耗时间3687毫秒 循环插入消耗时间5212毫秒
                 log.info("消耗时间" + (System.currentTimeMillis() - start) + "毫秒");
