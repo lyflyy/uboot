@@ -161,6 +161,6 @@ public class SysUser implements Serializable {
     private String activitiSync;
 
     public Integer getAge() {
-        return getBirthday() != null ? DateUtils.dateDiff('y', DateUtils.getCalendar(getBirthday().getTime()), DateUtils.getCalendar()) : null;
+        return getBirthday() != null ? DateUtils.dateDiff('y', DateUtils.getCalendar(), DateUtils.getCalendar(getBirthday().getTime())) : null;
     }
 }

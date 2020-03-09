@@ -584,7 +584,7 @@ public class SysDepartServiceImpl extends ServiceImpl<SysDepartMapper, SysDepart
 		where.eq("org_code", sysCode);
 		SysDepart depart = baseMapper.selectOne(where);
 		departs.add(depart);
-		if(StringUtils.isNotEmpty(depart.getParentId())){
+		if(depart !=null && StringUtils.isNotEmpty(depart.getParentId())){
 			recursiveParents(departs, depart.getParentId());
 		}
 	}
