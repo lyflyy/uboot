@@ -152,8 +152,7 @@ public class BaseController<T, S extends IService<T>> {
             params.setNeedSave(true);
             try {
                 long start = System.currentTimeMillis();
-                FileInputStream inputStream = new FileInputStream(new File(fileInfoVo.getPath()));
-                list = ExcelImportUtil.importExcel(inputStream, clazz, params);
+                list = ExcelImportUtil.importExcel(file.getInputStream(), clazz, params);
                 saveImportLog(fileInfoVo, list.size(), clazz.getSimpleName());
                 //update-begin-author:taoyan date:20190528 for:批量插入数据
                 //400条 saveBatch消耗时间1592毫秒  循环插入消耗时间1947毫秒
