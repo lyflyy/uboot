@@ -140,7 +140,7 @@ public abstract class AbstractParseSql extends ParseSqlVariable {
      */
     void handledoNotBelongSystem(FromItem item, int skip){
         setFromItem(item, "sys_user_alias_origin");
-        Join user = generJoin("sys_user", "sys_user_alias_su", "sys_user_alias_su.id", "sys_user_alias_origin.sys_user_id");
+        Join user = generJoin("sys_user", "sys_user_alias_su", "sys_user_alias_su.id", "sys_user_alias_origin.user_id");
         List<Join> newJoins = new ArrayList<>();
         newJoins.add(user);
         List<Join> oldJoins = parseSqlVo.getSelectBody().getJoins();
