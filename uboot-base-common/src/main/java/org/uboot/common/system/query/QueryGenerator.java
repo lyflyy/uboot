@@ -2,20 +2,22 @@ package org.uboot.common.system.query;
 
 import java.beans.PropertyDescriptor;
 import java.io.UnsupportedEncodingException;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.net.URLDecoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableName;
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.ReflectionUtils;
 import org.uboot.common.constant.CommonConstant;
 import org.uboot.common.constant.DataBaseConstant;
 import org.uboot.common.system.api.ISysBaseAPI;
@@ -105,8 +107,19 @@ public class QueryGenerator {
 			}
 		}
 
+        /**
+         * TableField不应该被处理进条件中来
+         */
+        List<PropertyDescriptor> propertyDescriptors = Arrays.asList(origDescriptors).stream().filter(e -> {
+            Field field = ReflectionUtils.findField(searchObj.getClass(), e.getName());
+            if(field == null){
+                return true;
+            }
+            return field.getAnnotation(TableField.class) == null;
+        }).collect(Collectors.toList());
+
 		String name, type;
-		for (int i = 0; i < origDescriptors.length; i++) {
+		for (int i = 0; i < propertyDescriptors.size(); i++) {
 			//aliasName = origDescriptors[i].getName();  mybatis  不存在实体属性 不用处理别名的情况
 			name = origDescriptors[i].getName();
 			type = origDescriptors[i].getPropertyType().toString();
@@ -117,19 +130,19 @@ public class QueryGenerator {
 
 				//数据权限查询
 				if(ruleMap.containsKey(name)) {
-					addRuleToQueryWrapper(ruleMap.get(name), name, origDescriptors[i].getPropertyType(), queryWrapper);
+					addRuleToQueryWrapper(searchObj, ruleMap.get(name), name, origDescriptors[i].getPropertyType(), queryWrapper);
 				}
 
 				// 添加 判断是否有区间值
 				String endValue = null,beginValue = null;
 				if (parameterMap != null && parameterMap.containsKey(name + BEGIN)) {
 					beginValue = parameterMap.get(name + BEGIN)[0].trim();
-					addQueryByRule(queryWrapper, name, type, beginValue, QueryRuleEnum.GE);
+					addQueryByRule(searchObj, queryWrapper, name, type, beginValue, QueryRuleEnum.GE);
 
 				}
 				if (parameterMap != null && parameterMap.containsKey(name + END)) {
 					endValue = parameterMap.get(name + END)[0].trim();
-					addQueryByRule(queryWrapper, name, type, endValue, QueryRuleEnum.LE);
+					addQueryByRule(searchObj, queryWrapper, name, type, endValue, QueryRuleEnum.LE);
 				}
 
 				//判断单值  参数带不同标识字符串 走不同的查询
@@ -160,7 +173,7 @@ public class QueryGenerator {
 						//rule = QueryRuleEnum.LIKE;
 					//}
 					// add -end 添加判断为字符串时设为全模糊查询
-					addEasyQuery(queryWrapper, name, rule, value);
+					addEasyQuery(searchObj, queryWrapper, name, rule, value);
 				}
 
 			} catch (Exception e) {
@@ -171,7 +184,7 @@ public class QueryGenerator {
 		doMultiFieldsOrder(queryWrapper, parameterMap);
 
 		//高级查询
-		doSuperQuery(queryWrapper, parameterMap);
+		doSuperQuery(searchObj, queryWrapper, parameterMap);
 
 	}
 
@@ -206,7 +219,7 @@ public class QueryGenerator {
 	 * @param queryWrapper
 	 * @param parameterMap
 	 */
-	public static void doSuperQuery(QueryWrapper<?> queryWrapper,Map<String, String[]> parameterMap) {
+	public static void doSuperQuery(Object searchObj, QueryWrapper<?> queryWrapper,Map<String, String[]> parameterMap) {
 		if(parameterMap!=null&& parameterMap.containsKey(SUPER_QUERY_PARAMS)){
 			String superQueryParams = parameterMap.get(SUPER_QUERY_PARAMS)[0];
 			// 解码
@@ -220,7 +233,7 @@ public class QueryGenerator {
 
 			for (QueryCondition rule : conditions) {
 				if(oConvertUtils.isNotEmpty(rule.getField()) && oConvertUtils.isNotEmpty(rule.getRule()) && oConvertUtils.isNotEmpty(rule.getVal())){
-					addEasyQuery(queryWrapper, rule.getField(), QueryRuleEnum.getByValue(rule.getRule()), rule.getVal());
+					addEasyQuery(searchObj, queryWrapper, rule.getField(), QueryRuleEnum.getByValue(rule.getRule()), rule.getVal());
 				}
 			}
 		}
@@ -316,7 +329,7 @@ public class QueryGenerator {
 		return value;
 	}
 
-	private static void addQueryByRule(QueryWrapper<?> queryWrapper,String name,String type,String value,QueryRuleEnum rule) throws ParseException {
+	private static void addQueryByRule(Object searchObj, QueryWrapper<?> queryWrapper,String name,String type,String value,QueryRuleEnum rule) throws ParseException {
 		if(oConvertUtils.isNotEmpty(value)) {
 			Object temp;
 			switch (type) {
@@ -345,7 +358,7 @@ public class QueryGenerator {
 				temp = value;
 				break;
 			}
-			addEasyQuery(queryWrapper, name, rule, temp);
+			addEasyQuery(searchObj, queryWrapper, name, rule, temp);
 		}
 	}
 
@@ -374,6 +387,28 @@ public class QueryGenerator {
 		return date;
 	}
 
+
+    /**
+     * 获取class的annotation的tablename
+     * @param searchObj
+     * @return
+     */
+	private static String getTableName(Object searchObj){
+	    if(searchObj.getClass() == null){
+	        return "";
+        }
+        TableName tableName = searchObj.getClass().getAnnotation(TableName.class);
+        if(tableName != null){
+            // 取出tablename
+            String s = tableName.value();
+            if(StringUtils.isNotBlank(s)){
+                return s + ".";
+            }
+            return "";
+        }
+        return getTableName(searchObj.getClass().getSuperclass());
+    }
+
 	/**
 	  * 根据规则走不同的查询
 	 * @param queryWrapper QueryWrapper
@@ -381,11 +416,12 @@ public class QueryGenerator {
 	 * @param rule         查询规则
 	 * @param value        查询条件值
 	 */
-	private static void addEasyQuery(QueryWrapper<?> queryWrapper, String name, QueryRuleEnum rule, Object value) {
+	private static void addEasyQuery(Object searchObj, QueryWrapper<?> queryWrapper, String name, QueryRuleEnum rule, Object value) {
 		if (value == null || rule == null || oConvertUtils.isEmpty(value)) {
 			return;
 		}
 		name = oConvertUtils.camelToUnderline(name);
+        name = getTableName(searchObj) + name;
 		log.info("--查询规则-->"+name+" "+rule.getValue()+" "+value);
 		switch (rule) {
 		case GT:
@@ -464,7 +500,7 @@ public class QueryGenerator {
 		return ruleMap;
 	}
 
-	private static void addRuleToQueryWrapper(SysPermissionDataRuleModel dataRule, String name, Class propertyType, QueryWrapper<?> queryWrapper) {
+	private static void addRuleToQueryWrapper(Object searchObj, SysPermissionDataRuleModel dataRule, String name, Class propertyType, QueryWrapper<?> queryWrapper) {
 		QueryRuleEnum rule = QueryRuleEnum.getByValue(dataRule.getRuleConditions());
 		if(rule.equals(QueryRuleEnum.IN) && ! propertyType.equals(String.class)) {
 			String[] values = dataRule.getRuleValue().split(",");
@@ -472,12 +508,12 @@ public class QueryGenerator {
 			for (int i = 0; i < values.length; i++) {
 				objs[i] = NumberUtils.parseNumber(values[i], propertyType);
 			}
-			addEasyQuery(queryWrapper, name, rule, objs);
+			addEasyQuery(searchObj, queryWrapper, name, rule, objs);
 		}else {
 			if (propertyType.equals(String.class)) {
-				addEasyQuery(queryWrapper, name, rule, converRuleValue(dataRule.getRuleValue()));
+				addEasyQuery(searchObj, queryWrapper, name, rule, converRuleValue(dataRule.getRuleValue()));
 			} else {
-				addEasyQuery(queryWrapper, name, rule, NumberUtils.parseNumber(dataRule.getRuleValue(), propertyType));
+				addEasyQuery(searchObj, queryWrapper, name, rule, NumberUtils.parseNumber(dataRule.getRuleValue(), propertyType));
 			}
 		}
 	}
@@ -658,8 +694,6 @@ public class QueryGenerator {
 
 	/**
 	 *   根据权限相关配置生成相关的SQL 语句
-	 * @param searchObj
-	 * @param parameterMap
 	 * @return
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -702,10 +736,9 @@ public class QueryGenerator {
 	/**
 	  * 根据权限相关配置 组装mp需要的权限
 	 * @param searchObj
-	 * @param parameterMap
 	 * @return
 	 */
-	public static void installAuthMplus(QueryWrapper<?> queryWrapper,Class<?> clazz) {
+	public static void installAuthMplus(Object searchObj, QueryWrapper<?> queryWrapper,Class<?> clazz) {
 		//权限查询
 		Map<String,SysPermissionDataRuleModel> ruleMap = getRuleMap();
 		PropertyDescriptor origDescriptors[] = PropertyUtils.getPropertyDescriptors(clazz);
@@ -721,7 +754,7 @@ public class QueryGenerator {
 				continue;
 			}
 			if(ruleMap.containsKey(name)) {
-				addRuleToQueryWrapper(ruleMap.get(name), name, origDescriptors[i].getPropertyType(), queryWrapper);
+				addRuleToQueryWrapper(searchObj, ruleMap.get(name), name, origDescriptors[i].getPropertyType(), queryWrapper);
 			}
 		}
 	}
