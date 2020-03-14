@@ -121,8 +121,8 @@ public class QueryGenerator {
 		String name, type;
 		for (int i = 0; i < propertyDescriptors.size(); i++) {
 			//aliasName = origDescriptors[i].getName();  mybatis  不存在实体属性 不用处理别名的情况
-			name = origDescriptors[i].getName();
-			type = origDescriptors[i].getPropertyType().toString();
+			name = propertyDescriptors.get(i).getName();
+			type = propertyDescriptors.get(i).getPropertyType().toString();
 			try {
 				if (judgedIsUselessField(name)|| !PropertyUtils.isReadable(searchObj, name)) {
 					continue;
