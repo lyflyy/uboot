@@ -8,7 +8,7 @@
         and su.id = stu.sys_user_id
         and su.id = #{userId}
         and st.del_flag = 0
-        and st.status = 2
+--         and st.status = 2
     </select>
 
     <select id="selectLastByCreateTime" resultType="org.uboot.modules.system.entity.SysTenant">
