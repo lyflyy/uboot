@@ -393,11 +393,11 @@ public class QueryGenerator {
      * @param searchObj
      * @return
      */
-	private static String getTableName(Object searchObj){
-	    if(searchObj.getClass() == null){
+	private static String getTableName(Class searchObj){
+	    if("Object".equals(searchObj.getClass().getSimpleName())){
 	        return "";
         }
-        TableName tableName = searchObj.getClass().getAnnotation(TableName.class);
+        TableName tableName = (TableName) searchObj.getAnnotation(TableName.class);
         if(tableName != null){
             // 取出tablename
             String s = tableName.value();
@@ -406,7 +406,7 @@ public class QueryGenerator {
             }
             return "";
         }
-        return getTableName(searchObj.getClass().getSuperclass());
+        return getTableName(searchObj.getSuperclass());
     }
 
 	/**
@@ -421,7 +421,7 @@ public class QueryGenerator {
 			return;
 		}
 		name = oConvertUtils.camelToUnderline(name);
-        name = getTableName(searchObj) + name;
+        name = getTableName(searchObj.getClass()) + name;
 		log.info("--查询规则-->"+name+" "+rule.getValue()+" "+value);
 		switch (rule) {
 		case GT:

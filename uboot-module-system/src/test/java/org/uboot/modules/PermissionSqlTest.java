@@ -59,18 +59,8 @@ public class PermissionSqlTest {
 //        HAVING a.id is not null and d.id is not null
 //        ORDER BY a.id
 
-        String sql = "SELECT\n" +
-                "\twm_soldier_info.*,\n" +
-                "\tsys_user_depart.is_manager \n" +
-                "FROM\n" +
-                "\twm_soldier_info\n" +
-                "\tLEFT JOIN sys_user_depart ON wm_soldier_info.tenant_id = '1224364946117206017' \n" +
-                "\tAND sys_user_depart.user_id = wm_soldier_info.id \n" +
-                "WHERE\n" +
-                "\twm_soldier_info.tenant_id = '1224364946117206017' \n" +
-                "\tAND wm_soldier_info.del_flag = 1\n" +
-                "ORDER BY\n" +
-                "\tcreate_time DESC";
+        String sql = "SELECT COUNT(1) FROM wm_soldier_info LEFT JOIN sys_user_depart ON sys_user_depart.tenant_id = '1224364946117206017' AND sys_user_depart.user_id = wm_soldier_info.id LEFT JOIN sys_depart ON sys_depart.tenant_id = '1224364946117206017' AND sys_depart.id = sys_user_depart.dep_id " +
+                "WHERE wm_soldier_info.tenant_id = '1224364946117206017' AND wm_soldier_info.id = ? AND wm_soldier_info.del_flag = ?";
 
 //        Select select = (Select) CCJSqlParserUtil.parse(sql);
 //        PlainSelect selectBody = (PlainSelect) select.getSelectBody();
