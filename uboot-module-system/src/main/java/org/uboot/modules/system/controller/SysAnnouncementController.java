@@ -62,8 +62,7 @@ public class SysAnnouncementController {
 	private ISysAnnouncementService sysAnnouncementService;
 	@Autowired
 	private ISysAnnouncementSendService sysAnnouncementSendService;
-	@Resource
-    private WebSocket webSocket;
+
 
 	/**
 	  * 分页列表查询
@@ -218,34 +217,11 @@ public class SysAnnouncementController {
 		if(sysAnnouncement==null) {
 			result.error500("未找到对应实体");
 		}else {
-			sysAnnouncement.setSendStatus(CommonSendStatus.PUBLISHED_STATUS_1);//发布中
-			sysAnnouncement.setSendTime(new Date());
-			String currentUserName = JwtUtil.getUserNameByToken(request);
-			sysAnnouncement.setSender(currentUserName);
-			boolean ok = sysAnnouncementService.updateById(sysAnnouncement);
+			boolean ok = sysAnnouncementService.sendAnnouncement(sysAnnouncement, JwtUtil.getUserNameByToken(request));
 			if(ok) {
 				result.success("该系统通知发布成功");
-				if(sysAnnouncement.getMsgType().equals(CommonConstant.MSG_TYPE_ALL)) {
-					JSONObject obj = new JSONObject();
-			    	obj.put("cmd", "topic");
-					obj.put("msgId", sysAnnouncement.getId());
-					obj.put("msgTxt", sysAnnouncement.getTitile());
-			    	webSocket.sendAllMessage(obj.toJSONString());
-				}else {
-					// 2.插入用户通告阅读标记表记录
-					String userId = sysAnnouncement.getUserIds();
-					String[] userIds = userId.substring(0, (userId.length()-1)).split(",");
-					String anntId = sysAnnouncement.getId();
-					Date refDate = new Date();
-					JSONObject obj = new JSONObject();
-			    	obj.put("cmd", "user");
-					obj.put("msgId", sysAnnouncement.getId());
-					obj.put("msgTxt", sysAnnouncement.getTitile());
-			    	webSocket.sendMoreMessage(userIds, obj.toJSONString());
-				}
 			}
 		}
-
 		return result;
 	}
 

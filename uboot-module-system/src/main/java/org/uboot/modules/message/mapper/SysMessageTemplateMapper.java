@@ -14,5 +14,5 @@ import java.util.List;
  */
 public interface SysMessageTemplateMapper extends BaseMapper<SysMessageTemplate> {
     @Select("SELECT * FROM SYS_SMS_TEMPLATE WHERE TEMPLATE_CODE = #{code}")
-    List<SysMessageTemplate> selectByCode(String code);
+    SysMessageTemplate selectByCode(String code);
 }

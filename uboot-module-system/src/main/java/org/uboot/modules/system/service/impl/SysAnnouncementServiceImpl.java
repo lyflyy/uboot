@@ -7,8 +7,16 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import com.alibaba.fastjson.JSONObject;
+import org.apache.shiro.SecurityUtils;
 import org.uboot.common.constant.CommonConstant;
+import org.uboot.common.constant.CommonSendStatus;
+import org.uboot.common.system.util.JwtUtil;
+import org.uboot.common.system.vo.LoginUser;
 import org.uboot.common.util.oConvertUtils;
+import org.uboot.modules.message.entity.SysMessageTemplate;
+import org.uboot.modules.message.service.ISysMessageTemplateService;
+import org.uboot.modules.message.websocket.WebSocket;
 import org.uboot.modules.system.entity.SysAnnouncement;
 import org.uboot.modules.system.entity.SysAnnouncementSend;
 import org.uboot.modules.system.mapper.SysAnnouncementMapper;
@@ -35,6 +43,60 @@ public class SysAnnouncementServiceImpl extends ServiceImpl<SysAnnouncementMappe
 
 	@Resource
 	private SysAnnouncementSendMapper sysAnnouncementSendMapper;
+
+	@Resource
+    private ISysMessageTemplateService sysMessageTemplateService;
+
+    @Resource
+    private WebSocket webSocket;
+
+    /**
+     * 根据模版code发送系统通知
+     */
+    @Transactional
+    public void sendWithTemplate(String templateCode, String userIds,String currentUserName){
+        SysMessageTemplate sysMessageTemplate = sysMessageTemplateService.selectByCode(templateCode);
+        // 新增通知消息
+        SysAnnouncement sysAnnouncement = SysAnnouncement.convert(sysMessageTemplate, userIds);
+        this.saveAnnouncement(sysAnnouncement);
+        // 将通知发送出去
+        this.sendAnnouncement(sysAnnouncement,currentUserName );
+    }
+
+
+    /**
+     * 发送消息
+     * @param sysAnnouncement
+     * @param currentUserName
+     * @return
+     */
+    public boolean sendAnnouncement(SysAnnouncement sysAnnouncement, String currentUserName){
+        sysAnnouncement.setSendStatus(CommonSendStatus.PUBLISHED_STATUS_1);//发布中
+        sysAnnouncement.setSendTime(new Date());
+        sysAnnouncement.setSender(currentUserName);
+        boolean ok = updateById(sysAnnouncement);
+        if(ok) {
+            if(sysAnnouncement.getMsgType().equals(CommonConstant.MSG_TYPE_ALL)) {
+                JSONObject obj = new JSONObject();
+                obj.put("cmd", "topic");
+                obj.put("msgId", sysAnnouncement.getId());
+                obj.put("msgTxt", sysAnnouncement.getTitile());
+                webSocket.sendAllMessage(obj.toJSONString());
+            }else {
+                // 2.插入用户通告阅读标记表记录
+                String userId = sysAnnouncement.getUserIds();
+                String[] userIds = userId.substring(0, (userId.length()-1)).split(",");
+                String anntId = sysAnnouncement.getId();
+                Date refDate = new Date();
+                JSONObject obj = new JSONObject();
+                obj.put("cmd", "user");
+                obj.put("msgId", sysAnnouncement.getId());
+                obj.put("msgTxt", sysAnnouncement.getTitile());
+                webSocket.sendMoreMessage(userIds, obj.toJSONString());
+            }
+        }
+        return ok;
+    }
 
 	@Transactional
 	@Override

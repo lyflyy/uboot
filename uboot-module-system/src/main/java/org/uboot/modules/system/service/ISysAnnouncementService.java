@@ -13,6 +13,16 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ISysAnnouncementService extends IService<SysAnnouncement> {
 
+    /**
+     * 根据通知模版发送消息
+     * @param templateCode
+     * @param userIds
+     * @param currentUserName
+     */
+    void sendWithTemplate(String templateCode, String userIds, String currentUserName);
+
+    boolean sendAnnouncement(SysAnnouncement sysAnnouncement, String currentUserName);
+
 	public void saveAnnouncement(SysAnnouncement sysAnnouncement);
 
 	public boolean upDateAnnouncement(SysAnnouncement sysAnnouncement);

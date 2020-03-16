@@ -1,5 +1,6 @@
 package org.uboot.modules.message.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import org.jeecgframework.poi.excel.annotation.Excel;
 
@@ -10,6 +11,8 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 import org.uboot.common.aspect.annotation.Dict;
 import org.uboot.common.system.base.entity.BaseEntity;
+
+import java.util.List;
 
 /**
  * @Description: 消息模板
@@ -46,4 +49,10 @@ public class SysMessageTemplate extends BaseEntity {
     /**优先级（L低，M中，H高）*/
     @Dict(dicCode = "message_priority")
     private java.lang.String priority;
+
+    @TableField(exist = false)
+    private List<String> titleParam;
+
+    @TableField(exist = false)
+    private List<String> contentParam;
 }

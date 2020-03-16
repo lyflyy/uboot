@@ -26,7 +26,7 @@ public class SysMessageTemplateServiceImpl extends ServiceImpl<SysMessageTemplat
 
 
     @Override
-    public List<SysMessageTemplate> selectByCode(String code) {
+    public SysMessageTemplate selectByCode(String code) {
         return sysMessageTemplateMapper.selectByCode(code);
     }
 }

@@ -15,5 +15,5 @@ import java.util.List;
  */
 public interface ISysMessageTemplateService extends IService<SysMessageTemplate>{
 
-    List<SysMessageTemplate> selectByCode(String code);
+    SysMessageTemplate selectByCode(String code);
 }
