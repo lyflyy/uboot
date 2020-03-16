@@ -394,8 +394,8 @@ public class QueryGenerator {
      * @return
      */
 	private static String getTableName(Class searchObj){
-	    if("Object".equals(searchObj.getClass().getSimpleName())){
-	        return "";
+        if(searchObj == null || searchObj.getClass() == null || "Object".equals(searchObj.getClass().getSimpleName())){
+            return "";
         }
         TableName tableName = (TableName) searchObj.getAnnotation(TableName.class);
         if(tableName != null){

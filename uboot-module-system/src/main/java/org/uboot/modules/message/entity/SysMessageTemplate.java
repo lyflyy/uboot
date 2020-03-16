@@ -42,4 +42,8 @@ public class SysMessageTemplate extends BaseEntity {
     @Dict(dicCode = "del_flag")
     @TableLogic
     private String delFlag;
+
+    /**优先级（L低，M中，H高）*/
+    @Dict(dicCode = "message_priority")
+    private java.lang.String priority;
 }
