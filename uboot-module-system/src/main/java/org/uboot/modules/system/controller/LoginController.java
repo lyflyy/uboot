@@ -318,6 +318,12 @@ public class LoginController {
 		return result;
 	}
 
+	@RequestMapping("/login/log")
+	public void saveLoginLog(){
+        LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
+        sysBaseAPI.addLog("用户名: " + sysUser.getUsername() + ",登录成功！", CommonConstant.LOG_TYPE_1, null);
+    }
+
 
 	/**
 	 * 用户信息
