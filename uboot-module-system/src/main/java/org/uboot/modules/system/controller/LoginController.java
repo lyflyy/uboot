@@ -6,7 +6,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
 import org.uboot.common.api.vo.Result;
 import org.uboot.common.constant.CacheConstant;
 import org.uboot.common.constant.CommonConstant;
@@ -19,7 +18,6 @@ import org.uboot.modules.shiro.vo.DefContants;
 import org.uboot.modules.system.base.model.SysUserModel;
 import org.uboot.modules.system.entity.SysDepart;
 import org.uboot.modules.system.entity.SysTenant;
-import org.uboot.modules.system.entity.SysTenantUser;
 import org.uboot.modules.system.entity.SysUser;
 import org.uboot.modules.system.model.SysLoginModel;
 import org.uboot.modules.system.service.ISysDepartService;
@@ -58,8 +56,22 @@ public class LoginController {
 
 	private static final String BASE_CHECK_CODES = "qwertyuiplkjhgfdsazxcvbnmQWERTYUPLKJHGFDSAZXCVBNM1234567890";
 
-	@ApiOperation("登录接口")
-	@RequestMapping(value = "/login", method = RequestMethod.POST)
+
+    @ApiOperation("登录接口")
+    @RequestMapping(value = "/login/info", method = RequestMethod.POST)
+    public Result<JSONObject> loginInfo(){
+        Result<JSONObject> result = new Result<JSONObject>();
+        LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
+        SysUser user = sysUserService.getById(sysUser.getId());
+        // 获取用户部门信息
+        JSONObject obj = new JSONObject();
+        handleInfo(obj, user);
+        result.setResult(obj);
+        return result;
+    }
+
+    @ApiOperation("登录接口")
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
 	public Result<JSONObject> login(@RequestBody SysLoginModel sysLoginModel){
 		Result<JSONObject> result = new Result<JSONObject>();
 		String username = sysLoginModel.getUsername();
@@ -319,9 +331,10 @@ public class LoginController {
 	}
 
 	@RequestMapping("/login/log")
-	public void saveLoginLog(){
+	public Result<Object> saveLoginLog(){
         LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
         sysBaseAPI.addLog("用户名: " + sysUser.getUsername() + ",登录成功！", CommonConstant.LOG_TYPE_1, null);
+        return Result.ok("记录登陆日志成功!");
     }
 
 
@@ -349,6 +362,17 @@ public class LoginController {
          *     }
          * ]
          */
+
+		// 获取用户部门信息
+		JSONObject obj = new JSONObject();
+        obj.put("token", token);
+        handleInfo(obj, sysUser);
+		result.setResult(obj);
+		result.success("登录成功");
+		return result;
+	}
+
+	private void handleInfo(JSONObject obj, SysUser sysUser){
         // 获取租户信息
         List<HashMap<String, Object>> tenants = new ArrayList<>();
         List<SysTenant> tenantUsers = sysTenantService.getByUserId(sysUser.getId());
@@ -361,22 +385,17 @@ public class LoginController {
             if (departs == null || departs.size() == 0) {
                 tenant.put("multi_depart", 0);
             } else if (departs.size() == 1) {
-                sysUserService.updateUserDepart(username, departs.get(0).getOrgCode());
+                sysUserService.updateUserDepart(sysUser.getUsername(), departs.get(0).getOrgCode());
                 tenant.put("multi_depart", 1);
             } else {
                 tenant.put("multi_depart", 2);
             }
             tenants.add(tenant);
+            obj.put("userInfo", sysUser);
         }
-		// 获取用户部门信息
-		JSONObject obj = new JSONObject();
-		obj.put("tenants", tenants);
-		obj.put("token", token);
-		obj.put("userInfo", sysUser);
-		result.setResult(obj);
-		result.success("登录成功");
-		return result;
-	}
+        obj.put("tenants", tenants);
+    }
+
 
 	/**
 	 * 获取加密字符串
