@@ -1,5 +1,6 @@
 package org.uboot.modules.system.service.impl;
 
+import com.alicp.jetcache.anno.CacheInvalidate;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -7,6 +8,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.uboot.common.api.vo.Result;
 import org.uboot.common.constant.CacheConstant;
 import org.uboot.common.constant.CommonConstant;
@@ -16,17 +19,26 @@ import org.uboot.common.system.vo.SysUserCacheInfo;
 import org.uboot.common.util.PasswordUtil;
 import org.uboot.common.util.oConvertUtils;
 import org.uboot.modules.system.base.model.SysUserModel;
-import org.uboot.modules.system.entity.*;
-import org.uboot.modules.system.mapper.*;
+import org.uboot.modules.system.entity.SysDepart;
+import org.uboot.modules.system.entity.SysPermission;
+import org.uboot.modules.system.entity.SysTenantUser;
+import org.uboot.modules.system.entity.SysUser;
+import org.uboot.modules.system.entity.SysUserDepart;
+import org.uboot.modules.system.entity.SysUserRole;
+import org.uboot.modules.system.mapper.SysDepartMapper;
+import org.uboot.modules.system.mapper.SysPermissionMapper;
+import org.uboot.modules.system.mapper.SysUserDepartMapper;
+import org.uboot.modules.system.mapper.SysUserMapper;
+import org.uboot.modules.system.mapper.SysUserRoleMapper;
 import org.uboot.modules.system.model.SysUserSysDepartModel;
 import org.uboot.modules.system.service.ISysTenantUserService;
 import org.uboot.modules.system.service.ISysUserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * <p>
@@ -55,7 +67,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     private ISysTenantUserService tenantUserService;
 
     @Override
-    @CacheEvict(value = {CacheConstant.SYS_USERS_CACHE}, allEntries = true)
+    @CacheInvalidate(name = CacheConstant.SYS_USERS_CACHE, key="#username")
     public Result<?> resetPassword(String username, String oldpassword, String newpassword, String confirmpassword) {
         SysUser user = userMapper.getUserByName(username);
         String passwordEncode = PasswordUtil.encrypt(username, oldpassword, user.getSalt());
@@ -74,8 +86,8 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     }
 
     @Override
-    @CacheEvict(value = {CacheConstant.SYS_USERS_CACHE}, allEntries = true)
-    public Result<?> changePassword(SysUser sysUser) {
+	@CacheInvalidate(name = CacheConstant.SYS_USERS_CACHE, key="#sysUser.username")
+	public Result<?> changePassword(SysUser sysUser) {
         String salt = oConvertUtils.randomGen(8);
         sysUser.setSalt(salt);
         String password = sysUser.getPassword();
@@ -86,8 +98,8 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     }
 
     @Override
-    @CacheEvict(value={CacheConstant.SYS_USERS_CACHE}, allEntries=true)
 	@Transactional(rollbackFor = Exception.class)
+	@CacheInvalidate(name = CacheConstant.SYS_USERS_CACHE, multi = true)
 	public boolean deleteUser(String userId) {
 		//1.删除用户
 		this.removeById(userId);
@@ -101,8 +113,8 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 	}
 
 	@Override
-    @CacheEvict(value={CacheConstant.SYS_USERS_CACHE}, allEntries=true)
 	@Transactional(rollbackFor = Exception.class)
+	@CacheInvalidate(name = CacheConstant.SYS_USERS_CACHE, multi = true)
 	public boolean deleteBatchUsers(String userIds) {
 		//1.删除用户
 		this.removeByIds(Arrays.asList(userIds.split(",")));
@@ -137,7 +149,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 	}
 
 	@Override
-	@CacheEvict(value= {CacheConstant.SYS_USERS_CACHE}, allEntries=true)
+	@CacheInvalidate(name = CacheConstant.SYS_USERS_CACHE, multi = true)
 	@Transactional
 	public void editUserWithRole(SysUser user, String roles) {
 		this.updateById(user);
@@ -264,7 +276,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
 
 	@Override
-	@CacheEvict(value= {CacheConstant.SYS_USERS_CACHE}, key="#username")
+	@CacheInvalidate(name = CacheConstant.SYS_USERS_CACHE, key="#username")
 	public void updateUserDepart(String username,String orgCode) {
 		baseMapper.updateUserDepart(username, orgCode);
 	}
@@ -297,7 +309,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
 	@Override
 	@Transactional
-	@CacheEvict(value={CacheConstant.SYS_USERS_CACHE}, allEntries=true)
+	@CacheInvalidate(name = CacheConstant.SYS_USERS_CACHE, multi = true)
 	public void editUserWithDepart(SysUser user, String departs) {
 		this.updateById(user);  //更新角色的时候已经更新了一次了，可以再跟新一次
 		//先删后加

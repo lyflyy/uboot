@@ -1,10 +1,12 @@
 package org.uboot.modules.system.service.impl;
 
-import java.util.Date;
-import java.util.List;
-
-import javax.annotation.Resource;
-
+import com.alicp.jetcache.anno.CacheInvalidate;
+import com.alicp.jetcache.anno.Cached;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.uboot.common.constant.CacheConstant;
 import org.uboot.common.constant.CommonConstant;
 import org.uboot.common.exception.UBootException;
@@ -15,14 +17,10 @@ import org.uboot.modules.system.mapper.SysPermissionMapper;
 import org.uboot.modules.system.model.TreeModel;
 import org.uboot.modules.system.service.ISysPermissionDataRuleService;
 import org.uboot.modules.system.service.ISysPermissionService;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import javax.annotation.Resource;
+import java.util.Date;
+import java.util.List;
 
 /**
  * <p>
@@ -51,7 +49,7 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
 	 */
 	@Override
 	@Transactional
-	@CacheEvict(value = CacheConstant.SYS_DATA_PERMISSIONS_CACHE,allEntries=true)
+	@CacheInvalidate(name = CacheConstant.SYS_DATA_PERMISSIONS_CACHE,key = "")
 	public void deletePermission(String id) throws UBootException {
 		SysPermission sysPermission = this.getById(id);
 		if(sysPermission==null) {
@@ -102,8 +100,7 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
 	  * 逻辑删除
 	 */
 	@Override
-	@CacheEvict(value = CacheConstant.SYS_DATA_PERMISSIONS_CACHE,allEntries=true)
-	//@CacheEvict(value = CacheConstant.SYS_DATA_PERMISSIONS_CACHE,allEntries=true,condition="#sysPermission.menuType==2")
+	@CacheInvalidate(name = CacheConstant.SYS_DATA_PERMISSIONS_CACHE,key = "")
 	public void deletePermissionLogical(String id) throws UBootException {
 		SysPermission sysPermission = this.getById(id);
 		if(sysPermission==null) {
@@ -120,7 +117,7 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
 	}
 
 	@Override
-	@CacheEvict(value = CacheConstant.SYS_DATA_PERMISSIONS_CACHE,allEntries=true)
+	@CacheInvalidate(name = CacheConstant.SYS_DATA_PERMISSIONS_CACHE,key = "")
 	public void addPermission(SysPermission sysPermission) throws UBootException {
 		//----------------------------------------------------------------------
 		//判断是否是一级菜单，是的话清空父菜单
@@ -140,7 +137,7 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
 	}
 
 	@Override
-	@CacheEvict(value = CacheConstant.SYS_DATA_PERMISSIONS_CACHE,allEntries=true)
+	@CacheInvalidate(name = CacheConstant.SYS_DATA_PERMISSIONS_CACHE,key = "")
 	public void editPermission(SysPermission sysPermission) throws UBootException {
 		SysPermission p = this.getById(sysPermission.getId());
 		//TODO 该节点判断是否还有子节点
@@ -201,7 +198,7 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
 	  *   获取模糊匹配规则的数据权限URL
 	 */
 	@Override
-	@Cacheable(value = CacheConstant.SYS_DATA_PERMISSIONS_CACHE)
+	@Cached(name = CacheConstant.SYS_DATA_PERMISSIONS_CACHE, key = "")
 	public List<String> queryPermissionUrlWithStar() {
 		return this.baseMapper.queryPermissionUrlWithStar();
 	}

@@ -1,30 +1,26 @@
 package org.uboot.modules.system.controller;
 
 
-import java.util.Arrays;
-import java.util.Date;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.uboot.common.api.vo.Result;
-import org.uboot.common.constant.CacheConstant;
-import org.uboot.common.system.query.QueryGenerator;
-import org.uboot.common.util.oConvertUtils;
-import org.uboot.modules.system.entity.SysDictItem;
-import org.uboot.modules.system.service.ISysDictItemService;
+import com.alicp.jetcache.anno.CacheInvalidate;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.uboot.common.api.vo.Result;
+import org.uboot.common.constant.CacheConstant;
+import org.uboot.common.system.query.QueryGenerator;
+import org.uboot.modules.system.entity.SysDictItem;
+import org.uboot.modules.system.service.ISysDictItemService;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-
-import lombok.extern.slf4j.Slf4j;
+import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
+import java.util.Date;
 
 /**
  * <p>
@@ -69,7 +65,7 @@ public class SysDictItemController {
 	 * @return
 	 */
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
-    @CacheEvict(value= {CacheConstant.SYS_DICT_CACHE_ALL, CacheConstant.SYS_DICT_CACHE }, allEntries=true)
+	@CacheInvalidate(name = CacheConstant.SYS_DICT_CACHE, multi = true)
 	public Result<SysDictItem> add(@RequestBody SysDictItem sysDictItem) {
 		Result<SysDictItem> result = new Result<SysDictItem>();
 		try {
@@ -89,7 +85,7 @@ public class SysDictItemController {
 	 * @return
 	 */
 	@RequestMapping(value = "/edit", method = RequestMethod.PUT)
-    @CacheEvict(value= {CacheConstant.SYS_DICT_CACHE_ALL, CacheConstant.SYS_DICT_CACHE }, allEntries=true)
+	@CacheInvalidate(name = CacheConstant.SYS_DICT_CACHE, multi = true)
 	public Result<SysDictItem> edit(@RequestBody SysDictItem sysDictItem) {
 		Result<SysDictItem> result = new Result<SysDictItem>();
 		SysDictItem sysdict = sysDictItemService.getById(sysDictItem.getId());
@@ -112,7 +108,7 @@ public class SysDictItemController {
 	 * @return
 	 */
 	@RequestMapping(value = "/delete", method = RequestMethod.DELETE)
-    @CacheEvict(value= {CacheConstant.SYS_DICT_CACHE_ALL, CacheConstant.SYS_DICT_CACHE }, allEntries=true)
+	@CacheInvalidate(name = CacheConstant.SYS_DICT_CACHE, multi = true)
 	public Result<SysDictItem> delete(@RequestParam(name="id",required=true) String id) {
 		Result<SysDictItem> result = new Result<SysDictItem>();
 		SysDictItem joinSystem = sysDictItemService.getById(id);
@@ -133,7 +129,7 @@ public class SysDictItemController {
 	 * @return
 	 */
 	@RequestMapping(value = "/deleteBatch", method = RequestMethod.DELETE)
-    @CacheEvict(value= {CacheConstant.SYS_DICT_CACHE_ALL, CacheConstant.SYS_DICT_CACHE }, allEntries=true)
+	@CacheInvalidate(name = CacheConstant.SYS_DICT_CACHE, multi = true)
 	public Result<SysDictItem> deleteBatch(@RequestParam(name="ids",required=true) String ids) {
 		Result<SysDictItem> result = new Result<SysDictItem>();
 		if(ids==null || "".equals(ids.trim())) {

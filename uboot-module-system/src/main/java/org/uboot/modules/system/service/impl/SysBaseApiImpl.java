@@ -1,19 +1,13 @@
 package org.uboot.modules.system.service.impl;
 
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.sql.DataSource;
-
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import org.apache.commons.lang3.StringUtils;
+import com.alibaba.fastjson.JSONObject;
+import com.alicp.jetcache.anno.Cached;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.uboot.common.constant.CacheConstant;
 import org.uboot.common.constant.CommonConstant;
 import org.uboot.common.constant.DataBaseConstant;
@@ -27,19 +21,32 @@ import org.uboot.common.util.IPUtils;
 import org.uboot.common.util.SpringContextUtils;
 import org.uboot.common.util.oConvertUtils;
 import org.uboot.modules.message.websocket.WebSocket;
-import org.uboot.modules.system.entity.*;
-import org.uboot.modules.system.mapper.*;
+import org.uboot.modules.system.entity.SysAnnouncement;
+import org.uboot.modules.system.entity.SysAnnouncementSend;
+import org.uboot.modules.system.entity.SysDepart;
+import org.uboot.modules.system.entity.SysDict;
+import org.uboot.modules.system.entity.SysLog;
+import org.uboot.modules.system.entity.SysRole;
+import org.uboot.modules.system.entity.SysUser;
+import org.uboot.modules.system.mapper.SysAnnouncementMapper;
+import org.uboot.modules.system.mapper.SysAnnouncementSendMapper;
+import org.uboot.modules.system.mapper.SysDepartMapper;
+import org.uboot.modules.system.mapper.SysLogMapper;
+import org.uboot.modules.system.mapper.SysRoleMapper;
+import org.uboot.modules.system.mapper.SysUserMapper;
+import org.uboot.modules.system.mapper.SysUserRoleMapper;
 import org.uboot.modules.system.service.ISysDepartService;
 import org.uboot.modules.system.service.ISysDictService;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.stereotype.Service;
 
-import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-
-import lombok.extern.slf4j.Slf4j;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @Description: 底层共通业务API，提供其他独立模块调用
@@ -107,7 +114,7 @@ public class SysBaseApiImpl implements ISysBaseAPI {
 	}
 
 	@Override
-	@Cacheable(cacheNames=CacheConstant.SYS_USERS_CACHE, key="#username")
+	@Cached(name = CacheConstant.SYS_USERS_CACHE, key="#username", expire = 360)
 	public LoginUser getUserByName(String username) {
 		if(oConvertUtils.isEmpty(username)) {
 			return null;

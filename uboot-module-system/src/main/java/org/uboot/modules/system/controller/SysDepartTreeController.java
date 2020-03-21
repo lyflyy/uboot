@@ -1,43 +1,46 @@
 package org.uboot.modules.system.controller;
 
 
+import com.alicp.jetcache.anno.CacheInvalidate;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
-import org.jeecgframework.poi.excel.ExcelImportUtil;
 import org.jeecgframework.poi.excel.def.NormalExcelConstants;
 import org.jeecgframework.poi.excel.entity.ExportParams;
 import org.jeecgframework.poi.excel.entity.ImportParams;
 import org.jeecgframework.poi.excel.view.JeecgEntityExcelView;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.uboot.common.api.vo.Result;
 import org.uboot.common.aspect.annotation.PermissionData;
 import org.uboot.common.constant.CacheConstant;
-import org.uboot.common.exception.UBootException;
 import org.uboot.common.system.base.controller.BaseController;
 import org.uboot.common.system.query.QueryGenerator;
 import org.uboot.common.system.util.JwtUtil;
 import org.uboot.common.system.vo.LoginUser;
 import org.uboot.modules.system.entity.SysDepart;
-import org.uboot.modules.system.mapper.SysDictMapper;
 import org.uboot.modules.system.model.DepartIdModel;
-import org.uboot.modules.system.model.DuplicateCheckVo;
 import org.uboot.modules.system.model.SysDepartModel;
-import org.uboot.modules.system.model.SysDepartTreeWithManagerModel;
-import org.uboot.modules.system.service.*;
+import org.uboot.modules.system.service.ISysDepartService;
 import org.uboot.modules.system.util.FindsDepartsChildrenUtil;
 import org.uboot.modules.system.vo.SysDepartManagersVO;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @Description: sys_depart 拥有数据权限的部门操作
@@ -127,7 +130,7 @@ public class SysDepartTreeController extends BaseController<SysDepart, ISysDepar
      * @return
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    @CacheEvict(value= {CacheConstant.SYS_DEPARTS_CACHE,CacheConstant.SYS_DEPART_IDS_CACHE}, allEntries=true)
+    @CacheInvalidate(name = CacheConstant.SYS_DEPARTS_CACHE, multi = true)
     public Result<SysDepart> add(@RequestBody SysDepartManagersVO sysDepart, HttpServletRequest request) {
         Result<SysDepart> result = new Result<SysDepart>();
         String username = JwtUtil.getUserNameByToken(request);
@@ -153,7 +156,7 @@ public class SysDepartTreeController extends BaseController<SysDepart, ISysDepar
      * @return
      */
     @RequestMapping(value = "/edit", method = RequestMethod.PUT)
-    @CacheEvict(value= {CacheConstant.SYS_DEPARTS_CACHE,CacheConstant.SYS_DEPART_IDS_CACHE}, allEntries=true)
+    @CacheInvalidate(name = CacheConstant.SYS_DEPARTS_CACHE, multi = true)
     public Result<SysDepart> edit(@RequestBody SysDepartManagersVO sysDepart, HttpServletRequest request) {
         String username = JwtUtil.getUserNameByToken(request);
         sysDepart.setUpdateBy(username);
@@ -226,7 +229,7 @@ public class SysDepartTreeController extends BaseController<SysDepart, ISysDepar
      * @return
      */
     @RequestMapping(value = "/importExcel", method = RequestMethod.POST)
-    @CacheEvict(value= {CacheConstant.SYS_DEPARTS_CACHE,CacheConstant.SYS_DEPART_IDS_CACHE}, allEntries=true)
+    @CacheInvalidate(name = CacheConstant.SYS_DEPARTS_CACHE, multi = true)
     public Result<?> importExcel(HttpServletRequest request, HttpServletResponse response) {
         MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
         Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();

@@ -1,18 +1,30 @@
 package org.uboot.modules.system.controller;
 
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.alibaba.fastjson.JSON;
+import com.alicp.jetcache.anno.CacheInvalidate;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
-import org.springframework.cache.annotation.Cacheable;
+import org.jeecgframework.poi.excel.ExcelImportUtil;
+import org.jeecgframework.poi.excel.def.NormalExcelConstants;
+import org.jeecgframework.poi.excel.entity.ExportParams;
+import org.jeecgframework.poi.excel.entity.ImportParams;
+import org.jeecgframework.poi.excel.view.JeecgEntityExcelView;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.servlet.ModelAndView;
 import org.uboot.common.api.vo.Result;
 import org.uboot.common.constant.CacheConstant;
 import org.uboot.common.constant.CommonConstant;
@@ -29,32 +41,14 @@ import org.uboot.modules.system.service.ISysDictItemService;
 import org.uboot.modules.system.service.ISysDictService;
 import org.uboot.modules.system.vo.SysDictModel;
 import org.uboot.modules.system.vo.SysDictPage;
-import org.jeecgframework.poi.excel.ExcelImportUtil;
-import org.jeecgframework.poi.excel.def.NormalExcelConstants;
-import org.jeecgframework.poi.excel.entity.ExportParams;
-import org.jeecgframework.poi.excel.entity.ImportParams;
-import org.jeecgframework.poi.excel.view.JeecgEntityExcelView;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.servlet.ModelAndView;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-
-import lombok.extern.slf4j.Slf4j;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -209,7 +203,7 @@ public class SysDictController {
 	 * @return
 	 */
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
-    @CacheEvict(value= {CacheConstant.SYS_DICT_CACHE_ALL}, allEntries=true)
+    @CacheInvalidate(name = CacheConstant.SYS_DICT_CACHE, key = "all")
 	public Result<SysDict> add(@RequestBody SysDict sysDict) {
 		Result<SysDict> result = new Result<SysDict>();
 		try {
@@ -230,7 +224,7 @@ public class SysDictController {
 	 * @return
 	 */
 	@RequestMapping(value = "/edit", method = RequestMethod.PUT)
-    @CacheEvict(value= {CacheConstant.SYS_DICT_CACHE_ALL}, allEntries=true)
+    @CacheInvalidate(name = CacheConstant.SYS_DICT_CACHE, key = "all")
 	public Result<SysDict> edit(@RequestBody SysDict sysDict) {
 		Result<SysDict> result = new Result<SysDict>();
 		SysDict sysdict = sysDictService.getById(sysDict.getId());
@@ -253,7 +247,7 @@ public class SysDictController {
 	 * @return
 	 */
 	@RequestMapping(value = "/delete", method = RequestMethod.DELETE)
-	@CacheEvict(value= {CacheConstant.SYS_DICT_CACHE_ALL, CacheConstant.SYS_DICT_CACHE }, allEntries=true)
+	@CacheInvalidate(name = CacheConstant.SYS_DICT_CACHE,multi = true)
 	public Result<SysDict> delete(@RequestParam(name="id",required=true) String id) {
 		Result<SysDict> result = new Result<SysDict>();
 		boolean ok = sysDictService.removeById(id);
@@ -271,7 +265,7 @@ public class SysDictController {
 	 * @return
 	 */
 	@RequestMapping(value = "/deleteBatch", method = RequestMethod.DELETE)
-    @CacheEvict(value= {CacheConstant.SYS_DICT_CACHE_ALL, CacheConstant.SYS_DICT_CACHE }, allEntries=true)
+	@CacheInvalidate(name = CacheConstant.SYS_DICT_CACHE, multi = true)
 	public Result<SysDict> deleteBatch(@RequestParam(name="ids",required=true) String ids) {
 		Result<SysDict> result = new Result<SysDict>();
 		if(oConvertUtils.isEmpty(ids)) {
@@ -287,7 +281,6 @@ public class SysDictController {
 	 * 导出excel
 	 *
 	 * @param request
-	 * @param response
 	 */
 	@RequestMapping(value = "/exportXls")
 	public ModelAndView exportXls(SysDict sysDict,HttpServletRequest request) {
@@ -327,7 +320,7 @@ public class SysDictController {
 	 * @return
 	 */
 	@RequestMapping(value = "/importExcel", method = RequestMethod.POST)
-    @CacheEvict(value= {CacheConstant.SYS_DICT_CACHE_ALL, CacheConstant.SYS_DICT_CACHE }, allEntries=true)
+	@CacheInvalidate(name = CacheConstant.SYS_DICT_CACHE, multi = true)
 	public Result<?> importExcel(HttpServletRequest request, HttpServletResponse response) {
 		MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
 		Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();

@@ -1,50 +1,23 @@
 package org.uboot.modules.system.controller;
 
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
-import org.apache.commons.lang.StringUtils;
+import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.apache.shiro.authz.annotation.RequiresRoles;
-import org.uboot.common.api.vo.Result;
-import org.uboot.common.constant.CacheConstant;
-import org.uboot.common.constant.CommonConstant;
-import org.uboot.common.system.api.ISysBaseAPI;
-import org.uboot.common.system.query.QueryGenerator;
-import org.uboot.common.system.util.JwtUtil;
-import org.uboot.common.system.vo.LoginUser;
-import org.uboot.common.util.PasswordUtil;
-import org.uboot.common.util.RedisUtil;
-import org.uboot.common.util.oConvertUtils;
-import org.uboot.modules.system.entity.*;
-import org.uboot.modules.system.model.DepartIdModel;
-import org.uboot.modules.system.model.SysUserSysDepartModel;
-import org.uboot.modules.system.service.ISysDepartService;
-import org.uboot.modules.system.service.ISysUserDepartService;
-import org.uboot.modules.system.service.ISysUserRoleService;
-import org.uboot.modules.system.service.ISysUserService;
-import org.uboot.modules.system.vo.SysDepartUsersVO;
-import org.uboot.modules.system.vo.SysUserRoleVO;
 import org.jeecgframework.poi.excel.ExcelImportUtil;
 import org.jeecgframework.poi.excel.def.NormalExcelConstants;
 import org.jeecgframework.poi.excel.entity.ExportParams;
 import org.jeecgframework.poi.excel.entity.ImportParams;
 import org.jeecgframework.poi.excel.view.JeecgEntityExcelView;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -55,16 +28,39 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
+import org.uboot.common.api.vo.Result;
+import org.uboot.common.constant.CommonConstant;
+import org.uboot.common.system.api.ISysBaseAPI;
+import org.uboot.common.system.query.QueryGenerator;
+import org.uboot.common.system.util.JwtUtil;
+import org.uboot.common.system.vo.LoginUser;
+import org.uboot.common.util.PasswordUtil;
+import org.uboot.common.util.RedisUtil;
+import org.uboot.common.util.oConvertUtils;
+import org.uboot.modules.system.entity.SysDepart;
+import org.uboot.modules.system.entity.SysUser;
+import org.uboot.modules.system.entity.SysUserDepart;
+import org.uboot.modules.system.entity.SysUserRole;
+import org.uboot.modules.system.model.DepartIdModel;
+import org.uboot.modules.system.model.SysUserSysDepartModel;
+import org.uboot.modules.system.service.ISysDepartService;
+import org.uboot.modules.system.service.ISysUserDepartService;
+import org.uboot.modules.system.service.ISysUserRoleService;
+import org.uboot.modules.system.service.ISysUserService;
+import org.uboot.modules.system.vo.SysDepartUsersVO;
+import org.uboot.modules.system.vo.SysUserRoleVO;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-
-import lombok.extern.slf4j.Slf4j;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * <p>

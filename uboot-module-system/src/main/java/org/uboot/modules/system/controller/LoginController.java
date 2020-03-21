@@ -138,7 +138,7 @@ public class LoginController {
 	    	//清空用户登录Shiro权限缓存
 			redisUtil.del(CommonConstant.PREFIX_USER_SHIRO_CACHE + sysUser.getId());
 			//清空用户的缓存信息（包括部门信息），例如sys:cache:user::<username>
-			redisUtil.del(String.format("%s::%s", CacheConstant.SYS_USERS_CACHE, sysUser.getUsername()));
+			redisUtil.del(String.format("%s%s", CacheConstant.SYS_USERS_CACHE, sysUser.getUsername()));
 			//调用shiro的logout
 			SecurityUtils.getSubject().logout();
 	    	return Result.ok("退出登录成功！");
