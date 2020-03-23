@@ -35,6 +35,10 @@
         </foreach>
     </update>
 
+    <update id="updateDelFlag">
+        update sys_user set del_flag = #{delFlag} where id = #{userId}
+    </update>
+
     <!-- 根据手机号查询 -->
 	<select id="getUserByPhone"  resultType="org.uboot.modules.system.entity.SysUser">
 		select * from  sys_user  where phone = #{phone} and del_flag = '0'

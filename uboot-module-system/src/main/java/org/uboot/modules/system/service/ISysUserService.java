@@ -180,4 +180,12 @@ public interface ISysUserService extends IService<SysUser> {
 	Result checkUserIsEffective(SysUser sysUser);
 
     void addUserWithTenant(SysUser user);
+
+    /**
+     * 设置user delflag 状态
+     * @param userId
+     * @param delFlag
+     * @return
+     */
+    int updateDelFlag(String userId, Integer delFlag);
 }

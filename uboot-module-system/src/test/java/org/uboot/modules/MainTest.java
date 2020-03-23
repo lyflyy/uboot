@@ -2,6 +2,9 @@ package org.uboot.modules;
 
 import org.uboot.modules.system.service.impl.SysDepartServiceImpl;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * @author: LiYang
  * @Email: lyflyyvip@163.com
@@ -11,11 +14,13 @@ import org.uboot.modules.system.service.impl.SysDepartServiceImpl;
 public class MainTest {
 
     public static void main(String[] args) {
-        SysDepartServiceImpl sysDepartService = new SysDepartServiceImpl();
-        String s = "258营/1连/1班";
-        System.out.println(
-                sysDepartService.getParentIdByNames(s.split("/"), "1236131507723075586")
-        );;
+        String s = "asjdasjd${param1}, ${param2}, ${param3}, ${param4}asdasdas,${param5}";
+        List<String> parm = Arrays.asList("a", "b", "c", "d");
+        for (int i = 0; i < parm.size(); i++) {
+            String tmp = "${param" + (i + 1) + "}";
+            s = s.replace(tmp, parm.get(i));
+        }
+        System.out.println(s);
     }
 
 }

@@ -365,4 +365,9 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             log.error("添加用户：" + user.getRealname() + "时候，租户Id不存在！");
         }
     }
+
+    @Override
+    public int updateDelFlag(String userId, Integer delFlag) {
+        return baseMapper.updateDelFlag(userId, delFlag);
+    }
 }
