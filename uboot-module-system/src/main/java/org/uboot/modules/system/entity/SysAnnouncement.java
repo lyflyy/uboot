@@ -1,24 +1,22 @@
 package org.uboot.modules.system.entity;
 
-import java.io.Serializable;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.Data;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import org.uboot.common.aspect.annotation.Dict;
+import lombok.Data;
 import org.jeecgframework.poi.excel.annotation.Excel;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.uboot.common.aspect.annotation.Dict;
 import org.uboot.modules.message.entity.SysMessageTemplate;
+
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @Description: 系统通告表
  * @Author: jeecg-boot
- * @Date:  2019-01-02
+ * @Date: 2019-01-02
  * @Version: V1.0
  */
 @Data
@@ -131,15 +129,15 @@ public class SysAnnouncement implements Serializable {
 
     /**
      * 模版 -> 通知 转换
+     *
      * @param template
-     * @param userIds
+     * @param params
      * @return
      */
-    public static SysAnnouncement convert(SysMessageTemplate template, String userIds) {
+    public static SysAnnouncement convert(SysMessageTemplate template, String... params) {
         SysAnnouncement sysAnnouncement = new SysAnnouncement();
-        sysAnnouncement.setUserIds(userIds);
-        sysAnnouncement.setTitile(replaceParam(template.getTemplateName(), template.getTitleParam()));
-        sysAnnouncement.setMsgContent(replaceParam(template.getTemplateContent(), template.getContentParam()));
+        sysAnnouncement.setTitile(replaceParam(template.getTemplateName(), params));
+        sysAnnouncement.setMsgContent(replaceParam(template.getTemplateContent(), params));
         sysAnnouncement.setPriority(template.getPriority());
         return sysAnnouncement;
     }
@@ -147,14 +145,15 @@ public class SysAnnouncement implements Serializable {
 
     /**
      * 参数替换
+     *
      * @param content
      * @param param
      * @return
      */
-    private static String replaceParam(String content, List<String> param){
-        for (int i = 0; i < param.size(); i++) {
+    private static String replaceParam(String content, String[] param) {
+        for (int i = 0; i < param.length; i++) {
             String tmp = "${param" + (i + 1) + "}";
-            content = content.replace(tmp, param.get(i));
+            content = content.replace(tmp, param[i]);
         }
         return content;
     }

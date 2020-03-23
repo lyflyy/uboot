@@ -8,6 +8,13 @@
 		WHERE user_id = #{userId, jdbcType=VARCHAR}
     </select>
 
+    <select id="getDepartAdminByDepId" resultType="org.uboot.modules.system.entity.SysUserDepart">
+		SELECT *
+		FROM sys_user_depart
+		WHERE  dep_id = ${param1} and is_manager = 1
+    </select>
+
+
     <delete id="deleteByDepCodeAndUser">
         delete from sys_user_depart where dep_id =
         (select id from sys_depart where org_code = #{deptCode})
