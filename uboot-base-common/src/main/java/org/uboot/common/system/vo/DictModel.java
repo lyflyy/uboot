@@ -1,12 +1,11 @@
 package org.uboot.common.system.vo;
 
-import java.io.Serializable;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+
+import java.io.Serializable;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -37,6 +36,8 @@ public class DictModel implements Serializable{
 	 * 字典文本
 	 */
 	private String text;
+
+    private Integer status;
 
     /**
      * 描述
