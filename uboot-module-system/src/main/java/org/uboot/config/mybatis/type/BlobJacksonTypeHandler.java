@@ -56,6 +56,7 @@ public class BlobJacksonTypeHandler extends BaseTypeHandler<Object> {
     @Override
     public Object getNullableResult(ResultSet rs, String columnName) throws SQLException {
         Blob blob = rs.getBlob(columnName);
+        if(blob == null) return null;
         byte[] bytes = blob.getBytes(1, (int) blob.length());
         return parse(bytes);
     }
@@ -63,6 +64,7 @@ public class BlobJacksonTypeHandler extends BaseTypeHandler<Object> {
     @Override
     public Object getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
         Blob blob = rs.getBlob(columnIndex);
+        if(blob == null) return null;
         byte[] bytes = blob.getBytes(1, (int) blob.length());
         return parse(bytes);
     }
@@ -70,6 +72,7 @@ public class BlobJacksonTypeHandler extends BaseTypeHandler<Object> {
     @Override
     public Object getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
         Blob blob = cs.getBlob(columnIndex);
+        if(blob == null) return null;
         byte[] bytes = blob.getBytes(1, (int) blob.length());
         return parse(bytes);
     }
