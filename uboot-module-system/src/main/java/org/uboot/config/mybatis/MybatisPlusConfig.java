@@ -74,7 +74,7 @@ public class MybatisPlusConfig {
             public Expression getTenantId() {
                 // 从 MilitaryContext 中取实例id
                 LoginUser sysUser = getLoginUser();
-                LOGGER.trace("login user is -:{}", sysUser);
+                LOGGER.debug("login user is -:{}", sysUser);
                 return new StringValue((sysUser == null || sysUser.getTenantId() == null) ? "-" : sysUser.getTenantId());
             }
 
@@ -87,7 +87,7 @@ public class MybatisPlusConfig {
             public boolean doTableFilter(String tableName) {
                 // 这里可以判断是否过滤表
                 boolean hasExclusive = tenantProperties.getTableExclusives().contains(tableName);
-                LOGGER.trace("tenant matching exclusive table tableName-:{}, hasExclusive-:{}", tableName, hasExclusive);
+                LOGGER.debug("tenant matching exclusive table tableName-:{}, hasExclusive-:{}", tableName, hasExclusive);
                 if (hasExclusive) {
                     return true;
                 }
