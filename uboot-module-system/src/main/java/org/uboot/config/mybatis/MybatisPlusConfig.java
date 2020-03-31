@@ -45,15 +45,15 @@ public class MybatisPlusConfig {
     /**
      * mybatis-plus SQL执行效率插件 dev test 环境开启
      */
-    @Bean
-    @Profile({"dev", "test"})
-    public PerformanceInterceptor performanceInterceptor() {
-        PerformanceInterceptor performanceInterceptor = new PerformanceInterceptor();
-        performanceInterceptor.setMaxTime(100);
-        performanceInterceptor.setWriteInLog(true);
-        performanceInterceptor.setFormat(true);
-        return performanceInterceptor;
-    }
+//    @Bean
+//    @Profile({"dev", "test"})
+//    public PerformanceInterceptor performanceInterceptor() {
+//        PerformanceInterceptor performanceInterceptor = new PerformanceInterceptor();
+//        performanceInterceptor.setMaxTime(100);
+//        performanceInterceptor.setWriteInLog(true);
+//        performanceInterceptor.setFormat(true);
+//        return performanceInterceptor;
+//    }
 
     /**
      * mybatis-plus分页插件<br>
@@ -74,7 +74,7 @@ public class MybatisPlusConfig {
             public Expression getTenantId() {
                 // 从 MilitaryContext 中取实例id
                 LoginUser sysUser = getLoginUser();
-                LOGGER.info("login user is -:{}", sysUser);
+                LOGGER.trace("login user is -:{}", sysUser);
                 return new StringValue((sysUser == null || sysUser.getTenantId() == null) ? "-" : sysUser.getTenantId());
             }
 
@@ -87,7 +87,7 @@ public class MybatisPlusConfig {
             public boolean doTableFilter(String tableName) {
                 // 这里可以判断是否过滤表
                 boolean hasExclusive = tenantProperties.getTableExclusives().contains(tableName);
-                LOGGER.info("tenant matching exclusive table tableName-:{}, hasExclusive-:{}", tableName, hasExclusive);
+                LOGGER.trace("tenant matching exclusive table tableName-:{}, hasExclusive-:{}", tableName, hasExclusive);
                 if (hasExclusive) {
                     return true;
                 }
