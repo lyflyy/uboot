@@ -86,7 +86,7 @@ public class MybatisPlusConfig {
             @Override
             public boolean doTableFilter(String tableName) {
                 // 这里可以判断是否过滤表
-                boolean hasExclusive = tenantProperties.getTableExclusives().contains(tableName);
+                boolean hasExclusive = tenantProperties.getTableExclusives().contains(tableName.toLowerCase());
                 LOGGER.debug("tenant matching exclusive table tableName-:{}, hasExclusive-:{}", tableName, hasExclusive);
                 if (hasExclusive) {
                     return true;

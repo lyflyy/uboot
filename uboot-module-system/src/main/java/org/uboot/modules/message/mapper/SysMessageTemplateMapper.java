@@ -4,8 +4,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Select;
 import org.uboot.modules.message.entity.SysMessageTemplate;
 
-import java.util.List;
-
 /**
  * @Description: 消息模板
  * @Author: jeecg-boot
@@ -13,6 +11,6 @@ import java.util.List;
  * @Version: V1.0
  */
 public interface SysMessageTemplateMapper extends BaseMapper<SysMessageTemplate> {
-    @Select("SELECT * FROM SYS_SMS_TEMPLATE WHERE TEMPLATE_CODE = #{code}")
+    @Select("SELECT * FROM sys_sms_template WHERE TEMPLATE_CODE = #{code}")
     SysMessageTemplate selectByCode(String code);
 }

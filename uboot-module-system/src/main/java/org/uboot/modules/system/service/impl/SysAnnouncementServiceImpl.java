@@ -88,7 +88,7 @@ public class SysAnnouncementServiceImpl extends ServiceImpl<SysAnnouncementMappe
         sysAnnouncement.setSender(currentUserName);
         boolean ok = updateById(sysAnnouncement);
         if (ok) {
-            if (sysAnnouncement.getMsgType().equals(CommonConstant.MSG_TYPE_ALL)) {
+            if (CommonConstant.MSG_TYPE_ALL.equals(sysAnnouncement.getMsgType())) {
                 JSONObject obj = new JSONObject();
                 obj.put("cmd", "topic");
                 obj.put("msgId", sysAnnouncement.getId());
@@ -113,7 +113,7 @@ public class SysAnnouncementServiceImpl extends ServiceImpl<SysAnnouncementMappe
     @Transactional
     @Override
     public void saveAnnouncement(SysAnnouncement sysAnnouncement) {
-        if (sysAnnouncement.getMsgType().equals(CommonConstant.MSG_TYPE_ALL)) {
+        if (CommonConstant.MSG_TYPE_ALL.equals(sysAnnouncement.getMsgType())) {
             sysAnnouncementMapper.insert(sysAnnouncement);
         } else {
             // 1.插入通告表记录
@@ -143,7 +143,7 @@ public class SysAnnouncementServiceImpl extends ServiceImpl<SysAnnouncementMappe
         // 1.更新系统信息表数据
         sysAnnouncementMapper.updateById(sysAnnouncement);
         String userId = sysAnnouncement.getUserIds();
-        if (oConvertUtils.isNotEmpty(userId) && sysAnnouncement.getMsgType().equals(CommonConstant.MSG_TYPE_UESR)) {
+        if (oConvertUtils.isNotEmpty(userId) && CommonConstant.MSG_TYPE_UESR.equals(sysAnnouncement.getMsgType())) {
             // 2.补充新的通知用户数据
             String[] userIds = userId.substring(0, (userId.length() - 1)).split(",");
             String anntId = sysAnnouncement.getId();
