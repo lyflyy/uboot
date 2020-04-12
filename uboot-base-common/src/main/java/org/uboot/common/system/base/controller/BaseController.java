@@ -52,7 +52,7 @@ public class BaseController<T, S extends IService<T>> {
     IWmImportLogService wmImportLogService;
 
     @Value(value = "${uboot.path.upload}")
-    private String uploadpath;
+    protected String uploadpath;
 
     protected void saveImportLog(UploadFileInfoVo fileInfoVo, Integer size, String module) {
         log.info("saveImportLogParam:{},{},{}", fileInfoVo, size, module);

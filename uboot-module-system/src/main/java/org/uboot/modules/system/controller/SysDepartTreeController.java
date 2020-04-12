@@ -26,6 +26,8 @@ import org.uboot.common.system.base.controller.BaseController;
 import org.uboot.common.system.query.QueryGenerator;
 import org.uboot.common.system.util.JwtUtil;
 import org.uboot.common.system.vo.LoginUser;
+import org.uboot.common.system.vo.UploadFileInfoVo;
+import org.uboot.common.util.UFileUtils;
 import org.uboot.modules.system.entity.SysDepart;
 import org.uboot.modules.system.model.DepartIdModel;
 import org.uboot.modules.system.model.SysDepartModel;
@@ -241,6 +243,8 @@ public class SysDepartTreeController extends BaseController<SysDepart, ISysDepar
             params.setNeedSave(true);
             try {
                 int num = sysDepartService.importDepart(request, file, params);
+	            UploadFileInfoVo fileInfoVo = UFileUtils.saveUploadFileFromMultipartFile(uploadpath, "excel", file);
+	            saveImportLog(fileInfoVo, num, SysDepart.class.getSimpleName());
                 return Result.ok("文件导入成功！数据行数：" + num);
             } catch (Exception e) {
                 log.error(e.getMessage(),e);
