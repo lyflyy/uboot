@@ -464,7 +464,7 @@ public class SysDepartServiceImpl extends ServiceImpl<SysDepartMapper, SysDepart
 
         String sql = "select * from sys_depart where tenant_id = '" + tenantId + "' and depart_name = '" + list.get(list.size() - 1) + "'";
         list.remove(list.size() - 1);
-        if(departNames.length == 2){
+        if(departNames.length == 1){
             // 如果数组只有两个值的话，就直接查询第一个值的id就可以了
             return sql;
         }

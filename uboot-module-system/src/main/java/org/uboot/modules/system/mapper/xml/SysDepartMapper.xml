@@ -32,16 +32,19 @@
     <select id="selectAllDepartByUser" resultMap="sysDepartTreeModelMap">
         select <include refid="modelColumns" /> from sys_depart sd, sys_user su where sd.org_code = su.org_code and su.id = #{id}
         and sd.del_flag = '0'
+        order by depart_name
     </select>
 
     <select id="selectAllDepart" resultMap="sysDepartTreeModelMap">
         select <include refid="modelColumns" /> from sys_depart sd where sd.parent_id = ''
         and sd.del_flag = '0'
+        order by depart_name
     </select>
 
     <select id="selectByParentId" resultMap="sysDepartTreeModelMap">
         select <include refid="modelColumns" /> from sys_depart sd where sd.parent_id = #{id}
         and sd.del_flag = '0'
+        order by depart_name
     </select>
 
     <select id="selectManagersByDepartId" resultType="org.uboot.modules.system.entity.SysUser">
