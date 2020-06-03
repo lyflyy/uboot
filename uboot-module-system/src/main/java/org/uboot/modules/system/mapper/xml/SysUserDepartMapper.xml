@@ -2,16 +2,16 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.uboot.modules.system.mapper.SysUserDepartMapper">
 
-    <select id="getUserDepartByUid" parameterType="String" resultType="org.uboot.modules.system.entity.SysUserDepart">
+    <select id="getUserDepartByUid" resultType="org.uboot.modules.system.entity.SysUserDepart">
 		SELECT *
 		FROM sys_user_depart
-		WHERE user_id = #{userId, jdbcType=VARCHAR}
+		WHERE user_id = #{userId}
     </select>
 
     <select id="getDepartAdminByDepId" resultType="org.uboot.modules.system.entity.SysUserDepart">
 		SELECT *
 		FROM sys_user_depart
-		WHERE  dep_id = ${param1} and is_manager = 1
+		WHERE  dep_id = ${depId} and is_manager = 1
     </select>
 
 
