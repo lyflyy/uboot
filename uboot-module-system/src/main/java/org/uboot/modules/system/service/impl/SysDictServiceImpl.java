@@ -201,7 +201,7 @@ public class SysDictServiceImpl extends ServiceImpl<SysDictMapper, SysDict> impl
     }
 
     @Override
-    @Cached(name = CacheConstant.SYS_DICT_CACHE, key = "all", expire = 3600, cacheType = CacheType.REMOTE)
+    @Cached(name = CacheConstant.SYS_DICT_CACHE, key = "'all'", expire = 3600, cacheType = CacheType.REMOTE)
     @CacheRefresh(refresh = 1800, stopRefreshAfterLastAccess = 3600, timeUnit = TimeUnit.SECONDS)
     @CachePenetrationProtect
     public List<SysDictModel> getAllDict() {

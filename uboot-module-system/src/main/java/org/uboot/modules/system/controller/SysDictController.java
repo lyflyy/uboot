@@ -203,7 +203,7 @@ public class SysDictController {
 	 * @return
 	 */
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
-    @CacheInvalidate(name = CacheConstant.SYS_DICT_CACHE, key = "all")
+    @CacheInvalidate(name = CacheConstant.SYS_DICT_CACHE, key = "'all'")
 	public Result<SysDict> add(@RequestBody SysDict sysDict) {
 		Result<SysDict> result = new Result<SysDict>();
 		try {
@@ -224,7 +224,7 @@ public class SysDictController {
 	 * @return
 	 */
 	@RequestMapping(value = "/edit", method = RequestMethod.PUT)
-    @CacheInvalidate(name = CacheConstant.SYS_DICT_CACHE, key = "all")
+    @CacheInvalidate(name = CacheConstant.SYS_DICT_CACHE, key = "'all'")
 	public Result<SysDict> edit(@RequestBody SysDict sysDict) {
 		Result<SysDict> result = new Result<SysDict>();
 		SysDict sysdict = sysDictService.getById(sysDict.getId());
