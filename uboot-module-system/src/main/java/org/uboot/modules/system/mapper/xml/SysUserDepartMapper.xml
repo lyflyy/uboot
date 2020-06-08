@@ -11,7 +11,7 @@
     <select id="getDepartAdminByDepId" resultType="org.uboot.modules.system.entity.SysUserDepart">
 		SELECT *
 		FROM sys_user_depart
-		WHERE  dep_id = ${depId} and is_manager = 1
+		WHERE  dep_id = #{depId} and is_manager = 1
     </select>
 
 
