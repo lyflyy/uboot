@@ -376,23 +376,27 @@ public class LoginController {
         // 获取租户信息
         List<HashMap<String, Object>> tenants = new ArrayList<>();
         List<SysTenant> tenantUsers = sysTenantService.getByUserId(sysUser.getId());
-        for (SysTenant tenantObj : tenantUsers) {
-            HashMap<String, Object> tenant = new HashMap<>();
-            tenant.put("tenantId", tenantObj.getId());
-            tenant.put("tenantName", tenantObj.getName());
-            List<SysDepart> departs = sysDepartService.queryUserDepartsByTenantId(sysUser.getId(), tenantObj.getId());
-            tenant.put("departs", departs);
-            if (departs == null || departs.size() == 0) {
-                tenant.put("multi_depart", 0);
-            } else if (departs.size() == 1) {
-                sysUserService.updateUserDepart(sysUser.getUsername(), departs.get(0).getOrgCode());
-                tenant.put("multi_depart", 1);
-            } else {
-                tenant.put("multi_depart", 2);
-            }
-            tenants.add(tenant);
-            obj.put("userInfo", sysUser);
-        }
+		tenantUsers.stream()
+				.filter(e -> e.getStatus() == 2)
+				.forEach(tenantObj -> {
+			HashMap<String, Object> tenant = new HashMap<>();
+			tenant.put("tenantId", tenantObj.getId());
+			tenant.put("tenantName", tenantObj.getName());
+			List<SysDepart> departs = sysDepartService.queryUserDepartsByTenantId(sysUser.getId(), tenantObj.getId());
+			tenant.put("departs", departs);
+			if (departs == null || departs.size() == 0) {
+				tenant.put("multi_depart", 0);
+			} else if (departs.size() == 1) {
+				sysUserService.updateUserDepart(sysUser.getUsername(), departs.get(0).getOrgCode());
+				tenant.put("multi_depart", 1);
+			} else {
+				tenant.put("multi_depart", 2);
+			}
+			tenants.add(tenant);
+//					tenantUsers.stream().filter(e -> e.getId().equals(sysUser.getT))
+			
+			obj.put("userInfo", sysUser);
+		});
         obj.put("tenants", tenants);
     }
 
