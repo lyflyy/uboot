@@ -95,7 +95,7 @@ public class SysTenantController extends BaseController<SysTenant, ISysTenantSer
         SysUser sysUser = sysUserService.getUserByName("admin");
         sysTenantUser.setSysUserId(sysUser.getId());
         sysTenantUserService.save(sysTenantUser);
-		return Result.ok("添加成功！");
+		return Result.ok(sysTenant);
 	}
 
 	/**
