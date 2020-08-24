@@ -1,0 +1,379 @@
+2020-08-25 00:07:59.947 [main] INFO  org.uboot.UbootApplication:50 - Starting UbootApplication on LiYangdeMBP.lan with PID 4297 (/Users/liyang/ideaWorkspace/uboot/uboot-parent/uboot-app/uboot-app-military/module-military/target/classes started by liyang in /Users/liyang/ideaWorkspace/uboot/uboot-parent)
+2020-08-25 00:07:59.951 [main] INFO  org.uboot.UbootApplication:679 - The following profiles are active: dev
+2020-08-25 00:08:01.638 [main] INFO  o.s.d.r.config.RepositoryConfigurationDelegate:244 - Multiple Spring Data modules found, entering strict repository configuration mode!
+2020-08-25 00:08:01.641 [main] INFO  o.s.d.r.config.RepositoryConfigurationDelegate:126 - Bootstrapping Spring Data repositories in DEFAULT mode.
+2020-08-25 00:08:01.737 [main] INFO  o.s.d.r.config.RepositoryConfigurationDelegate:182 - Finished Spring Data repository scanning in 82ms. Found 0 repository interfaces.
+2020-08-25 00:08:02.426 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:330 - Bean 'shiroProperties' of type [org.uboot.config.shiro.ShiroProperties$$EnhancerBySpringCGLIB$$e353e267] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-08-25 00:08:02.430 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:330 - Bean 'shiroConfig' of type [org.uboot.config.shiro.ShiroConfig$$EnhancerBySpringCGLIB$$6ad91bd6] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-08-25 00:08:02.497 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:330 - Bean 'shiroRealm' of type [org.uboot.modules.shiro.authc.ShiroRealm] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-08-25 00:08:02.598 [main] INFO  org.uboot.config.shiro.ShiroConfig:137 - ===============(1)创建缓存管理器RedisCacheManager
+2020-08-25 00:08:02.600 [main] INFO  org.uboot.config.shiro.ShiroConfig:155 - ===============(2)创建RedisManager,连接Redis..URL= 127.0.0.1:6379
+2020-08-25 00:08:02.603 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:330 - Bean 'redisManager' of type [org.crazycake.shiro.RedisManager] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-08-25 00:08:02.606 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:330 - Bean 'securityManager' of type [org.apache.shiro.web.mgt.DefaultWebSecurityManager] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-08-25 00:08:02.658 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:330 - Bean 'authorizationAttributeSourceAdvisor' of type [org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-08-25 00:08:02.766 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:330 - Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$4c31cc56] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-08-25 00:08:02.995 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:330 - Bean 'spring.datasource.dynamic-com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DynamicDataSourceProperties' of type [com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DynamicDataSourceProperties] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-08-25 00:08:03.005 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:330 - Bean 'com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DynamicDataSourceAutoConfiguration' of type [com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DynamicDataSourceAutoConfiguration$$EnhancerBySpringCGLIB$$b5c03d27] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-08-25 00:08:03.024 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:330 - Bean 'dsProcessor' of type [com.baomidou.dynamic.datasource.processor.DsHeaderProcessor] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-08-25 00:08:03.030 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:330 - Bean 'dynamicDatasourceAnnotationAdvisor' of type [com.baomidou.dynamic.datasource.aop.DynamicDataSourceAnnotationAdvisor] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-08-25 00:08:03.031 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:330 - Bean 'com.alicp.jetcache.anno.config.JetCacheProxyConfiguration' of type [com.alicp.jetcache.anno.config.JetCacheProxyConfiguration$$EnhancerBySpringCGLIB$$58998f6d] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-08-25 00:08:03.049 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:330 - Bean 'com.alicp.jetcache.anno.config.CommonConfiguration' of type [com.alicp.jetcache.anno.config.CommonConfiguration$$EnhancerBySpringCGLIB$$d79fd4e5] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-08-25 00:08:03.098 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:330 - Bean 'spring.redis-org.springframework.boot.autoconfigure.data.redis.RedisProperties' of type [org.springframework.boot.autoconfigure.data.redis.RedisProperties] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-08-25 00:08:03.112 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:330 - Bean 'org.springframework.boot.autoconfigure.data.redis.LettuceConnectionConfiguration' of type [org.springframework.boot.autoconfigure.data.redis.LettuceConnectionConfiguration$$EnhancerBySpringCGLIB$$614b8aa0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-08-25 00:08:03.303 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:330 - Bean 'lettuceClientResources' of type [io.lettuce.core.resource.DefaultClientResources] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-08-25 00:08:03.401 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:330 - Bean 'redisConnectionFactory' of type [org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-08-25 00:08:03.419 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:330 - Bean 'redisConfig' of type [org.uboot.config.RedisConfig$$EnhancerBySpringCGLIB$$8712b5fd] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-08-25 00:08:03.467 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:330 - Bean 'org.apache.shiro.spring.boot.autoconfigure.ShiroBeanAutoConfiguration' of type [org.apache.shiro.spring.boot.autoconfigure.ShiroBeanAutoConfiguration$$EnhancerBySpringCGLIB$$5f4aaa06] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-08-25 00:08:03.475 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:330 - Bean 'eventBus' of type [org.apache.shiro.event.support.DefaultEventBus] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-08-25 00:08:03.938 [main] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer:90 - Tomcat initialized with port(s): 8080 (http)
+2020-08-25 00:08:03.952 [main] INFO  org.apache.coyote.http11.Http11NioProtocol:173 - Initializing ProtocolHandler ["http-nio-8080"]
+2020-08-25 00:08:03.960 [main] INFO  org.apache.catalina.core.StandardService:173 - Starting service [Tomcat]
+2020-08-25 00:08:03.960 [main] INFO  org.apache.catalina.core.StandardEngine:173 - Starting Servlet engine: [Apache Tomcat/9.0.16]
+2020-08-25 00:08:03.966 [main] INFO  org.apache.catalina.core.AprLifecycleListener:173 - The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: [/Users/liyang/Library/Java/Extensions:/Library/Java/Extensions:/Network/Library/Java/Extensions:/System/Library/Java/Extensions:/usr/lib/java:.]
+2020-08-25 00:08:04.084 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/uboot/api]:173 - Initializing Spring embedded WebApplicationContext
+2020-08-25 00:08:04.084 [main] INFO  org.springframework.web.context.ContextLoader:296 - Root WebApplicationContext: initialization completed in 4076 ms
+2020-08-25 00:08:04.615 [main] INFO  c.b.dynamic.datasource.DynamicDataSourceCreator:113 - 动态数据源-检测到druid存在,如配置中未指定type,druid会默认配置
+2020-08-25 00:08:05.421 [main] INFO  com.alibaba.druid.pool.DruidDataSource:1003 - {dataSource-1,master} inited
+2020-08-25 00:08:05.422 [main] INFO  c.b.dynamic.datasource.DynamicRoutingDataSource:203 - 初始共加载 1 个数据源
+2020-08-25 00:08:05.423 [main] INFO  c.b.dynamic.datasource.DynamicRoutingDataSource:142 - 动态数据源-加载 master 成功
+2020-08-25 00:08:05.423 [main] INFO  c.b.dynamic.datasource.DynamicRoutingDataSource:212 - 当前的默认数据源是单数据源，数据源名为 master
+2020-08-25 00:08:12.771 [main] INFO  org.quartz.impl.StdSchedulerFactory:1208 - Using default implementation for ThreadExecutor
+2020-08-25 00:08:12.781 [main] INFO  org.quartz.core.SchedulerSignalerImpl:61 - Initialized Scheduler Signaller of type: class org.quartz.core.SchedulerSignalerImpl
+2020-08-25 00:08:12.781 [main] INFO  org.quartz.core.QuartzScheduler:229 - Quartz Scheduler v.2.3.0 created.
+2020-08-25 00:08:12.785 [main] INFO  o.s.scheduling.quartz.LocalDataSourceJobStore:672 - Using db table-based data access locking (synchronization).
+2020-08-25 00:08:12.787 [main] INFO  o.s.scheduling.quartz.LocalDataSourceJobStore:145 - JobStoreCMT initialized.
+2020-08-25 00:08:12.788 [main] INFO  org.quartz.core.QuartzScheduler:294 - Scheduler meta-data: Quartz Scheduler (v2.3.0) 'quartzScheduler' with instanceId 'NON_CLUSTERED'
+  Scheduler class: 'org.quartz.core.QuartzScheduler' - running locally.
+  NOT STARTED.
+  Currently in standby mode.
+  Number of jobs executed: 0
+  Using thread pool 'org.quartz.simpl.SimpleThreadPool' - with 10 threads.
+  Using job-store 'org.springframework.scheduling.quartz.LocalDataSourceJobStore' - which supports persistence. and is not clustered.
+
+2020-08-25 00:08:12.788 [main] INFO  org.quartz.impl.StdSchedulerFactory:1362 - Quartz scheduler 'quartzScheduler' initialized from an externally provided properties instance.
+2020-08-25 00:08:12.788 [main] INFO  org.quartz.impl.StdSchedulerFactory:1366 - Quartz scheduler version: 2.3.0
+2020-08-25 00:08:12.788 [main] INFO  org.quartz.core.QuartzScheduler:2287 - JobFactory set to: org.springframework.scheduling.quartz.SpringBeanJobFactory@38f569d
+2020-08-25 00:08:15.214 [main] INFO  o.s.b.actuate.endpoint.web.EndpointLinksResolver:59 - Exposing 2 endpoint(s) beneath base path '/actuator'
+2020-08-25 00:08:15.522 [main] INFO  s.d.s.w.PropertySourcedRequestMappingHandlerMapping:69 - Mapped URL path [/v2/api-docs] onto method [public org.springframework.http.ResponseEntity<springfox.documentation.spring.web.json.Json> springfox.documentation.swagger2.web.Swagger2Controller.getDocumentation(java.lang.String,javax.servlet.http.HttpServletRequest)]
+2020-08-25 00:08:15.887 [main] INFO  o.s.scheduling.concurrent.ThreadPoolTaskExecutor:171 - Initializing ExecutorService 'applicationTaskExecutor'
+2020-08-25 00:08:16.189 [main] INFO  c.a.jetcache.autoconfigure.AbstractCacheAutoInit:67 - init cache area default , type= caffeine
+2020-08-25 00:08:16.199 [main] INFO  c.a.jetcache.autoconfigure.AbstractCacheAutoInit:67 - init cache area default , type= redis.lettuce
+2020-08-25 00:08:16.280 [main] INFO  io.lettuce.core.EpollProvider:68 - Starting without optional epoll library
+2020-08-25 00:08:16.282 [main] INFO  io.lettuce.core.KqueueProvider:70 - Starting without optional kqueue library
+2020-08-25 00:08:16.427 [main] INFO  c.a.jetcache.support.DefaultCacheMonitorManager:84 - cache stat period at 15 MINUTES
+2020-08-25 00:08:16.945 [main] WARN  o.s.b.a.freemarker.FreeMarkerAutoConfiguration:70 - Cannot find template location(s): [classpath:/templates] (please add some templates, check your FreeMarker configuration, or set spring.freemarker.checkTemplateLocation=false)
+2020-08-25 00:08:17.212 [main] INFO  s.d.s.web.plugins.DocumentationPluginsBootstrapper:160 - Context refreshed
+2020-08-25 00:08:17.231 [main] INFO  s.d.s.web.plugins.DocumentationPluginsBootstrapper:163 - Found 1 custom documentation plugin(s)
+2020-08-25 00:08:17.274 [main] INFO  s.d.spring.web.scanners.ApiListingReferenceScanner:41 - Scanning for api listing references
+2020-08-25 00:08:17.479 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: queryPageListUsingGET_1
+2020-08-25 00:08:17.541 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: queryContrastDailyUsingGET_1
+2020-08-25 00:08:17.542 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: queryContrastLastUsingGET_1
+2020-08-25 00:08:17.545 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: queryInfoUsingGET_1
+2020-08-25 00:08:17.554 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: addUsingPOST_1
+2020-08-25 00:08:17.555 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: deleteUsingDELETE_1
+2020-08-25 00:08:17.557 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: deleteBatchUsingDELETE_1
+2020-08-25 00:08:17.558 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: editUsingPUT_1
+2020-08-25 00:08:17.559 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: queryByIdUsingGET_1
+2020-08-25 00:08:17.562 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: queryPageListUsingGET_2
+2020-08-25 00:08:17.571 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: addUsingPOST_2
+2020-08-25 00:08:17.572 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: deleteUsingDELETE_2
+2020-08-25 00:08:17.574 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: deleteBatchUsingDELETE_2
+2020-08-25 00:08:17.575 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: editUsingPUT_2
+2020-08-25 00:08:17.576 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: queryByIdUsingGET_2
+2020-08-25 00:08:17.583 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: queryPageListUsingGET_3
+2020-08-25 00:08:17.588 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: addUsingPOST_3
+2020-08-25 00:08:17.589 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: deleteUsingDELETE_3
+2020-08-25 00:08:17.590 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: deleteBatchUsingDELETE_3
+2020-08-25 00:08:17.591 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: editUsingPUT_3
+2020-08-25 00:08:17.592 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: queryByIdUsingGET_3
+2020-08-25 00:08:17.595 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: queryPageListUsingGET_4
+2020-08-25 00:08:17.600 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: addUsingPOST_4
+2020-08-25 00:08:17.602 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: deleteUsingDELETE_4
+2020-08-25 00:08:17.603 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: deleteBatchUsingDELETE_4
+2020-08-25 00:08:17.604 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: editUsingPUT_4
+2020-08-25 00:08:17.607 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingGET_1
+2020-08-25 00:08:17.608 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: importExcelUsingPOST_1
+2020-08-25 00:08:17.609 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: queryByIdUsingGET_4
+2020-08-25 00:08:17.611 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: queryPageListUsingGET_5
+2020-08-25 00:08:17.622 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: addUsingPOST_5
+2020-08-25 00:08:17.623 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: deleteUsingDELETE_5
+2020-08-25 00:08:17.624 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: deleteBatchUsingDELETE_5
+2020-08-25 00:08:17.626 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: editUsingPUT_5
+2020-08-25 00:08:17.629 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingGET_2
+2020-08-25 00:08:17.631 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingHEAD_1
+2020-08-25 00:08:17.633 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingPOST_1
+2020-08-25 00:08:17.635 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingPUT_1
+2020-08-25 00:08:17.636 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingPATCH_1
+2020-08-25 00:08:17.638 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingDELETE_1
+2020-08-25 00:08:17.639 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingOPTIONS_1
+2020-08-25 00:08:17.640 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingTRACE_1
+2020-08-25 00:08:17.641 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: importExcelUsingPOST_2
+2020-08-25 00:08:17.643 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: queryByIdUsingGET_5
+2020-08-25 00:08:17.644 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: queryPageListUsingGET_6
+2020-08-25 00:08:17.647 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: addUsingPOST_6
+2020-08-25 00:08:17.648 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: deleteUsingDELETE_6
+2020-08-25 00:08:17.649 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: deleteBatchUsingDELETE_6
+2020-08-25 00:08:17.651 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: editUsingPUT_6
+2020-08-25 00:08:17.654 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingGET_3
+2020-08-25 00:08:17.655 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingHEAD_2
+2020-08-25 00:08:17.656 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingPOST_2
+2020-08-25 00:08:17.657 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingPUT_2
+2020-08-25 00:08:17.658 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingPATCH_2
+2020-08-25 00:08:17.659 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingDELETE_2
+2020-08-25 00:08:17.660 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingOPTIONS_2
+2020-08-25 00:08:17.661 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingTRACE_2
+2020-08-25 00:08:17.662 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: importExcelUsingPOST_3
+2020-08-25 00:08:17.663 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: queryByIdUsingGET_6
+2020-08-25 00:08:17.664 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: queryPageListUsingGET_7
+2020-08-25 00:08:17.669 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: addUsingPOST_7
+2020-08-25 00:08:17.670 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: deleteUsingDELETE_7
+2020-08-25 00:08:17.671 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: deleteBatchUsingDELETE_7
+2020-08-25 00:08:17.672 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: editUsingPUT_7
+2020-08-25 00:08:17.675 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingGET_4
+2020-08-25 00:08:17.676 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingHEAD_3
+2020-08-25 00:08:17.677 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingPOST_3
+2020-08-25 00:08:17.678 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingPUT_3
+2020-08-25 00:08:17.680 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingPATCH_3
+2020-08-25 00:08:17.681 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingDELETE_3
+2020-08-25 00:08:17.682 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingOPTIONS_3
+2020-08-25 00:08:17.683 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingTRACE_3
+2020-08-25 00:08:17.684 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: importExcelUsingPOST_4
+2020-08-25 00:08:17.685 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: queryByIdUsingGET_7
+2020-08-25 00:08:17.687 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: queryPageListUsingGET_8
+2020-08-25 00:08:17.691 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: addUsingPOST_8
+2020-08-25 00:08:17.692 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: deleteUsingDELETE_8
+2020-08-25 00:08:17.695 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: deleteBatchUsingDELETE_8
+2020-08-25 00:08:17.696 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: editUsingPUT_8
+2020-08-25 00:08:17.700 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingGET_5
+2020-08-25 00:08:17.701 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingHEAD_4
+2020-08-25 00:08:17.702 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingPOST_4
+2020-08-25 00:08:17.703 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingPUT_4
+2020-08-25 00:08:17.705 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingPATCH_4
+2020-08-25 00:08:17.706 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingDELETE_4
+2020-08-25 00:08:17.708 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingOPTIONS_4
+2020-08-25 00:08:17.709 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingTRACE_4
+2020-08-25 00:08:17.710 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: importExcelUsingPOST_5
+2020-08-25 00:08:17.711 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: queryByIdUsingGET_8
+2020-08-25 00:08:17.713 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: queryPageListUsingGET_9
+2020-08-25 00:08:17.719 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: addUsingPOST_9
+2020-08-25 00:08:17.720 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: deleteUsingDELETE_9
+2020-08-25 00:08:17.722 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: deleteBatchUsingDELETE_9
+2020-08-25 00:08:17.723 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: editUsingPUT_9
+2020-08-25 00:08:17.729 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingGET_6
+2020-08-25 00:08:17.731 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingHEAD_5
+2020-08-25 00:08:17.733 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingPOST_5
+2020-08-25 00:08:17.735 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingPUT_5
+2020-08-25 00:08:17.736 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingPATCH_5
+2020-08-25 00:08:17.737 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingDELETE_5
+2020-08-25 00:08:17.738 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingOPTIONS_5
+2020-08-25 00:08:17.739 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingTRACE_5
+2020-08-25 00:08:17.741 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: importExcelUsingPOST_6
+2020-08-25 00:08:17.743 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: queryByIdUsingGET_9
+2020-08-25 00:08:17.747 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: queryPageListUsingGET_10
+2020-08-25 00:08:17.754 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: addUsingPOST_10
+2020-08-25 00:08:17.756 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: deleteUsingDELETE_10
+2020-08-25 00:08:17.758 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: deleteBatchUsingDELETE_10
+2020-08-25 00:08:17.759 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: editUsingPUT_10
+2020-08-25 00:08:17.765 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingGET_7
+2020-08-25 00:08:17.766 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingHEAD_6
+2020-08-25 00:08:17.768 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingPOST_6
+2020-08-25 00:08:17.770 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingPUT_6
+2020-08-25 00:08:17.771 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingPATCH_6
+2020-08-25 00:08:17.773 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingDELETE_6
+2020-08-25 00:08:17.775 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingOPTIONS_6
+2020-08-25 00:08:17.777 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingTRACE_6
+2020-08-25 00:08:17.778 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: importExcelUsingPOST_7
+2020-08-25 00:08:17.779 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: queryByIdUsingGET_10
+2020-08-25 00:08:17.782 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: queryPageListUsingGET_11
+2020-08-25 00:08:17.790 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingGET_8
+2020-08-25 00:08:17.791 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingHEAD_7
+2020-08-25 00:08:17.792 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingPOST_7
+2020-08-25 00:08:17.794 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingPUT_7
+2020-08-25 00:08:17.796 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingPATCH_7
+2020-08-25 00:08:17.797 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingDELETE_7
+2020-08-25 00:08:17.799 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingOPTIONS_7
+2020-08-25 00:08:17.800 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingTRACE_7
+2020-08-25 00:08:17.806 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: queryPageListUsingGET_12
+2020-08-25 00:08:17.815 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: addUsingPOST_11
+2020-08-25 00:08:17.817 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: deleteUsingDELETE_11
+2020-08-25 00:08:17.818 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: deleteBatchUsingDELETE_11
+2020-08-25 00:08:17.820 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: editUsingPUT_11
+2020-08-25 00:08:17.824 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingGET_9
+2020-08-25 00:08:17.826 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingHEAD_8
+2020-08-25 00:08:17.827 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingPOST_8
+2020-08-25 00:08:17.828 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingPUT_8
+2020-08-25 00:08:17.830 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingPATCH_8
+2020-08-25 00:08:17.831 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingDELETE_8
+2020-08-25 00:08:17.832 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingOPTIONS_8
+2020-08-25 00:08:17.833 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingTRACE_8
+2020-08-25 00:08:17.835 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: importExcelUsingPOST_8
+2020-08-25 00:08:17.836 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: queryByIdUsingGET_11
+2020-08-25 00:08:17.840 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: queryPageListUsingGET_13
+2020-08-25 00:08:17.847 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: addUsingPOST_12
+2020-08-25 00:08:17.849 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: addUsingPOST_13
+2020-08-25 00:08:17.850 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: deleteUsingDELETE_12
+2020-08-25 00:08:17.851 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: deleteBatchUsingDELETE_12
+2020-08-25 00:08:17.855 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: editUsingPUT_12
+2020-08-25 00:08:17.858 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingGET_10
+2020-08-25 00:08:17.860 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingHEAD_9
+2020-08-25 00:08:17.861 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingPOST_9
+2020-08-25 00:08:17.862 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingPUT_9
+2020-08-25 00:08:17.863 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingPATCH_9
+2020-08-25 00:08:17.864 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingDELETE_9
+2020-08-25 00:08:17.865 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingOPTIONS_9
+2020-08-25 00:08:17.866 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingTRACE_9
+2020-08-25 00:08:17.867 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: importExcelUsingPOST_9
+2020-08-25 00:08:17.869 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: queryByIdUsingGET_12
+2020-08-25 00:08:17.871 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: queryPageListUsingGET_14
+2020-08-25 00:08:17.888 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: queryByIdUsingGET_13
+2020-08-25 00:08:17.910 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: queryPageListUsingGET_15
+2020-08-25 00:08:17.921 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: addUsingPOST_14
+2020-08-25 00:08:17.923 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: deleteUsingDELETE_13
+2020-08-25 00:08:17.925 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: deleteBatchUsingDELETE_13
+2020-08-25 00:08:17.928 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: editUsingPUT_13
+2020-08-25 00:08:17.936 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingGET_11
+2020-08-25 00:08:17.937 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingHEAD_10
+2020-08-25 00:08:17.938 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingPOST_10
+2020-08-25 00:08:17.939 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingPUT_10
+2020-08-25 00:08:17.941 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingPATCH_10
+2020-08-25 00:08:17.942 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingDELETE_10
+2020-08-25 00:08:17.944 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingOPTIONS_10
+2020-08-25 00:08:17.946 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingTRACE_10
+2020-08-25 00:08:17.948 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: importExcelUsingPOST_10
+2020-08-25 00:08:17.950 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: queryByIdUsingGET_14
+2020-08-25 00:08:17.955 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: queryPageListUsingGET_16
+2020-08-25 00:08:17.957 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: queryPageListUsingGET_17
+2020-08-25 00:08:17.969 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: addUsingPOST_15
+2020-08-25 00:08:17.971 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: deleteUsingDELETE_14
+2020-08-25 00:08:17.972 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: deleteBatchUsingDELETE_14
+2020-08-25 00:08:17.990 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: editUsingPUT_14
+2020-08-25 00:08:18.005 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingGET_12
+2020-08-25 00:08:18.008 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingHEAD_11
+2020-08-25 00:08:18.011 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingPOST_11
+2020-08-25 00:08:18.014 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingPUT_11
+2020-08-25 00:08:18.017 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingPATCH_11
+2020-08-25 00:08:18.021 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingDELETE_11
+2020-08-25 00:08:18.024 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingOPTIONS_11
+2020-08-25 00:08:18.028 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingTRACE_11
+2020-08-25 00:08:18.029 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: importExcelUsingPOST_11
+2020-08-25 00:08:18.031 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: queryByIdUsingGET_15
+2020-08-25 00:08:18.036 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: queryPageListUsingGET_18
+2020-08-25 00:08:18.043 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: addUsingPOST_16
+2020-08-25 00:08:18.044 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: deleteUsingDELETE_15
+2020-08-25 00:08:18.045 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: deleteBatchUsingDELETE_15
+2020-08-25 00:08:18.046 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: editUsingPUT_15
+2020-08-25 00:08:18.050 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingGET_13
+2020-08-25 00:08:18.051 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingHEAD_12
+2020-08-25 00:08:18.054 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingPOST_12
+2020-08-25 00:08:18.055 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingPUT_12
+2020-08-25 00:08:18.056 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingPATCH_12
+2020-08-25 00:08:18.057 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingDELETE_12
+2020-08-25 00:08:18.059 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingOPTIONS_12
+2020-08-25 00:08:18.060 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingTRACE_12
+2020-08-25 00:08:18.061 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: importExcelUsingPOST_12
+2020-08-25 00:08:18.062 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: queryByIdUsingGET_16
+2020-08-25 00:08:18.064 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: queryPageListUsingGET_19
+2020-08-25 00:08:18.074 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: addUsingPOST_17
+2020-08-25 00:08:18.075 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: deleteUsingDELETE_16
+2020-08-25 00:08:18.075 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: deleteBatchUsingDELETE_16
+2020-08-25 00:08:18.080 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: editUsingPUT_16
+2020-08-25 00:08:18.087 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingGET_14
+2020-08-25 00:08:18.089 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingHEAD_13
+2020-08-25 00:08:18.092 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingPOST_13
+2020-08-25 00:08:18.094 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingPUT_13
+2020-08-25 00:08:18.097 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingPATCH_13
+2020-08-25 00:08:18.099 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingDELETE_13
+2020-08-25 00:08:18.103 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingOPTIONS_13
+2020-08-25 00:08:18.106 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingTRACE_13
+2020-08-25 00:08:18.107 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: importExcelUsingPOST_13
+2020-08-25 00:08:18.108 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: queryByIdUsingGET_17
+2020-08-25 00:08:18.112 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: queryPageListUsingGET_20
+2020-08-25 00:08:18.129 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: addUsingPOST_18
+2020-08-25 00:08:18.132 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: deleteUsingDELETE_17
+2020-08-25 00:08:18.133 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: deleteBatchUsingDELETE_17
+2020-08-25 00:08:18.136 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: dwonloadXlsUsingGET_1
+2020-08-25 00:08:18.138 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: editUsingPUT_17
+2020-08-25 00:08:18.157 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingGET_15
+2020-08-25 00:08:18.158 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: importExcelUsingPOST_14
+2020-08-25 00:08:18.162 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: queryByIdUsingGET_18
+2020-08-25 00:08:18.179 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: queryPageListUsingGET_21
+2020-08-25 00:08:18.185 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: addUsingPOST_19
+2020-08-25 00:08:18.188 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: deleteUsingDELETE_18
+2020-08-25 00:08:18.190 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: deleteBatchUsingDELETE_18
+2020-08-25 00:08:18.191 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: editUsingPUT_18
+2020-08-25 00:08:18.195 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingGET_16
+2020-08-25 00:08:18.198 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingHEAD_14
+2020-08-25 00:08:18.201 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingPOST_14
+2020-08-25 00:08:18.205 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingPUT_14
+2020-08-25 00:08:18.207 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingPATCH_14
+2020-08-25 00:08:18.209 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingDELETE_14
+2020-08-25 00:08:18.210 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingOPTIONS_14
+2020-08-25 00:08:18.212 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingTRACE_14
+2020-08-25 00:08:18.213 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: importExcelUsingPOST_15
+2020-08-25 00:08:18.214 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: queryByIdUsingGET_19
+2020-08-25 00:08:18.217 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: queryPageListUsingGET_22
+2020-08-25 00:08:18.222 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: addUsingPOST_20
+2020-08-25 00:08:18.223 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: deleteUsingDELETE_19
+2020-08-25 00:08:18.224 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: deleteBatchUsingDELETE_19
+2020-08-25 00:08:18.225 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: dwonloadXlsUsingGET_2
+2020-08-25 00:08:18.226 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: dwonloadXlsUsingHEAD_1
+2020-08-25 00:08:18.226 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: dwonloadXlsUsingPOST_1
+2020-08-25 00:08:18.227 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: dwonloadXlsUsingPUT_1
+2020-08-25 00:08:18.227 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: dwonloadXlsUsingPATCH_1
+2020-08-25 00:08:18.228 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: dwonloadXlsUsingDELETE_1
+2020-08-25 00:08:18.228 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: dwonloadXlsUsingOPTIONS_1
+2020-08-25 00:08:18.229 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: dwonloadXlsUsingTRACE_1
+2020-08-25 00:08:18.230 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: editUsingPUT_19
+2020-08-25 00:08:18.261 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingGET_17
+2020-08-25 00:08:18.262 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingHEAD_15
+2020-08-25 00:08:18.263 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingPOST_15
+2020-08-25 00:08:18.264 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingPUT_15
+2020-08-25 00:08:18.265 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingPATCH_15
+2020-08-25 00:08:18.266 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingDELETE_15
+2020-08-25 00:08:18.266 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingOPTIONS_15
+2020-08-25 00:08:18.267 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: exportXlsUsingTRACE_15
+2020-08-25 00:08:18.268 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: importExcelUsingPOST_16
+2020-08-25 00:08:18.269 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: queryByIdUsingGET_20
+2020-08-25 00:08:18.270 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator:40 - Generating unique operation named: queryPageListUsingGET_23
+2020-08-25 00:08:18.445 [main] INFO  o.s.scheduling.quartz.SchedulerFactoryBean:726 - Starting Quartz Scheduler now
+2020-08-25 00:08:18.623 [main] INFO  o.s.scheduling.quartz.LocalDataSourceJobStore:866 - Freed 0 triggers from 'acquired' / 'blocked' state.
+2020-08-25 00:08:18.656 [main] INFO  o.s.scheduling.quartz.LocalDataSourceJobStore:876 - Recovering 0 jobs that were in-progress at the time of the last shut-down.
+2020-08-25 00:08:18.656 [main] INFO  o.s.scheduling.quartz.LocalDataSourceJobStore:889 - Recovery complete.
+2020-08-25 00:08:18.671 [main] INFO  o.s.scheduling.quartz.LocalDataSourceJobStore:896 - Removed 0 'complete' triggers.
+2020-08-25 00:08:18.687 [main] INFO  o.s.scheduling.quartz.LocalDataSourceJobStore:901 - Removed 0 stale fired job entries.
+2020-08-25 00:08:18.711 [main] INFO  org.quartz.core.QuartzScheduler:547 - Scheduler quartzScheduler_$_NON_CLUSTERED started.
+2020-08-25 00:08:18.730 [main] INFO  org.apache.coyote.http11.Http11NioProtocol:173 - Starting ProtocolHandler ["http-nio-8080"]
+2020-08-25 00:08:18.747 [main] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer:204 - Tomcat started on port(s): 8080 (http) with context path '/uboot/api'
+2020-08-25 00:08:18.751 [main] INFO  org.uboot.UbootApplication:59 - Started UbootApplication in 19.673 seconds (JVM running for 20.705)
+2020-08-25 00:08:18.764 [main] INFO  org.uboot.UbootApplication:35 - 
+----------------------------------------------------------
+	Application UBoot is running! Access URLs:
+	Local: 		http://localhost:8080/uboot/api/
+	External: 	http://192.168.199.234:8080/uboot/api/
+	swagger-ui: 		http://192.168.199.234:8080/uboot/api/doc.html
+----------------------------------------------------------
+2020-08-25 00:08:19.108 [RMI TCP Connection(3)-192.168.199.234] INFO  o.a.c.c.C.[Tomcat].[localhost].[/uboot/api]:173 - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2020-08-25 00:08:19.109 [RMI TCP Connection(3)-192.168.199.234] INFO  org.springframework.web.servlet.DispatcherServlet:524 - Initializing Servlet 'dispatcherServlet'
+2020-08-25 00:08:19.130 [RMI TCP Connection(3)-192.168.199.234] INFO  org.springframework.web.servlet.DispatcherServlet:546 - Completed initialization in 21 ms
+2020-08-25 00:08:22.169 [http-nio-8080-exec-1] INFO  org.uboot.modules.message.websocket.WebSocket:37 - 【websocket消息】有新的连接，总数为:1
+2020-08-25 00:08:27.336 [http-nio-8080-exec-2] INFO  o.u.modules.system.service.impl.AutoPoiDictService:58 - ---AutoPoi--Get_DB_Dict------[军_1, 师_2, 旅_3, 团_4, 营_5, 连_6, 排_7, 班_8, 区_9]
+2020-08-25 00:08:57.198 [http-nio-8080-exec-6] INFO  o.u.m.system.controller.SysPermissionController:177 -  ------ 通过令牌获取用户拥有的访问菜单 ---- TOKEN ------ eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1OTgyODYzNjAsInVzZXJuYW1lIjoiYWRtaW4ifQ.HjVgTgOMVXxnO74EKvnF--LGYwrXxUBV_kgY0zBxMek
+2020-08-25 00:08:58.256 [http-nio-8080-exec-7] INFO  org.uboot.modules.message.websocket.WebSocket:37 - 【websocket消息】有新的连接，总数为:2
+2020-08-25 00:08:58.332 [http-nio-8080-exec-8] ERROR o.uboot.common.system.controller.CommonController:97 - 预览图片失败/Users/liyang/test/temp/upFiles/user/20190119/logo-2_1547868176839.png (No such file or directory)
+2020-08-25 00:09:00.736 [http-nio-8080-exec-1] ERROR o.uboot.common.system.controller.CommonController:97 - 预览图片失败/Users/liyang/test/temp/upFiles/files/default.jpg (No such file or directory)
+2020-08-25 00:09:07.278 [http-nio-8080-exec-4] INFO  o.u.m.system.controller.SysPermissionController:77 - ======获取全部菜单数据=====耗时:66毫秒
+2020-08-25 00:09:32.386 [http-nio-8080-exec-9] ERROR o.uboot.common.system.controller.CommonController:97 - 预览图片失败/Users/liyang/test/temp/upFiles/files/default.jpg (No such file or directory)
+2020-08-25 00:10:33.021 [http-nio-8080-exec-5] ERROR o.uboot.common.system.controller.CommonController:97 - 预览图片失败/Users/liyang/test/temp/upFiles/files/default.jpg (No such file or directory)
+2020-08-25 00:10:34.151 [http-nio-8080-exec-7] ERROR o.uboot.common.system.controller.CommonController:97 - 预览图片失败/Users/liyang/test/temp/upFiles/files/default.jpg (No such file or directory)
+2020-08-25 00:10:58.858 [http-nio-8080-exec-2] INFO  org.uboot.modules.message.websocket.WebSocket:46 - 【websocket消息】连接断开，总数为:1
+2020-08-25 00:11:01.115 [http-nio-8080-exec-4] INFO  o.u.m.system.controller.SysPermissionController:177 -  ------ 通过令牌获取用户拥有的访问菜单 ---- TOKEN ------ eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1OTgyODYzNjAsInVzZXJuYW1lIjoiYWRtaW4ifQ.HjVgTgOMVXxnO74EKvnF--LGYwrXxUBV_kgY0zBxMek
+2020-08-25 00:11:02.516 [http-nio-8080-exec-5] INFO  org.uboot.modules.message.websocket.WebSocket:37 - 【websocket消息】有新的连接，总数为:2
+2020-08-25 00:11:02.563 [http-nio-8080-exec-6] ERROR o.uboot.common.system.controller.CommonController:97 - 预览图片失败/Users/liyang/test/temp/upFiles/user/20190119/logo-2_1547868176839.png (No such file or directory)
+2020-08-25 00:11:04.952 [http-nio-8080-exec-10] ERROR o.uboot.common.system.controller.CommonController:97 - 预览图片失败/Users/liyang/test/temp/upFiles/files/default.jpg (No such file or directory)
+2020-08-25 00:15:00.014 [JetCacheDefaultExecutor] INFO  com.alicp.jetcache.support.StatInfoLogger:46 - jetcache stat from 2020-08-25 00:08:16,421 to 2020-08-25 00:15:00,006
+cache          |       qps|   rate|           get|           hit|          fail|        expire|avgLoadTime|maxLoadTime
+---------------+----------+-------+--------------+--------------+--------------+--------------+-----------+-----------
+sys:cache:dict |      0.01|100.00%|             2|             2|             0|             0|        0.0|          0
+sys:cache:user:|      0.04|100.00%|            16|            16|             0|             0|        0.0|          0
+---------------+----------+-------+--------------+--------------+--------------+--------------+-----------+-----------
+

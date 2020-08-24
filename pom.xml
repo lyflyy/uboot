@@ -21,7 +21,7 @@
         <uboot.common.version>0.0.1-SNAPSHOT</uboot.common.version>
         <uboot.common.system>0.0.1-SNAPSHOT</uboot.common.system>
         <mybatis-plus.version>3.1.2</mybatis-plus.version>
-        <druid.version>1.1.17</druid.version>
+        <druid.version>1.1.23</druid.version>
         <jwt.version>0.9.1</jwt.version>
         <commons.version>2.6</commons.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
