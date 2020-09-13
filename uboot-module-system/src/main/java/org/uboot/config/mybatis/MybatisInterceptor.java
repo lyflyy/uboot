@@ -35,10 +35,10 @@ public class MybatisInterceptor implements Interceptor {
 	public Object intercept(Invocation invocation) throws Throwable {
 		MappedStatement mappedStatement = (MappedStatement) invocation.getArgs()[0];
 		String sqlId = mappedStatement.getId();
-		log.debug("------sqlId------" + sqlId);
+//		log.debug("------sqlId------" + sqlId);
 		SqlCommandType sqlCommandType = mappedStatement.getSqlCommandType();
 		Object parameter = invocation.getArgs()[1];
-		log.debug("------sqlCommandType------" + sqlCommandType);
+//		log.debug("------sqlCommandType------" + sqlCommandType);
 
 		if (parameter == null) {
 			return invocation.proceed();
@@ -47,7 +47,7 @@ public class MybatisInterceptor implements Interceptor {
 			LoginUser sysUser = this.getLoginUser();
 			Field[] fields = oConvertUtils.getAllFields(parameter);
 			for (Field field : fields) {
-				log.debug("------field.name------" + field.getName());
+//				log.debug("------field.name------" + field.getName());
 				try {
 					if ("createBy".equals(field.getName())) {
 						field.setAccessible(true);
@@ -116,7 +116,7 @@ public class MybatisInterceptor implements Interceptor {
 			}
 
 			for (Field field : fields) {
-				log.debug("------field.name------" + field.getName());
+//				log.debug("------field.name------" + field.getName());
 				try {
 					if ("updateBy".equals(field.getName())) {
 						//获取登录用户信息
