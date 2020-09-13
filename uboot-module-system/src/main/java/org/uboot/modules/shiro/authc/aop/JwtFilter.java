@@ -4,12 +4,14 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter;
-import org.uboot.modules.shiro.authc.JwtToken;
-import org.uboot.modules.shiro.vo.DefContants;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.uboot.modules.shiro.authc.JwtToken;
+import org.uboot.modules.shiro.vo.DefContants;
+
 import lombok.extern.slf4j.Slf4j;
 
 /**

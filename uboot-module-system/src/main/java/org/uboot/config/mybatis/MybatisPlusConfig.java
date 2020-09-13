@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.uboot.common.constant.TenantConstant;
+import org.uboot.common.exception.UBootException;
 import org.uboot.common.system.vo.LoginUser;
 import org.uboot.modules.system.util.TenantContext;
 
@@ -78,7 +79,11 @@ public class MybatisPlusConfig {
         // 从 MilitaryContext 中取实例id
         LoginUser sysUser = getLoginUser();
         LOGGER.debug("login user is -:{}", sysUser);
-        String tenantId = StringUtils.defaultString(sysUser != null ? sysUser.getTenantId(): TenantContext.get(), "-");
+        String tenantId = sysUser != null ? sysUser.getTenantId(): TenantContext.get();
+        if (StringUtils.isBlank(tenantId)) {
+          throw new UBootException("兵季参数错误");
+        }
+
         return new StringValue(tenantId);
       }
 
