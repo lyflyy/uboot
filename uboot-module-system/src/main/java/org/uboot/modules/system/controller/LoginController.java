@@ -380,6 +380,7 @@ public class LoginController {
 				.filter(e -> e.getStatus() == 2)
 				.forEach(tenantObj -> {
 			HashMap<String, Object> tenant = new HashMap<>();
+			tenant.put("createTime", tenantObj.getCreateTime());
 			tenant.put("tenantId", tenantObj.getId());
 			tenant.put("tenantName", tenantObj.getName());
 			List<SysDepart> departs = sysDepartService.queryUserDepartsByTenantId(sysUser.getId(), tenantObj.getId());
