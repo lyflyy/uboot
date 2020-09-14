@@ -380,6 +380,7 @@ public class LoginController {
 //				.filter(e -> e.getStatus() == 2)
 				.forEach(tenantObj -> {
 			HashMap<String, Object> tenant = new HashMap<>();
+			tenant.put("status", tenantObj.getStatus());
 			tenant.put("createTime", tenantObj.getCreateTime());
 			tenant.put("tenantId", tenantObj.getId());
 			tenant.put("tenantName", tenantObj.getName());
