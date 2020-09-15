@@ -7,7 +7,6 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
 import lombok.Data;
-import org.uboot.common.aspect.annotation.Dict;
 
 @Data
 @TableName("sys_user_depart")
@@ -28,7 +27,10 @@ public class SysUserDepart implements Serializable {
      */
 	private Boolean isManager;
 
-	public SysUserDepart(String id, String userId, String depId) {
+  public SysUserDepart() {
+  }
+
+  public SysUserDepart(String id, String userId, String depId) {
 		super();
 		this.id = id;
 		this.userId = userId;
