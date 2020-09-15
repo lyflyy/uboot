@@ -1,20 +1,19 @@
 package org.uboot.modules.system.entity;
 
+import java.io.Serializable;
+import java.util.Date;
+
+import org.jeecgframework.poi.excel.annotation.Excel;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.uboot.common.aspect.annotation.Dict;
+
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.Data;
-import org.uboot.common.aspect.annotation.Dict;
-import org.uboot.modules.system.model.SysDepartTreeModel;
-import org.jeecgframework.poi.excel.annotation.Excel;
-import org.springframework.format.annotation.DateTimeFormat;
 
-import java.io.Serializable;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import lombok.Data;
 
 /**
  * <p>
@@ -95,7 +94,7 @@ public class SysDepart implements Serializable {
 	/**创建日期*/
 	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
-    @Excel(name="创建日期",width=15)
+    @Excel(name="创建日期",width=15, format = "yyyy-MM-dd HH:mm:ss")
 	private Date createTime;
 
 	/**更新人*/
@@ -103,7 +102,7 @@ public class SysDepart implements Serializable {
 	private String updateBy;
 
 	/**更新日期*/
-    @Excel(name="更新日期",width=15)
+    @Excel(name="更新日期",width=15,format = "yyyy-MM-dd HH:mm:ss")
 	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	private Date updateTime;
