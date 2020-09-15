@@ -377,9 +377,10 @@ public class LoginController {
         List<HashMap<String, Object>> tenants = new ArrayList<>();
         List<SysTenant> tenantUsers = sysTenantService.getByUserId(sysUser.getId());
 		tenantUsers.stream()
-				.filter(e -> e.getStatus() == 2)
+//				.filter(e -> e.getStatus() == 2)
 				.forEach(tenantObj -> {
 			HashMap<String, Object> tenant = new HashMap<>();
+			tenant.put("status", tenantObj.getStatus());
 			tenant.put("createTime", tenantObj.getCreateTime());
 			tenant.put("tenantId", tenantObj.getId());
 			tenant.put("tenantName", tenantObj.getName());
