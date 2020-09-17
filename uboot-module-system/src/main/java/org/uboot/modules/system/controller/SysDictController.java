@@ -7,6 +7,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.jeecgframework.poi.excel.ExcelImportUtil;
@@ -26,6 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.uboot.common.api.vo.Result;
+import org.uboot.common.aspect.annotation.AutoLog;
 import org.uboot.common.constant.CacheConstant;
 import org.uboot.common.constant.CommonConstant;
 import org.uboot.common.system.query.QueryGenerator;
@@ -58,6 +61,7 @@ import java.util.Map;
  * @Author zhangweijian
  * @since 2018-12-28
  */
+@Api(tags = "字典接口")
 @RestController
 @RequestMapping("/sys/dict")
 @Slf4j
@@ -68,7 +72,9 @@ public class SysDictController {
 
 	@Autowired
 	private ISysDictItemService sysDictItemService;
-
+	
+	@ApiOperation(value="字典查询所有", notes="字典")
+	@AutoLog(value = "字典")
     @RequestMapping(value = "/all", method = RequestMethod.GET)
     public Result<List<SysDictModel>> queryAll() {
         Result<List<SysDictModel>> result = new Result<>();
@@ -77,7 +83,10 @@ public class SysDictController {
         result.setResult(sysDicts);
         return result;
     }
-
+	
+	
+	@ApiOperation(value="字典分页", notes="字典")
+	@AutoLog(value = "字典")
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public Result<IPage<SysDict>> queryPageList(SysDict sysDict,@RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
 									  @RequestParam(name="pageSize", defaultValue="10") Integer pageSize,HttpServletRequest req) {
@@ -103,6 +112,8 @@ public class SysDictController {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
+	@ApiOperation(value="获取树形字典数据", notes="获取树形字典数据")
+	@AutoLog(value = "获取树形字典数据")
 	@RequestMapping(value = "/treeList", method = RequestMethod.GET)
 	public Result<List<SysDictTree>> treeList(SysDict sysDict,@RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
 									  @RequestParam(name="pageSize", defaultValue="10") Integer pageSize,HttpServletRequest req) {
@@ -130,6 +141,8 @@ public class SysDictController {
 	 * @param dictCode 表名,文本字段,code字段  | 举例：sys_user,realname,id
 	 * @return
 	 */
+	@ApiOperation(value="获取字典数据", notes="获取字典数据")
+	@AutoLog(value = "获取字典数据")
 	@RequestMapping(value = "/getDictItems/{dictCode}", method = RequestMethod.GET)
 	public Result<List<DictModel>> getDictItems(@PathVariable String dictCode) {
 		log.info(" dictCode : "+ dictCode);
@@ -202,6 +215,8 @@ public class SysDictController {
 	 * @param sysDict
 	 * @return
 	 */
+	@ApiOperation(value="字典新增", notes="字典新增")
+	@AutoLog(value = "字典新增")
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
     @CacheInvalidate(name = CacheConstant.SYS_DICT_CACHE, key = "'all'")
 	public Result<SysDict> add(@RequestBody SysDict sysDict) {
@@ -223,6 +238,8 @@ public class SysDictController {
 	 * @param sysDict
 	 * @return
 	 */
+	@ApiOperation(value="字典编辑", notes="字典编辑")
+	@AutoLog(value = "字典编辑")
 	@RequestMapping(value = "/edit", method = RequestMethod.PUT)
     @CacheInvalidate(name = CacheConstant.SYS_DICT_CACHE, key = "'all'")
 	public Result<SysDict> edit(@RequestBody SysDict sysDict) {
@@ -246,6 +263,8 @@ public class SysDictController {
 	 * @param id
 	 * @return
 	 */
+	@ApiOperation(value="字典删除", notes="字典删除")
+	@AutoLog(value = "字典删除")
 	@RequestMapping(value = "/delete", method = RequestMethod.DELETE)
 	@CacheInvalidate(name = CacheConstant.SYS_DICT_CACHE,multi = true)
 	public Result<SysDict> delete(@RequestParam(name="id",required=true) String id) {
@@ -264,6 +283,8 @@ public class SysDictController {
 	 * @param ids
 	 * @return
 	 */
+	@ApiOperation(value="字典批量删除", notes="字典批量删除")
+	@AutoLog(value = "字典批量删除")
 	@RequestMapping(value = "/deleteBatch", method = RequestMethod.DELETE)
 	@CacheInvalidate(name = CacheConstant.SYS_DICT_CACHE, multi = true)
 	public Result<SysDict> deleteBatch(@RequestParam(name="ids",required=true) String ids) {
@@ -282,6 +303,8 @@ public class SysDictController {
 	 *
 	 * @param request
 	 */
+	@ApiOperation(value="字典导出excel", notes="字典导出excel")
+	@AutoLog(value = "字典导出excel")
 	@RequestMapping(value = "/exportXls")
 	public ModelAndView exportXls(SysDict sysDict,HttpServletRequest request) {
 		// Step.1 组装查询条件
@@ -319,6 +342,8 @@ public class SysDictController {
 	 * @param
 	 * @return
 	 */
+	@ApiOperation(value="字典通过excel导入数据", notes="字典通过excel导入数据")
+	@AutoLog(value = "字典通过excel导入数据")
 	@RequestMapping(value = "/importExcel", method = RequestMethod.POST)
 	@CacheInvalidate(name = CacheConstant.SYS_DICT_CACHE, multi = true)
 	public Result<?> importExcel(HttpServletRequest request, HttpServletResponse response) {
