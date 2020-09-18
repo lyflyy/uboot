@@ -67,6 +67,7 @@ public class SysAnnouncementServiceImpl extends ServiceImpl<SysAnnouncementMappe
         String senderUser = parameters[1];
         SysMessageTemplate sysMessageTemplate = sysMessageTemplateService.selectByCode(templateCode);
         SysAnnouncement sysAnnouncement = SysAnnouncement.convert(sysMessageTemplate, ArrayUtil.sub(parameters, 2, parameters.length));
+	    sysAnnouncement.setMsgType(CommonConstant.MSG_TYPE_UESR);
         sysAnnouncement.setUserIds(userIds);
         this.saveAnnouncement(sysAnnouncement);
         // 将通知发送出去

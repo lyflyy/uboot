@@ -8,6 +8,7 @@ import lombok.Data;
 import org.jeecgframework.poi.excel.annotation.Excel;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.uboot.common.aspect.annotation.Dict;
+import org.uboot.common.constant.CommonConstant;
 import org.uboot.modules.message.entity.SysMessageTemplate;
 
 import java.io.Serializable;
