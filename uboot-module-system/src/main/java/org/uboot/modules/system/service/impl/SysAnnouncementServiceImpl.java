@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.uboot.common.constant.CommonConstant;
@@ -110,7 +111,7 @@ public class SysAnnouncementServiceImpl extends ServiceImpl<SysAnnouncementMappe
         }
         return ok;
     }
-
+	
     @Transactional
     @Override
     public void saveAnnouncement(SysAnnouncement sysAnnouncement) {
@@ -121,16 +122,18 @@ public class SysAnnouncementServiceImpl extends ServiceImpl<SysAnnouncementMappe
             sysAnnouncementMapper.insert(sysAnnouncement);
             // 2.插入用户通告阅读标记表记录
             String userId = sysAnnouncement.getUserIds();
-            String[] userIds = userId.substring(0, (userId.length() - 1)).split(",");
+            String[] userIds = userId.split(",");
             String anntId = sysAnnouncement.getId();
             Date refDate = new Date();
             for (int i = 0; i < userIds.length; i++) {
-                SysAnnouncementSend announcementSend = new SysAnnouncementSend();
-                announcementSend.setAnntId(anntId);
-                announcementSend.setUserId(userIds[i]);
-                announcementSend.setReadFlag(CommonConstant.NO_READ_FLAG);
-                announcementSend.setReadTime(refDate);
-                sysAnnouncementSendMapper.insert(announcementSend);
+            	if(StringUtils.isNoneBlank(userIds[i])){
+		            SysAnnouncementSend announcementSend = new SysAnnouncementSend();
+		            announcementSend.setAnntId(anntId);
+		            announcementSend.setUserId(userIds[i]);
+		            announcementSend.setReadFlag(CommonConstant.NO_READ_FLAG);
+		            announcementSend.setReadTime(refDate);
+		            sysAnnouncementSendMapper.insert(announcementSend);
+	            }
             }
         }
     }
