@@ -9,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.type.EnumTypeHandler;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.UnavailableSecurityManagerException;
 import org.mybatis.spring.annotation.MapperScan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -152,6 +153,8 @@ public class MybatisPlusConfig {
       sysUser =
           SecurityUtils.getSubject().getPrincipal() != null ? (LoginUser) SecurityUtils.getSubject().getPrincipal()
               : null;
+    }catch (UnavailableSecurityManagerException ignored){
+
     } catch (Exception e) {
       //e.printStackTrace();
       sysUser = null;
