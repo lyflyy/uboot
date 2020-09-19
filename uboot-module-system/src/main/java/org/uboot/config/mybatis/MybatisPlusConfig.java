@@ -156,7 +156,7 @@ public class MybatisPlusConfig {
     }catch (UnavailableSecurityManagerException ignored){
 
     } catch (Exception e) {
-      //e.printStackTrace();
+      e.printStackTrace();
       sysUser = null;
     }
     return sysUser;

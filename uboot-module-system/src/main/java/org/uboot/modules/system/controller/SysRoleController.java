@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.jeecgframework.poi.excel.def.NormalExcelConstants;
@@ -25,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.uboot.common.api.vo.Result;
+import org.uboot.common.aspect.annotation.AutoLog;
 import org.uboot.common.constant.CommonConstant;
 import org.uboot.common.system.query.QueryGenerator;
 import org.uboot.common.system.vo.LoginUser;
@@ -57,6 +60,7 @@ import java.util.Map;
  * @Author scott
  * @since 2018-12-19
  */
+@Api(tags = "角色接口")
 @RestController
 @RequestMapping("/sys/role")
 @Slf4j
@@ -81,6 +85,8 @@ public class SysRoleController {
 	 * @param req
 	 * @return
 	 */
+	@ApiOperation(value="角色分页列表查询", notes="角色分页列表查询")
+	@AutoLog(value = "角色分页列表查询")
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public Result<IPage<SysRole>> queryPageList(SysRole role,
 									  @RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
@@ -100,6 +106,8 @@ public class SysRoleController {
 	 * @param role
 	 * @return
 	 */
+	@ApiOperation(value="角色添加", notes="角色添加")
+	@AutoLog(value = "角色添加")
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public Result<SysRole> add(@RequestBody SysRole role) {
 		Result<SysRole> result = new Result<SysRole>();
@@ -119,6 +127,8 @@ public class SysRoleController {
 	 * @param role
 	 * @return
 	 */
+	@ApiOperation(value="角色编辑", notes="角色编辑")
+	@AutoLog(value = "角色编辑")
 	@RequestMapping(value = "/edit", method = RequestMethod.PUT)
 	public Result<SysRole> edit(@RequestBody SysRole role) {
 		Result<SysRole> result = new Result<SysRole>();
@@ -142,6 +152,8 @@ public class SysRoleController {
 	 * @param id
 	 * @return
 	 */
+	@ApiOperation(value="角色通过id删除", notes="角色通过id删除")
+	@AutoLog(value = "角色通过id删除")
 	@RequestMapping(value = "/delete", method = RequestMethod.DELETE)
 	public Result<SysRole> delete(@RequestParam(name="id",required=true) String id) {
 		Result<SysRole> result = new Result<SysRole>();
@@ -163,6 +175,8 @@ public class SysRoleController {
 	 * @param ids
 	 * @return
 	 */
+	@ApiOperation(value="角色批量删除", notes="角色批量删除")
+	@AutoLog(value = "角色批量删除")
 	@RequestMapping(value = "/deleteBatch", method = RequestMethod.DELETE)
 	public Result<SysRole> deleteBatch(@RequestParam(name="ids",required=true) String ids) {
 		Result<SysRole> result = new Result<SysRole>();
@@ -180,6 +194,8 @@ public class SysRoleController {
 	 * @param id
 	 * @return
 	 */
+	@ApiOperation(value="角色通过id查询", notes="角色通过id查询")
+	@AutoLog(value = "角色通过id查询")
 	@RequestMapping(value = "/queryById", method = RequestMethod.GET)
 	public Result<SysRole> queryById(@RequestParam(name="id",required=true) String id) {
 		Result<SysRole> result = new Result<SysRole>();
@@ -209,6 +225,8 @@ public class SysRoleController {
 	/**
 	  * 校验角色编码唯一
 	 */
+	@ApiOperation(value="角色校验角色编码唯一", notes="角色校验角色编码唯一")
+	@AutoLog(value = "角色校验角色编码唯一")
 	@RequestMapping(value = "/checkRoleCode", method = RequestMethod.GET)
 	public Result<Boolean> checkUsername(String id,String roleCode) {
 		Result<Boolean> result = new Result<>();
@@ -249,6 +267,8 @@ public class SysRoleController {
 	 * @param request
 	 * @param response
 	 */
+	@ApiOperation(value="角色导出excel", notes="角色导出excel")
+	@AutoLog(value = "角色导出excel")
 	@RequestMapping(value = "/exportXls")
 	public ModelAndView exportXls(SysRole sysRole,HttpServletRequest request) {
 		// Step.1 组装查询条件
@@ -271,6 +291,8 @@ public class SysRoleController {
 	 * @param response
 	 * @return
 	 */
+	@ApiOperation(value="角色通过excel导入数据", notes="角色通过excel导入数据")
+	@AutoLog(value = "角色通过excel导入数据")
 	@RequestMapping(value = "/importExcel", method = RequestMethod.POST)
 	public Result<?> importExcel(HttpServletRequest request, HttpServletResponse response) {
 		MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
@@ -358,6 +380,8 @@ public class SysRoleController {
 	 * @param request
 	 * @return
 	 */
+	@ApiOperation(value="用户角色授权功能，查询菜单权限树", notes="用户角色授权功能，查询菜单权限树")
+	@AutoLog(value = "用户角色授权功能，查询菜单权限树")
 	@RequestMapping(value = "/queryTreeList", method = RequestMethod.GET)
 	public Result<Map<String,Object>> queryTreeList(HttpServletRequest request) {
 		Result<Map<String,Object>> result = new Result<>();

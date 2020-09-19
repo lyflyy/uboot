@@ -2,6 +2,8 @@ package org.uboot.modules.system.controller;
 
 import com.alicp.jetcache.anno.CacheInvalidate;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.jeecgframework.poi.excel.ExcelImportUtil;
@@ -19,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.uboot.common.api.vo.Result;
+import org.uboot.common.aspect.annotation.AutoLog;
 import org.uboot.common.constant.CacheConstant;
 import org.uboot.common.system.query.QueryGenerator;
 import org.uboot.common.system.util.JwtUtil;
@@ -44,6 +47,7 @@ import java.util.Map;
  *
  * @Author: Steve @Since： 2019-01-22
  */
+@Api(tags = "部门接口")
 @RestController
 @RequestMapping("/sys/sysDepart")
 @Slf4j
@@ -57,6 +61,8 @@ public class SysDepartController {
 	 *
 	 * @return
 	 */
+	@ApiOperation(value="部门信息-分页列表查询", notes="部门信息-分页列表查询")
+	@AutoLog(value = "部门信息-分页列表查询")
 	@RequestMapping(value = "/queryTreeList", method = RequestMethod.GET)
 	public Result<List<SysDepartTreeModel>> queryTreeList() {
 		Result<List<SysDepartTreeModel>> result = new Result<>();
@@ -81,6 +87,8 @@ public class SysDepartController {
 	 * @param sysDepart
 	 * @return
 	 */
+	@ApiOperation(value="添加新数据 添加用户新建的部门对象数据,并保存到数据库", notes="添加新数据 添加用户新建的部门对象数据,并保存到数据库")
+	@AutoLog(value = "添加新数据 添加用户新建的部门对象数据,并保存到数据库")
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	@CacheInvalidate(name = CacheConstant.SYS_DEPARTS_CACHE, multi = true)
 	public Result<SysDepart> add(@RequestBody SysDepart sysDepart, HttpServletRequest request) {
@@ -106,6 +114,8 @@ public class SysDepartController {
 	 * @param sysDepart
 	 * @return
 	 */
+	@ApiOperation(value="编辑数据 编辑部门的部分数据,并保存到数据库", notes="编辑数据 编辑部门的部分数据,并保存到数据库")
+	@AutoLog(value = "编辑数据 编辑部门的部分数据,并保存到数据库")
 	@RequestMapping(value = "/edit", method = RequestMethod.PUT)
 	@CacheInvalidate(name = CacheConstant.SYS_DEPARTS_CACHE, multi = true)
 	public Result<SysDepart> edit(@RequestBody SysDepart sysDepart, HttpServletRequest request) {
@@ -133,6 +143,8 @@ public class SysDepartController {
     * @param id
     * @return
     */
+	 @ApiOperation(value="通过id删除", notes="通过id删除")
+	 @AutoLog(value = "通过id删除")
     @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
 	@CacheInvalidate(name = CacheConstant.SYS_DEPARTS_CACHE, multi = true)
    public Result<SysDepart> delete(@RequestParam(name="id",required=true) String id) {
@@ -160,6 +172,8 @@ public class SysDepartController {
 	 * @param ids
 	 * @return
 	 */
+	@ApiOperation(value="批量删除 根据前端请求的多个ID,对数据库执行删除相关部门数据的操作", notes="批量删除 根据前端请求的多个ID,对数据库执行删除相关部门数据的操作")
+	@AutoLog(value = "批量删除 根据前端请求的多个ID,对数据库执行删除相关部门数据的操作")
 	@RequestMapping(value = "/deleteBatch", method = RequestMethod.DELETE)
 	@CacheInvalidate(name = CacheConstant.SYS_DEPARTS_CACHE, multi = true)
 	public Result<SysDepart> deleteBatch(@RequestParam(name = "ids", required = true) String ids) {
@@ -179,6 +193,8 @@ public class SysDepartController {
 	 *
 	 * @return
 	 */
+	@ApiOperation(value="查询数据 添加或编辑页面对该方法发起请求,以树结构形式加载所有部门的名称,方便用户的操作", notes="查询数据 添加或编辑页面对该方法发起请求,以树结构形式加载所有部门的名称,方便用户的操作")
+	@AutoLog(value = "查询数据 添加或编辑页面对该方法发起请求,以树结构形式加载所有部门的名称,方便用户的操作")
 	@RequestMapping(value = "/queryIdTree", method = RequestMethod.GET)
 	public Result<List<DepartIdModel>> queryIdTree() {
 //		Result<List<DepartIdModel>> result = new Result<List<DepartIdModel>>();
@@ -219,6 +235,8 @@ public class SysDepartController {
 	 * @param keyWord
 	 * @return
 	 */
+	@ApiOperation(value="部门搜索功能方法,根据关键字模糊搜索相关部门", notes="部门搜索功能方法,根据关键字模糊搜索相关部门")
+	@AutoLog(value = "部门搜索功能方法,根据关键字模糊搜索相关部门")
 	@RequestMapping(value = "/searchBy", method = RequestMethod.GET)
 	public Result<List<SysDepartTreeModel>> searchBy(@RequestParam(name = "keyWord", required = true) String keyWord) {
 		Result<List<SysDepartTreeModel>> result = new Result<List<SysDepartTreeModel>>();
@@ -245,6 +263,8 @@ public class SysDepartController {
      * @param request
      * @param response
      */
+	@ApiOperation(value="部门导出excel", notes="部门导出excel")
+	@AutoLog(value = "部门导出excel")
     @RequestMapping(value = "/exportXls")
     public ModelAndView exportXls(SysDepart sysDepart,HttpServletRequest request) {
         // Step.1 组装查询条件
@@ -275,6 +295,8 @@ public class SysDepartController {
      * @param response
      * @return
      */
+    @ApiOperation(value="部门通过excel导入数据", notes="部门通过excel导入数据")
+    @AutoLog(value = "部门通过excel导入数据")
     @RequestMapping(value = "/importExcel", method = RequestMethod.POST)
 	@CacheInvalidate(name = CacheConstant.SYS_DEPARTS_CACHE, multi = true)
     public Result<?> importExcel(HttpServletRequest request, HttpServletResponse response) {

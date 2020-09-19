@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.uboot.common.api.vo.Result;
+import org.uboot.common.aspect.annotation.AutoLog;
 import org.uboot.common.constant.CommonConstant;
 import org.uboot.common.exception.UBootException;
 import org.uboot.common.system.query.QueryGenerator;
@@ -67,6 +68,8 @@ public class QuartzJobController {
 	 * @param req
 	 * @return
 	 */
+	@ApiOperation(value="定时任务接口-分页列表查询", notes="定时任务接口-分页列表查询")
+	@AutoLog(value = "定时任务接口-分页列表查询")
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public Result<?> queryPageList(QuartzJob quartzJob, @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
 			@RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize, HttpServletRequest req) {
@@ -83,6 +86,8 @@ public class QuartzJobController {
 	 * @param quartzJob
 	 * @return
 	 */
+	@ApiOperation(value="定时任务接口-添加定时任务", notes="定时任务接口-添加定时任务")
+	@AutoLog(value = "定时任务接口-添加定时任务")
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public Result<?> add(@RequestBody QuartzJob quartzJob) {
 		List<QuartzJob> list = quartzJobService.findByJobClassName(quartzJob.getJobClassName());
@@ -99,6 +104,8 @@ public class QuartzJobController {
 	 * @param quartzJob
 	 * @return
 	 */
+	@ApiOperation(value="定时任务接口-更新定时任务", notes="定时任务接口-更新定时任务")
+	@AutoLog(value = "定时任务接口-更新定时任务")
 	@RequestMapping(value = "/edit", method = RequestMethod.PUT)
 	public Result<?> eidt(@RequestBody QuartzJob quartzJob) {
 		try {
@@ -116,6 +123,8 @@ public class QuartzJobController {
 	 * @param id
 	 * @return
 	 */
+	@ApiOperation(value="定时任务接口-通过id删除", notes="定时任务接口-通过id删除")
+	@AutoLog(value = "定时任务接口-通过id删除")
 	@RequestMapping(value = "/delete", method = RequestMethod.DELETE)
 	public Result<?> delete(@RequestParam(name = "id", required = true) String id) {
 		QuartzJob quartzJob = quartzJobService.getById(id);
@@ -133,6 +142,8 @@ public class QuartzJobController {
 	 * @param ids
 	 * @return
 	 */
+	@ApiOperation(value="定时任务接口-批量删除", notes="定时任务接口-批量删除")
+	@AutoLog(value = "定时任务接口-批量删除")
 	@RequestMapping(value = "/deleteBatch", method = RequestMethod.DELETE)
 	public Result<?> deleteBatch(@RequestParam(name = "ids", required = true) String ids) {
 		if (ids == null || "".equals(ids.trim())) {
@@ -151,8 +162,9 @@ public class QuartzJobController {
 	 * @param job
 	 * @return
 	 */
+	@ApiOperation(value="定时任务接口-暂停定时任务", notes="定时任务接口-暂停定时任务")
+	@AutoLog(value = "定时任务接口-暂停定时任务")
 	@GetMapping(value = "/pause")
-	@ApiOperation(value = "暂停定时任务")
 	public Result<Object> pauseJob(@RequestParam(name = "jobClassName", required = true) String jobClassName) {
 		QuartzJob job = null;
 		try {
@@ -176,7 +188,8 @@ public class QuartzJobController {
 	 * @return
 	 */
 	@GetMapping(value = "/resume")
-	@ApiOperation(value = "恢复定时任务")
+	@ApiOperation(value="定时任务接口-恢复定时任务", notes="定时任务接口-恢复定时任务")
+	@AutoLog(value = "定时任务接口-恢复定时任务")
 	public Result<Object> resumeJob(@RequestParam(name = "jobClassName", required = true) String jobClassName) {
 		QuartzJob job = quartzJobService.getOne(new LambdaQueryWrapper<QuartzJob>().eq(QuartzJob::getJobClassName, jobClassName));
 		if (job == null) {
@@ -193,6 +206,8 @@ public class QuartzJobController {
 	 * @param id
 	 * @return
 	 */
+	@ApiOperation(value="定时任务接口-通过id查询", notes="定时任务接口-通过id查询")
+	@AutoLog(value = "定时任务接口-通过id查询")
 	@RequestMapping(value = "/queryById", method = RequestMethod.GET)
 	public Result<?> queryById(@RequestParam(name = "id", required = true) String id) {
 		QuartzJob quartzJob = quartzJobService.getById(id);
@@ -206,6 +221,8 @@ public class QuartzJobController {
 	 * @param response
 	 */
 	@RequestMapping(value = "/exportXls")
+	@ApiOperation(value="定时任务接口-导出excel", notes="定时任务接口-导出excel")
+	@AutoLog(value = "定时任务接口-导出excel")
 	public ModelAndView exportXls(HttpServletRequest request, QuartzJob quartzJob) {
 		// Step.1 组装查询条件
 		QueryWrapper<QuartzJob> queryWrapper = QueryGenerator.initQueryWrapper(quartzJob, request.getParameterMap());
@@ -227,6 +244,8 @@ public class QuartzJobController {
 	 * @param response
 	 * @return
 	 */
+	@ApiOperation(value="定时任务接口-通过excel导入数据", notes="定时任务接口-通过excel导入数据")
+	@AutoLog(value = "定时任务接口-通过excel导入数据")
 	@RequestMapping(value = "/importExcel", method = RequestMethod.POST)
 	public Result<?> importExcel(HttpServletRequest request, HttpServletResponse response) {
 		MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
