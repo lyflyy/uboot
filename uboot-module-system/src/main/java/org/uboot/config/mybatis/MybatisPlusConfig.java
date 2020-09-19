@@ -153,7 +153,7 @@ public class MybatisPlusConfig {
           SecurityUtils.getSubject().getPrincipal() != null ? (LoginUser) SecurityUtils.getSubject().getPrincipal()
               : null;
     } catch (Exception e) {
-      //e.printStackTrace();
+      e.printStackTrace();
       sysUser = null;
     }
     return sysUser;
