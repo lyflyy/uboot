@@ -480,6 +480,7 @@ public class SysDepartServiceImpl extends ServiceImpl<SysDepartMapper, SysDepart
         for (int i = 0; i < departNames.length - 1; i++) {
             sql += ")";
         }
+        sql += " limit 1";
         return sql;
     }
 

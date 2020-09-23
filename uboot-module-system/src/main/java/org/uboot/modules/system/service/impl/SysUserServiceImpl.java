@@ -9,10 +9,13 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.uboot.common.api.vo.Result;
 import org.uboot.common.constant.CacheConstant;
 import org.uboot.common.constant.CommonConstant;
+import org.uboot.common.exception.UBootException;
 import org.uboot.common.system.api.ISysBaseAPI;
 import org.uboot.common.system.vo.LoginUser;
 import org.uboot.common.system.vo.SysUserCacheInfo;
@@ -136,7 +139,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
 
 	@Override
-	@Transactional
+	@Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED, rollbackFor = UBootException.class)
 	public void addUserWithRole(SysUser user, String roles) {
 		this.save(user);
 		if(oConvertUtils.isNotEmpty(roles)) {
