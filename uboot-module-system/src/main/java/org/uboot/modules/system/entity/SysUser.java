@@ -151,9 +151,12 @@ public class SysUser implements Serializable {
      * 更新时间
      */
     private Date updateTime;
-
-    @TableField(exist = false)
-    private Integer age;
+	
+	@TableField(exist = false)
+	private Integer age;
+	
+	@TableField(exist = false)
+	private Boolean isManager;
 
     /**
      * 同步工作流引擎1同步0不同步
