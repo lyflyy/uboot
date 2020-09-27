@@ -1,5 +1,17 @@
 package org.uboot.config.mybatis.permission;
 
+import static org.uboot.config.mybatis.permission.ParseSqlUtil.generJoin;
+import static org.uboot.config.mybatis.permission.ParseSqlUtil.handleConditionAlias;
+import static org.uboot.config.mybatis.permission.ParseSqlUtil.handleJoins;
+import static org.uboot.config.mybatis.permission.ParseSqlUtil.handleLeftExpression;
+import static org.uboot.config.mybatis.permission.ParseSqlUtil.handleOldJoinAlias;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector;
+
+import org.apache.commons.lang3.StringUtils;
+
 import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.expression.Alias;
 import net.sf.jsqlparser.expression.Expression;
@@ -7,14 +19,14 @@ import net.sf.jsqlparser.expression.operators.conditional.AndExpression;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.schema.Table;
-import net.sf.jsqlparser.statement.select.*;
-import org.apache.commons.lang3.StringUtils;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Vector;
-
-import static org.uboot.config.mybatis.permission.ParseSqlUtil.*;
+import net.sf.jsqlparser.statement.select.AllTableColumns;
+import net.sf.jsqlparser.statement.select.FromItem;
+import net.sf.jsqlparser.statement.select.Join;
+import net.sf.jsqlparser.statement.select.OrderByElement;
+import net.sf.jsqlparser.statement.select.PlainSelect;
+import net.sf.jsqlparser.statement.select.Select;
+import net.sf.jsqlparser.statement.select.SelectExpressionItem;
+import net.sf.jsqlparser.statement.select.SelectItem;
 
 /**
  * @author: LiYang
@@ -115,7 +127,7 @@ public abstract class AbstractParseSql extends ParseSqlVariable {
         if(orderTable != null &&
                 (StringUtils.isBlank(orderTable.getName()) ||
                         orderTable.getName().equals(parseSqlVo.getOldAliasName()))){
-            orderTable.setName(parseSqlVo.getNewAlias().getName());
+            orderTable.setName(parseSqlVo.getTableList().get(0).getName());
         }
     }
 
