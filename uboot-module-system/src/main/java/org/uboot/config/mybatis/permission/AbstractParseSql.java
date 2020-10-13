@@ -151,8 +151,11 @@ public abstract class AbstractParseSql extends ParseSqlVariable {
      * @param skip
      */
     void handledoNotBelongSystem(FromItem item, int skip){
-        setFromItem(item, "sys_user_alias_origin");
-        Join user = generJoin("sys_user", "sys_user_alias_su", "sys_user_alias_su.id", "sys_user_alias_origin.user_id");
+        setFromItem(item, item.getAlias().getName());
+        Join user = generJoin("sys_user",
+                "sys_user_alias_su",
+                "sys_user_alias_su.id",
+                item.getAlias().getName() + ".user_id");
         List<Join> newJoins = new ArrayList<>();
         newJoins.add(user);
         List<Join> oldJoins = parseSqlVo.getSelectBody().getJoins();
@@ -177,7 +180,7 @@ public abstract class AbstractParseSql extends ParseSqlVariable {
             // origin 要修改成sys_user 的alias
             setFromItem(item, "sys_user_alias_su");
         }else{
-            setFromItem(item, "sys_user_alias_origin");
+            setFromItem(item, item.getAlias().getName());
         }
         List<Join> joins = parseSqlVo.getSelectBody().getJoins();
         // 处理关联表的alias
