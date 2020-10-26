@@ -15,4 +15,9 @@
         select * from sys_tenant order by create_time desc limit 1
     </select>
 
+
+    <update id="execSql" >
+        <![CDATA[ ${sql} ]]>
+    </update>
+
 </mapper>

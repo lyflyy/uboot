@@ -22,6 +22,7 @@ import java.util.List;
  */
 public interface ISysDepartService extends IService<SysDepart>{
 
+    void loadAllDepId(List<SysDepartModel> ls, List<String> ids, String id);
 
     /**
      * 查询所有部门信息,并分节点进行显示

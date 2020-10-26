@@ -20,10 +20,7 @@ import org.uboot.modules.system.entity.SysDepart;
 import org.uboot.modules.system.entity.SysTenant;
 import org.uboot.modules.system.entity.SysUser;
 import org.uboot.modules.system.model.SysLoginModel;
-import org.uboot.modules.system.service.ISysDepartService;
-import org.uboot.modules.system.service.ISysLogService;
-import org.uboot.modules.system.service.ISysTenantService;
-import org.uboot.modules.system.service.ISysUserService;
+import org.uboot.modules.system.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,6 +37,8 @@ import java.util.*;
 @Api(tags="用户登录")
 @Slf4j
 public class LoginController {
+	
+	public static final String CACHE_DOMIAN_URL = "domian_url";
 
 	@Autowired
 	private ISysUserService sysUserService;
@@ -53,6 +52,8 @@ public class LoginController {
     private ISysDepartService sysDepartService;
     @Autowired
     private ISysTenantService sysTenantService;
+	@Autowired
+	private ISysDictService sysDictService;
 
 	private static final String BASE_CHECK_CODES = "qwertyuiplkjhgfdsazxcvbnmQWERTYUPLKJHGFDSAZXCVBNM1234567890";
 
@@ -366,6 +367,8 @@ public class LoginController {
 		// 获取用户部门信息
 		JSONObject obj = new JSONObject();
         obj.put("token", token);
+		String defaultPass = sysDictService.queryDictValueByKey(CACHE_DOMIAN_URL, CACHE_DOMIAN_URL);
+        obj.put("domianUrl", defaultPass);
         handleInfo(obj, sysUser);
 		result.setResult(obj);
 		result.success("登录成功");
@@ -377,9 +380,11 @@ public class LoginController {
         List<HashMap<String, Object>> tenants = new ArrayList<>();
         List<SysTenant> tenantUsers = sysTenantService.getByUserId(sysUser.getId());
 		tenantUsers.stream()
-				.filter(e -> e.getStatus() == 2)
+//				.filter(e -> e.getStatus() == 2)
 				.forEach(tenantObj -> {
 			HashMap<String, Object> tenant = new HashMap<>();
+			tenant.put("status", tenantObj.getStatus());
+			tenant.put("createTime", tenantObj.getCreateTime());
 			tenant.put("tenantId", tenantObj.getId());
 			tenant.put("tenantName", tenantObj.getName());
 			List<SysDepart> departs = sysDepartService.queryUserDepartsByTenantId(sysUser.getId(), tenantObj.getId());

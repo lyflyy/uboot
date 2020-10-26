@@ -22,4 +22,6 @@ public interface SysTenantMapper extends BaseMapper<SysTenant> {
      * @return
      */
     SysTenant selectLastByCreateTime();
+    
+    void execSql(@Param("sql") String sql);
 }

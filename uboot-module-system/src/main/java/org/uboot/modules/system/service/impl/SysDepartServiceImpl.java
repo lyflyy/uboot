@@ -79,6 +79,22 @@ public class SysDepartServiceImpl extends ServiceImpl<SysDepartMapper, SysDepart
     @Autowired
     SysDictMapper sysDictMapper;
 
+
+	@Override
+    public void loadAllDepId(List<SysDepartModel> ls, List<String> ids, String id) {
+		for (SysDepartModel tsm : ls) {
+			if (tsm.getParentId().equals(id)) {
+				ids.add(tsm.getId());
+				loadAllDepId(tsm.getChildren(), ids, tsm.getId());
+			} else {
+				List<SysDepartModel> temp = tsm.getChildren();
+				if (temp != null && temp.size() > 0) {
+					loadAllDepId(temp, ids, id);
+				}
+			}
+		}
+	}
+
 	/**
 	 * queryTreeList 对应 queryTreeList 查询所有的部门数据,以树结构形式响应给前端
 	 */
@@ -480,6 +496,7 @@ public class SysDepartServiceImpl extends ServiceImpl<SysDepartMapper, SysDepart
         for (int i = 0; i < departNames.length - 1; i++) {
             sql += ")";
         }
+        sql += " limit 1";
         return sql;
     }
 

@@ -19,9 +19,6 @@ public class PermissionSqlTest {
 
     static Logger logger = LoggerFactory.getLogger(PermissionSqlTest.class);
 
-    public static final String originTableAlias = "sys_user_alias_origin";
-
-
     public static void main(String[] args) throws JSQLParserException {
         // 单表查询
         // select * from wm_soldier_info;
