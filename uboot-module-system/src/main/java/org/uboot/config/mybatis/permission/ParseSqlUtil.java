@@ -135,8 +135,8 @@ public class ParseSqlUtil {
         // length = 3 database.table.column - length = 2 table/alias.column - length = 1 column
         // length = 3 newAlias.column - length = 2 newAlias.column - length = 1 newAlias.column
         String alias = tmpStr.length == 3 ? tmpStr[1] : tmpStr.length == 2 ? tmpStr[0] : tmpStr[0];
-        if(alias.equals(oldAlias) || alias.equals(fromTable.getName()) || StringUtils.isBlank(alias)
-        || alias.equals(parseSqlVo.getFromTable().getName())){
+        if(alias.equals(oldAlias) || (fromTable != null && alias.equals(fromTable.getName())) || StringUtils.isBlank(alias)
+        || (parseSqlVo != null && parseSqlVo.getFromTable() != null && alias.equals(parseSqlVo.getFromTable().getName()))){
             table.setAlias(new Alias(originTableAlias));
         }
     }
