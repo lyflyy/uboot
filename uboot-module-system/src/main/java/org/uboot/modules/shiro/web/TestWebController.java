@@ -69,7 +69,7 @@ public class TestWebController {
     }
 
     @GetMapping("/require_permission")
-    @RequiresPermissions(logical = Logical.AND, value = {"view", "edit"})
+    // @RequiresPermissions(logical = Logical.AND, value = {"view", "edit"})
     public ResponseBean requirePermission() {
         return new ResponseBean(200, "You are visiting permission require edit,view", null);
     }
