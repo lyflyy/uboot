@@ -368,12 +368,18 @@ public class SysDepartServiceImpl extends ServiceImpl<SysDepartMapper, SysDepart
     }
 
     @Override
-//    @Transactional
+    @Transactional
     public int importDepart(HttpServletRequest request, MultipartFile file, ImportParams params) throws Exception {
         LoginUser user = (LoginUser) SecurityUtils.getSubject().getPrincipal();
-
-        String username = JwtUtil.getUserNameByToken(request);
-        List<SysDepart> listSysDeparts = ExcelImportUtil.importExcel(file.getInputStream(), SysDepart.class, params);
+		String username = JwtUtil.getUserNameByToken(request);
+        // 校验所有的导入的部门是否是有权限的，不要导入到其他部门下
+		List<SysDepart> listSysDeparts = ExcelImportUtil.importExcel(file.getInputStream(), SysDepart.class, params);
+		LambdaQueryWrapper<SysDepart> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+		lambdaQueryWrapper.eq(SysDepart::getOrgCode, user.getOrgCode());
+		SysDepart departFromUser = baseMapper.selectOne(lambdaQueryWrapper);
+		for (SysDepart e : listSysDeparts) {
+			if(!e.getDepartName().contains(departFromUser.getDepartName())) throw new UBootException("该用户没有权限添加父级部门或者平级别部门！");
+		}
         // 一级部别处理
         List<SysDepart> firstDeparts = listSysDeparts.stream().filter(e -> e.getDepartName().indexOf("/") == -1).collect(Collectors.toList());
         for (SysDepart firstDepart : firstDeparts) {
@@ -384,24 +390,24 @@ public class SysDepartServiceImpl extends ServiceImpl<SysDepartMapper, SysDepart
         }
         // 再处理不是一级部别的部别
         List<SysDepart> otherDeparts = listSysDeparts.stream().filter(e -> e.getDepartName().indexOf("/") > -1).collect(Collectors.toList());
-        if(otherDeparts == null){
-            return firstDeparts.size();
-        }
+//        if(otherDeparts == null){
+//            return firstDeparts.size();
+//        }
         // 最多处理1000个层级
         for (int i = 2; i < 1000; i++) {
             // 从不是一级的部别列表中筛选出带i个/的  依次向上，这样就可以从最大部别依次导入了
-            if(otherDeparts.size() == 0){
-                break;
-            }
+//            if(otherDeparts.size() == 0){
+//                break;
+//            }
             List<SysDepart> departs = new ArrayList<>();
             for (SysDepart otherDepart : otherDeparts) {
                 if(otherDepart.getDepartName().split("/").length == i){
                     departs.add(otherDepart);
                 }
             }
-            if(departs.size() == 0){
-                continue;
-            }
+//            if(departs.size() == 0){
+//                continue;
+//            }
             for (SysDepart sysDepart : departs) {
                 String depNames[] = sysDepart.getDepartName().split("/");
                 // 只需要找到这个部别的名字的上级部别，aaa/bbb/ccc,想要添加的是ccc，需要找到bbb，并找到他的id
