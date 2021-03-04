@@ -114,7 +114,7 @@ public class ParseSql extends AbstractParseSql{
                 handledoNotBelongSystem(parseSqlVo.getSelectBody().getFromItem(), 0);
             }else{
                 // 主表不符合条件，遍历jointables
-                if(parseSqlVo.getJoins() != null)
+                if(parseSqlVo.getJoins() == null) return sql;
                 for (int i = 0; i < parseSqlVo.getJoins().size(); i++) {
                     Join join = parseSqlVo.getJoins().get(i);
                     // jointable 不是子查询
