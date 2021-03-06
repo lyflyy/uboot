@@ -135,9 +135,29 @@ public class ParseSqlUtil {
         // length = 3 database.table.column - length = 2 table/alias.column - length = 1 column
         // length = 3 newAlias.column - length = 2 newAlias.column - length = 1 newAlias.column
         String alias = tmpStr.length == 3 ? tmpStr[1] : tmpStr.length == 2 ? tmpStr[0] : tmpStr[0];
-        if(alias.equals(oldAlias) || (fromTable != null && alias.equals(fromTable.getName())) || StringUtils.isBlank(alias)
-        || (parseSqlVo != null && parseSqlVo.getFromTable() != null && alias.equals(parseSqlVo.getFromTable().getName()))){
-            table.setAlias(new Alias(originTableAlias));
+
+
+
+
+
+
+
+        logger.info("alias====:{}", alias);
+        logger.info("oldAlias====:{}", oldAlias);
+        logger.info("fromTable====:{}", fromTable);
+        logger.info("fromTable.getName()====:{}", fromTable.getName());
+        logger.info("parseSqlVo====:{}", parseSqlVo);
+        logger.info("parseSqlVo.getFromTable()====:{}", parseSqlVo.getFromTable());
+        logger.info("parseSqlVo.getFromTable()====:{}", parseSqlVo.getFromTable());
+        logger.info("parseSqlVo.getFromTable().getName()====:{}", parseSqlVo.getFromTable().getName());
+        logger.info("originTableAlias====:{}", originTableAlias);
+        if(alias != null){
+            if(alias.equals(oldAlias) || (fromTable != null && alias.equals(fromTable.getName())) || StringUtils.isBlank(alias)){
+                table.setAlias(new Alias(originTableAlias));
+            }
+            if(parseSqlVo != null && parseSqlVo.getFromTable() != null && alias.equals(parseSqlVo.getFromTable().getName())){
+                table.setAlias(new Alias(originTableAlias));
+            }
         }
     }
 
